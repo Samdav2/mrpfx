@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans, Palanquin_Dark, Nova_Flat } from "next/font/google";
 import "./globals.css";
-import "./scraped_styles.css";
 import "./homepage-post.css";
-import "./youtube-widget.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
