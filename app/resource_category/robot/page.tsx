@@ -1,0 +1,105 @@
+import React from 'react';
+import Link from 'next/link';
+
+export default function RobotsPage() {
+    return (
+        <div className="min-h-screen bg-white text-[#666] font-sans">
+            {/* Header Section with Mountain Divider */}
+            <div className="relative bg-[#0762d9] pt-[160px] pb-[128px] overflow-hidden">
+                <div className="container mx-auto px-4 relative z-10 text-center">
+                    <h1 className="text-[3rem] font-[900] text-white mb-6 uppercase tracking-[4px] font-[family-name:var(--font-palanquin-dark)] leading-none drop-shadow-md">
+                        FREE ROBOTS
+                    </h1>
+                    <div className="w-[80px] h-[3px] bg-[#52f28a] mx-auto"></div>
+                </div>
+
+                {/* Wave Divider */}
+                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+                    <svg
+                        className="relative block w-[calc(160%+1.3px)] h-[135px] transform -translate-x-1/2 rotate-y-180 left-1/2"
+                        data-name="Layer 1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 1200 120"
+                        preserveAspectRatio="none"
+                    >
+                        <path
+                            d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+                            className="fill-[#EAF3FF29]"
+                        ></path>
+                    </svg>
+                </div>
+            </div>
+
+            {/* Registration Form Section */}
+            <div className="container mx-auto px-4 my-[50px] relative z-20">
+                <div className="max-w-[600px] mx-auto bg-white p-8 rounded-lg">
+                    <form className="space-y-5">
+                        {/* Username Field */}
+                        <div className="space-y-2">
+                            <label className="block text-[15px] font-bold text-[#555]">
+                                Username<span className="text-red-500 ml-1">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
+                            />
+                        </div>
+
+                        {/* Email Field */}
+                        <div className="space-y-2">
+                            <label className="block text-[15px] font-bold text-[#555]">
+                                E-mail Address<span className="text-red-500 ml-1">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
+                            />
+                        </div>
+
+                        {/* Password Field */}
+                        <div className="space-y-2">
+                            <label className="block text-[15px] font-bold text-[#555]">
+                                Password<span className="text-red-500 ml-1">*</span>
+                            </label>
+                            <input
+                                type="password"
+                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
+                            />
+                        </div>
+
+                        {/* Confirm Password Field */}
+                        <div className="space-y-2">
+                            <label className="block text-[15px] font-bold text-[#555]">
+                                Confirm Password<span className="text-red-500 ml-1">*</span>
+                            </label>
+                            <input
+                                type="password"
+                                placeholder="Confirm Password"
+                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666] placeholder:text-[#aaa]"
+                            />
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex justify-between pt-6">
+                            <button
+                                type="submit"
+                                style={{ backgroundColor: '#3ba1da', width: '48%', height: '45px', color: 'white', border: 'none' }}
+                                className="hover:!bg-[#44b0ec] font-normal text-[15px] leading-[1em] rounded-[4px] transition-colors duration-200 shadow-[0_4px_6px_rgba(50,50,93,0.11),0_1px_3px_rgba(0,0,0,0.08)] flex items-center justify-center outline-none focus:outline-none"
+                            >
+                                Register
+                            </button>
+
+                            <button
+                                type="button"
+                                style={{ backgroundColor: '#eee', width: '48%', height: '45px', color: '#666', border: 'none' }}
+                                className="hover:!bg-[#e5e5e5] font-normal text-[15px] leading-[1em] rounded-[4px] transition-colors duration-200 shadow-[0_4px_6px_rgba(50,50,93,0.11),0_1px_3px_rgba(0,0,0,0.08)] flex items-center justify-center outline-none focus:outline-none"
+                            >
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+}

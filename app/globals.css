@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-gold: #f0b90b;
+  --color-gold-hover: #d9a300;
+  --color-dark-bg: #000000;
+  --color-dark-surface: #080808;
+  --color-text-gray: #979797;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-dark-bg);
+  color: white;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+/* Global Link Styles - Baseline reset (NO !important so inline/specific styles can override) */
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Dark background sections - links should be white */
+.bg-black a,
+.bg-dark-bg a,
+[data-settings*="background_background"] a,
+.elementor-element-d09626a a,
+footer a {
+  color: #ffffff !important;
+}
+
+/* Header navigation - links should be BLACK on white background */
+header#masthead a.elementor-item,
+header#masthead .elementor-nav-menu a,
+.elementor-nav-menu--main a.elementor-item,
+.elementor-nav-menu--main a.elementor-sub-item {
+  color: #1a1a1a !important;
+}
+
+/* Header buttons - Login should have purple text, Sign Up should have white text */
+header#masthead .elementor-element-d5add03 .elementor-button {
+  color: #5B2EFF !important;
+}
+
+header#masthead .elementor-element-373f0cd .elementor-button {
+  color: #ffffff !important;
+}
+
+/* Light/white background sections - links should be dark */
+.bg-white a,
+.bg-gray-100 a,
+.bg-gray-50 a,
+.product-page a {
+  color: #333333 !important;
+}
+
+/* Specific Elementor link styling */
+.elementor-icon-list-text {
+  color: inherit !important;
+}
+
+/* YouTube widget links - inherit from parent */
+.yotu-video,
+.yotu-video h3,
+.yotu-video-title {
+  color: inherit !important;
+}
+
+/* Allow specific classes to override the inherit behavior */
+a.text-white,
+.bg-white a.text-white,
+.bg-gray-100 a.text-white,
+.bg-gray-50 a.text-white {
+  color: white !important;
+}
+
+a.text-black {
+  color: black !important;
+}
+
+a.text-gray-300 {
+  color: rgb(209 213 219) !important;
+}
+
+a.text-gray-400 {
+  color: rgb(156 163 175) !important;
+}
+
+a.text-gray-500 {
+  color: rgb(107 114 128) !important;
+}
+
+a.text-gray-600 {
+  color: rgb(75 85 99) !important;
+}
+
+a.text-blue-500 {
+  color: rgb(59 130 246) !important;
+}
+
+a.text-blue-600 {
+  color: rgb(37 99 235) !important;
+}
+
+/* Custom utility classes can be added here */
+
+/* Fix Elementor Button Visibility - Force black text on white/outline buttons */
+.elementor-element-c2b17a8 .elementor-button,
+/* Hero Recommended Broker (Desktop) */
+.elementor-element-7e7e1b4 .elementor-button,
+/* Hero Recommended Broker (Mobile) */
+.elementor-element-1fba2a8 .elementor-button
+
+/* Join Free (Community) */
+  {
+  color: #000000 !important;
+}
+
+/* VIP Mentorship "View Course" buttons - Should be Indigo */
+.elementor-element-a01b06f .elementor-button,
+/* View Course (Desktop) */
+.elementor-element-f35af11 .elementor-button
+
+/* View Course (Mobile) */
+  {
+  color: #312E81 !important;
+}
+
+/* Join VIP (Community) - Light Blue background, White text */
+.elementor-element-494925a .elementor-button {
+  background-color: #06B6D4 !important;
+  color: #ffffff !important;
+}
+
+/* View More (YouTube) - White text */
+.elementor-element-d694bcb .elementor-button {
+  color: #ffffff !important;
+}
+
+/* Header Buttons Fix */
+header#masthead a[href="/login"] {
+  color: #5B2EFF !important;
+}
+
+header#masthead a[href="/sign-up"] {
+  color: #ffffff !important;
+  background-color: #5B2EFF !important;
+}
+
+/* Ensure button text wrapper inherits the color */
+.elementor-element-c2b17a8 .elementor-button-text,
+.elementor-element-7e7e1b4 .elementor-button-text,
+.elementor-element-1fba2a8 .elementor-button-text,
+.elementor-element-a01b06f .elementor-button-text,
+.elementor-element-f35af11 .elementor-button-text,
+.elementor-element-494925a .elementor-button-text,
+.elementor-element-d694bcb .elementor-button-text {
+  color: inherit !important;
+}
+
+/* Our Services - Card titles (What we have to offer section) */
+.elementor-element-8f46210 .elementor-heading-title,
+.elementor-element-e50d5a7 .elementor-heading-title,
+.elementor-element-5daba67 .elementor-heading-title,
+.elementor-element-b5d163d .elementor-heading-title {
+  color: #1a1a1a !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin-top: 12px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Get Mentorship button - ensure text is visible */
+.elementor-element-e4a200e .elementor-button {
+  background-color: #5B2EFF !important;
+  color: #ffffff !important;
+}
+
+.elementor-element-e4a200e .elementor-button-text {
+  color: #ffffff !important;
 }

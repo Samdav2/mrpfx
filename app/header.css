@@ -1,0 +1,345 @@
+/* Header Navigation Styles */
+
+/* Main header bar */
+header#masthead {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: #fff;
+    width: 100%;
+}
+
+/* Header container */
+.elementor-element-652fce8,
+.elementor-element-b471f3d {
+    position: relative;
+    padding: 12px 20px !important;
+    background-color: #fff !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 0 auto;
+    border: none !important;
+}
+
+/* Ensure no overflow clipping */
+.elementor-element-a64d28b,
+.elementor-element-fadaa7a,
+.elementor-element-8f7fc66,
+.elementor-widget-nav-menu,
+.elementor-widget-container {
+    overflow: visible !important;
+}
+
+/* Logo container */
+.elementor-element-a64d28b {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Navigation container - center */
+.elementor-element-fadaa7a {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+}
+
+/* Buttons container - right */
+.elementor-element-8f7fc66 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* Navigation menu */
+nav.elementor-nav-menu--main {
+    position: static;
+    width: 100%;
+}
+
+nav.elementor-nav-menu--main ul.elementor-nav-menu {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li {
+    position: relative;
+    list-style: none;
+    border: none !important;
+}
+
+/* REMOVE ALL pseudo-elements */
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li::after,
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li::before,
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li>a::after,
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li>a::before {
+    content: none !important;
+    display: none !important;
+}
+
+/* Main menu links */
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li>a.elementor-item {
+    display: inline-block !important;
+    padding: 10px 12px;
+    font-family: "DM Sans", Sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap !important;
+    border-radius: 6px;
+    border: none !important;
+}
+
+/* Dropdown arrow span - INLINE with text */
+.dropdown-arrow {
+    display: inline !important;
+    font-size: 8px !important;
+    margin-left: 4px !important;
+    vertical-align: middle !important;
+    color: inherit !important;
+}
+
+/* Hover state */
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li>a.elementor-item:hover,
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li.menu-item-has-children:hover>a.elementor-item {
+    background-color: #f4f4f6;
+    color: #000;
+}
+
+/* Sub-menu (Dropdown) */
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li>ul.sub-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    transform: translateY(5px) !important;
+    min-width: 220px !important;
+    background-color: #fff !important;
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.15) !important;
+    list-style: none !important;
+    margin: 4px 0 0 0 !important;
+    padding: 8px !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    z-index: 99999 !important;
+    border-radius: 12px !important;
+    display: block !important;
+    border: none !important;
+}
+
+/* Show dropdown on hover */
+nav.elementor-nav-menu--main ul.elementor-nav-menu>li.menu-item-has-children:hover>ul.sub-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+/* Sub-menu items */
+nav.elementor-nav-menu--main ul.sub-menu>li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    border: none !important;
+}
+
+/* REMOVE pseudo-elements from sub-menu */
+nav.elementor-nav-menu--main ul.sub-menu>li::after,
+nav.elementor-nav-menu--main ul.sub-menu>li::before,
+nav.elementor-nav-menu--main ul.sub-menu>li>a::after,
+nav.elementor-nav-menu--main ul.sub-menu>li>a::before {
+    content: none !important;
+    display: none !important;
+}
+
+nav.elementor-nav-menu--main ul.sub-menu>li>a.elementor-sub-item {
+    display: block !important;
+    padding: 12px 16px !important;
+    font-family: "DM Sans", Sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    text-align: left !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    margin-bottom: 4px !important;
+    background-color: transparent !important;
+    color: #333 !important;
+    border: none !important;
+}
+
+nav.elementor-nav-menu--main ul.sub-menu>li:last-child>a.elementor-sub-item {
+    margin-bottom: 0 !important;
+}
+
+/* Dropdown items HOVER state */
+nav.elementor-nav-menu--main ul.sub-menu>li>a.elementor-sub-item:hover {
+    background-color: #000 !important;
+    color: #fff !important;
+    transform: translateX(4px);
+}
+
+/* Login button */
+.elementor-element-d5add03 .elementor-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff !important;
+    border: 1.5px solid #5B2EFF !important;
+    color: #5B2EFF !important;
+    font-family: "DM Sans", Sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 10px 24px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: 1;
+    white-space: nowrap !important;
+}
+
+.elementor-element-d5add03 .elementor-button:hover {
+    background-color: #f8f7ff !important;
+    transform: translateY(-1px);
+}
+
+/* Sign Up button */
+.elementor-element-373f0cd .elementor-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: #5B2EFF !important;
+    border: 1.5px solid #5B2EFF !important;
+    color: #fff !important;
+    font-family: "DM Sans", Sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 10px 24px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    line-height: 1;
+    white-space: nowrap !important;
+}
+
+.elementor-element-373f0cd .elementor-button:hover {
+    background-color: #4920cc !important;
+    border-color: #4920cc !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(91, 46, 255, 0.25);
+}
+
+/* Mobile dropdown styles */
+nav.elementor-nav-menu--dropdown.elementor-nav-menu__container {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: #fff !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+    z-index: 9999 !important;
+    padding: 0 !important;
+}
+
+nav.elementor-nav-menu--dropdown ul.elementor-nav-menu {
+    display: flex !important;
+    flex-direction: column !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+nav.elementor-nav-menu--dropdown ul.elementor-nav-menu>li {
+    border-bottom: 1px solid #eee;
+}
+
+nav.elementor-nav-menu--dropdown ul.elementor-nav-menu>li:last-child {
+    border-bottom: none;
+}
+
+nav.elementor-nav-menu--dropdown ul.elementor-nav-menu>li>a.elementor-item {
+    display: block !important;
+    padding: 16px 20px !important;
+    font-family: "DM Sans", Sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+}
+
+/* Menu toggle button */
+.elementor-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.elementor-menu-toggle i {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Utility class */
+.hidden {
+    display: none !important;
+}
+
+/* Desktop visibility */
+@media (min-width: 1025px) {
+    .elementor-hidden-mobile {
+        display: flex !important;
+    }
+
+    .elementor-hidden-desktop {
+        display: none !important;
+    }
+
+    .elementor-hidden-desktop.elementor-hidden-tablet {
+        display: none !important;
+    }
+}
+
+/* Tablet and Mobile visibility */
+@media (max-width: 1024px) {
+    .elementor-hidden-mobile {
+        display: none !important;
+    }
+
+    .elementor-element-b471f3d {
+        display: flex !important;
+    }
+
+    .e-con-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    .elementor-element-652fce8,
+    .elementor-element-b471f3d {
+        padding: 12px 20px !important;
+    }
+}
