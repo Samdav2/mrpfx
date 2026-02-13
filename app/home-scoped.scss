@@ -1,0 +1,13 @@
+.scraped-homepage {
+    background-color: #ffffff;
+    color: #000000;
+    display: flow-root;
+
+    /* Force Enroll button text to white */
+    .elementor-element-bbba58f .elementor-button-text {
+        color: #ffffff !important;
+    }
+
+    @import 'scraped_styles';
+    @import 'youtube-widget';
+}

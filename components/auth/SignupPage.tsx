@@ -1,8 +1,57 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { authService } from '@/lib/auth';
 
 const SignupPage = () => {
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [privacy, setPrivacy] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSignup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        if (!privacy) {
+            setError('Please agree to the privacy policy');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await authService.signup({
+                email,
+                password,
+                username: email.split('@')[0], // Simple username generation
+                display_name: fullName,
+            });
+            setSuccess('Account created successfully. Please check your email for verification code.');
+            // Clear form
+            setFullName('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setPrivacy(false);
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-white font-[family-name:var(--font-dm-sans)] flex items-center justify-center">
             <div className="w-full max-w-7xl px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24">
@@ -25,7 +74,19 @@ const SignupPage = () => {
                             Create an account
                         </h2>
 
-                        <form className="space-y-5">
+                        {error && (
+                            <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">
+                                {error}
+                            </div>
+                        )}
+
+                        {success && (
+                            <div className="bg-green-50 text-green-600 p-3 rounded mb-4 text-sm">
+                                {success}
+                            </div>
+                        )}
+
+                        <form className="space-y-5" onSubmit={handleSignup}>
                             {/* Full Name */}
                             <div className="space-y-2">
                                 <label className="text-[13px] text-gray-600 flex items-center gap-1 font-medium">
@@ -36,8 +97,11 @@ const SignupPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="YouTube Account Name"
+                                    placeholder="Full Name"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-[4px] text-sm focus:outline-none focus:border-[#4FA4D6] text-gray-900 placeholder-gray-400 bg-white"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -49,6 +113,9 @@ const SignupPage = () => {
                                 <input
                                     type="email"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-[4px] text-sm focus:outline-none focus:border-[#4FA4D6] text-gray-900 bg-white"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -61,6 +128,9 @@ const SignupPage = () => {
                                 <input
                                     type="password"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-[4px] text-sm focus:outline-none focus:border-[#4FA4D6] text-gray-900 bg-white"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -74,6 +144,9 @@ const SignupPage = () => {
                                     type="password"
                                     placeholder="Confirm Password"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-[4px] text-sm focus:outline-none focus:border-[#4FA4D6] text-gray-900 placeholder-gray-400 bg-white"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -88,6 +161,8 @@ const SignupPage = () => {
                                         name="privacy"
                                         type="checkbox"
                                         className="mt-1 h-4 w-4 text-[#4FA4D6] focus:ring-[#4FA4D6] border-gray-300 rounded"
+                                        checked={privacy}
+                                        onChange={(e) => setPrivacy(e.target.checked)}
                                     />
                                     <label htmlFor="privacy" className="text-[13px] text-gray-500">
                                         Please confirm that you agree to our privacy policy
@@ -99,9 +174,10 @@ const SignupPage = () => {
                             <div className="pt-4">
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-[4px] shadow-sm text-sm font-medium text-white bg-[#4FA4D6] hover:bg-[#3d8cb8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4FA4D6]"
+                                    disabled={loading}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-[4px] shadow-sm text-sm font-medium text-white bg-[#4FA4D6] hover:bg-[#3d8cb8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4FA4D6] disabled:opacity-50"
                                 >
-                                    Register
+                                    {loading ? 'Creating Account...' : 'Register'}
                                 </button>
                             </div>
 

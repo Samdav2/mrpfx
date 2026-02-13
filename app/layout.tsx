@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter, DM_Sans, Palanquin_Dark, Nova_Flat } from "next/font/google";
 import "./globals.css";
 import "./homepage-post.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,6 +36,8 @@ export const metadata: Metadata = {
   description: "Master forex trading through precision, strategy, and discipline.",
 };
 
+import ClientLayout from "./ClientLayout";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,11 +46,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${dmSans.variable} ${palanquinDark.variable} ${novaFlat.variable} font-sans bg-black text-white min-h-screen flex flex-col antialiased`}>
-        <Header />
-        <main className="flex-grow">
+        <ClientLayout>
           {children}
-        </main>
-        <Footer />
+        </ClientLayout>
       </body>
     </html>
   );

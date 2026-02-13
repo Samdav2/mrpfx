@@ -200,3 +200,127 @@ header#masthead a[href="/sign-up"] {
 .elementor-element-e4a200e .elementor-button-text {
   color: #ffffff !important;
 }
+
+/* WordPress page/post content styling on dark backgrounds */
+.wp-content {
+  color: #d1d5db !important;
+  font-size: 1.125rem !important;
+  line-height: 1.8 !important;
+}
+
+.wp-content p {
+  color: #d1d5db !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.wp-content h1,
+.wp-content h2,
+.wp-content h3,
+.wp-content h4,
+.wp-content h5,
+.wp-content h6 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.wp-content h1 {
+  font-size: 2rem !important;
+}
+
+.wp-content h2 {
+  font-size: 1.5rem !important;
+}
+
+.wp-content h3 {
+  font-size: 1.25rem !important;
+}
+
+.wp-content a {
+  color: #22d3ee !important;
+  text-decoration: none !important;
+}
+
+.wp-content a:hover {
+  text-decoration: underline !important;
+}
+
+.wp-content strong,
+.wp-content b {
+  color: #ffffff !important;
+}
+
+.wp-content ul,
+.wp-content ol {
+  color: #d1d5db !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 1.25rem !important;
+  list-style: revert !important;
+}
+
+.wp-content li {
+  color: #d1d5db !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.wp-content blockquote {
+  border-left: 3px solid #22d3ee !important;
+  padding-left: 1rem !important;
+  color: #9ca3af !important;
+  font-style: italic !important;
+  margin: 1.5rem 0 !important;
+}
+
+.wp-content img {
+  border-radius: 0.75rem !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 1.5rem 0 !important;
+}
+
+.wp-content code {
+  color: #c084fc !important;
+  background-color: rgba(139, 92, 246, 0.1) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+}
+
+.wp-content pre {
+  background-color: rgba(17, 24, 39, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 0.75rem !important;
+  padding: 1rem !important;
+  overflow-x: auto !important;
+  margin: 1.5rem 0 !important;
+}
+
+.wp-content pre code {
+  background: none !important;
+  padding: 0 !important;
+}
+
+.wp-content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+}
+
+.wp-content th,
+.wp-content td {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 0.5rem 1rem !important;
+  color: #d1d5db !important;
+}
+
+.wp-content th {
+  background-color: rgba(17, 24, 39, 0.5) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.wp-content hr {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  margin: 2rem 0 !important;
+}

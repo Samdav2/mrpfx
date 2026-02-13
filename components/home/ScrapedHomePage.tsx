@@ -31,7 +31,7 @@ const ScrapedHomePage = () => {
 <div class="elementor-button-wrapper">
 <a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/mentorship-course/">
 <span class="elementor-button-content-wrapper">
-<span class="elementor-button-text">Enroll For Mentorship</span>
+<span class="elementor-button-text" style={{ color: '#ffffff' }}>Enroll For Mentorship</span>
 </span>
 </a>
 </div>
@@ -770,8 +770,11 @@ Get yourself equipped into the world of Trading								</div>
 </div>
 </div>
 </div>` }} />
-<NewsletterSection />
-<div className="scraped-homepage" dangerouslySetInnerHTML={{ __html: `
+      <div className="scraped-homepage" style={{ backgroundColor: '#ffffff' }}>
+        <NewsletterSection />
+      </div>
+      <div className="scraped-homepage" dangerouslySetInnerHTML={{
+        __html: `
 <div class="elementor elementor-42554" data-elementor-id="42554" data-elementor-post-type="page" data-elementor-type="wp-page">
 </div>` }}
       />

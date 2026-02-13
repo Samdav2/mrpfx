@@ -1,12 +1,61 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { authService, User } from '@/lib/auth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileSubMenu, setMobileSubMenu] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+          try {
+            const userData = await authService.getCurrentUser();
+            setUser(userData);
+          } catch (error: any) {
+            console.error('Failed to fetch user:', error);
+            // If user is not verified (403), try to get user from token
+            if (error.response && error.response.status === 403) {
+              const tokenUser = authService.getUserFromToken();
+              if (tokenUser) {
+                setUser(tokenUser);
+                return;
+              }
+            }
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+
+    const handleAuthChange = () => {
+      fetchUser();
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    authService.logout();
+    setUser(null);
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -155,39 +204,102 @@ const Header = () => {
           </ul>
         </nav>
 
-        {/* Buttons */}
+        {/* Buttons / User Dropdown */}
         <div className="flex items-center gap-3 flex-shrink-0">
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center bg-white border-[1.5px] border-[#5B2EFF] text-[#5B2EFF] font-dm-sans text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-[#f8f7ff] transition-all whitespace-nowrap"
-          >
-            Login
-          </Link>
-          <Link
-            href="/sign-up"
-            className="inline-flex items-center justify-center bg-[#5B2EFF] border-[1.5px] border-[#5B2EFF] text-white font-dm-sans text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-[#4920cc] transition-all whitespace-nowrap"
-          >
-            Sign Up
-          </Link>
+          {user ? (
+            <div
+              className="relative group"
+              onMouseEnter={() => setOpenDropdown('user-menu')}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <button className="flex items-center gap-2 px-4 py-2 border border-[#2A3596] rounded-lg bg-white text-[#2A3596] font-bold text-sm hover:bg-gray-50 transition-colors">
+                <div className="flex flex-col items-start text-xs leading-tight">
+                  <span className="font-bold">Hello,</span>
+                  <span className="font-medium truncate max-w-[150px]">{user.user_email}</span>
+                </div>
+                <span className="text-[10px]">▼</span>
+              </button>
+
+              {/* User Dropdown */}
+              <ul className={`absolute top-full right-0 mt-1 min-w-[200px] bg-white rounded-xl shadow-lg p-2 transition-all duration-200 z-[99999] ${openDropdown === 'user-menu' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-1'}`} style={{ backgroundColor: 'white' }}>
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className="block px-4 py-3 font-dm-sans text-sm font-bold text-gray-800 hover:bg-gray-100 rounded-lg transition-all"
+                  >
+                    My Courses & Materials
+                  </Link>
+                </li>
+                <li className="border-t border-gray-100 my-1"></li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-3 font-dm-sans text-sm font-bold text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center bg-white border-[1.5px] border-[#5B2EFF] text-[#5B2EFF] font-dm-sans text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-[#f8f7ff] transition-all whitespace-nowrap"
+              >
+                Login
+              </Link>
+              <Link
+                href="/sign-up"
+                className="inline-flex items-center justify-center bg-[#5B2EFF] border-[1.5px] border-[#5B2EFF] text-white font-dm-sans text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-[#4920cc] transition-all whitespace-nowrap"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
       {/* Mobile Header */}
       <div className="lg:hidden flex flex-col p-4 bg-white">
-        {/* Top Row: Login / Sign Up Buttons */}
+        {/* Top Row: Login / Sign Up Buttons or User Info */}
         <div className="flex justify-center gap-4 mb-6 w-full">
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center bg-white border border-[#1a237e] text-[#1a237e] font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
-          >
-            Login
-          </Link>
-          <Link
-            href="/sign-up"
-            className="inline-flex items-center justify-center bg-[#1a237e] text-white font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
-          >
-            Sign Up
-          </Link>
+          {user ? (
+            <div className="flex flex-col items-center w-full">
+              <div className="text-center mb-4">
+                <p className="text-[#2A3596] font-bold text-sm">Hello, {user.user_email}</p>
+              </div>
+              <div className="flex gap-3">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center justify-center bg-white border border-[#2A3596] text-[#2A3596] font-bold text-sm px-6 py-2 rounded-md"
+                >
+                  My Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center justify-center bg-red-50 border border-red-200 text-red-600 font-bold text-sm px-6 py-2 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center bg-white border border-[#1a237e] text-[#1a237e] font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
+              >
+                Login
+              </Link>
+              <Link
+                href="/sign-up"
+                className="inline-flex items-center justify-center bg-[#1a237e] text-white font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Bottom Row: Logo and Menu Toggle */}

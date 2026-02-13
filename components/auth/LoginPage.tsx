@@ -2,9 +2,34 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/lib/auth';
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            await authService.login({
+                login: email,
+                password: password,
+            });
+            router.push('/dashboard'); // Redirect to dashboard after login
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-white font-[family-name:var(--font-dm-sans)] flex items-center justify-center">
@@ -27,7 +52,13 @@ const LoginPage = () => {
                             Sign In
                         </h2>
 
-                        <form className="space-y-6">
+                        {error && (
+                            <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">
+                                {error}
+                            </div>
+                        )}
+
+                        <form className="space-y-6" onSubmit={handleLogin}>
                             {/* Username/Email */}
                             <div className="space-y-2">
                                 <label className="text-[13px] text-gray-600 block font-medium">
@@ -37,6 +68,9 @@ const LoginPage = () => {
                                     type="text"
                                     placeholder="Username or Email Address"
                                     className="w-full px-4 py-3 border border-[#2A3596] rounded-[4px] text-sm focus:outline-none focus:ring-1 focus:ring-[#2A3596] text-gray-900 placeholder-gray-400"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -50,6 +84,9 @@ const LoginPage = () => {
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Password"
                                         className="w-full px-4 py-3 border border-[#2A3596] rounded-[4px] text-sm focus:outline-none focus:ring-1 focus:ring-[#2A3596] text-gray-900 placeholder-gray-400"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                     <button
                                         type="button"
@@ -90,9 +127,10 @@ const LoginPage = () => {
                             <div className="pt-2">
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-[4px] shadow-sm text-sm font-bold text-white bg-[#2A3596] hover:bg-[#202875] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2A3596]"
+                                    disabled={loading}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-[4px] shadow-sm text-sm font-bold text-white bg-[#2A3596] hover:bg-[#202875] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2A3596] disabled:opacity-50"
                                 >
-                                    Sign In
+                                    {loading ? 'Signing In...' : 'Sign In'}
                                 </button>
                             </div>
 

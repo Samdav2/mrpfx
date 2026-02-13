@@ -46,7 +46,7 @@ const FreeRobotsPage = () => {
                             <div className="pt-2">
                                 <Link
                                     href="/sign-up"
-                                    className="inline-block font-[family-name:var(--font-inter)] font-bold transition-colors"
+                                    className="inline-block font-[family-name:var(--font-inter)] font-bold transition-colors text-white"
                                     style={{
                                         backgroundColor: '#3442D9',
                                         color: '#FFFFFF',

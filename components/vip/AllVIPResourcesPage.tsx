@@ -1,67 +1,34 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import NewsletterSection from '@/components/shared/NewsletterSection';
-
-// VIP Products data
-const vipProducts = [
-    {
-        id: 1,
-        title: 'Mentorship Course 100 September 1ST - 11TH 2025',
-        image: '/assets/vip_resources/mentorship-course.png',
-        link: '/product/mentorship-course-100'
-    },
-    {
-        id: 2,
-        title: 'RENT VPS HOSTING',
-        subtitle: 'VPS For Forex - Run Your Trading on Cloud',
-        image: '/assets/vip_resources/vps-hosting.png',
-        link: '/product/vps-hosting'
-    },
-    {
-        id: 3,
-        title: 'VIP MEMBERSHIP GROUP',
-        image: '/assets/vip_resources/vip-membership.png',
-        link: '/product/vip-membership'
-    },
-    {
-        id: 4,
-        title: 'The 21 ultimate chart patterns',
-        author: 'Victory Omoike',
-        description: 'The 21 Ultimate Chart Patterns -Mr P Fx (For accurate trades and sniper entries)',
-        image: '/assets/vip_resources/chart-patterns.png',
-        link: '/product/21-chart-patterns'
-    },
-    {
-        id: 5,
-        title: 'Alisa G Auto Robot (FOR PHONE OR PC) Over 99% extreme accuracy',
-        image: '/assets/vip_resources/alisa-g-robot.png',
-        link: '/product/alisa-g-robot'
-    },
-    {
-        id: 6,
-        title: 'CHAPPIE G ROBOT (FOR STEP INDEX ONLY)',
-        image: '/assets/vip_resources/chappie-g-robot.png',
-        link: '/product/chappie-g-robot'
-    },
-    {
-        id: 7,
-        title: 'Invasion 360 All in One Indicator',
-        description: '(Volatility 75, Boom and Crash, Step Index, Nasdaq, Gold, EURUSD, GBPUSD)',
-        image: '/assets/vip_resources/invasion-360.png',
-        link: '/product/invasion-360'
-    },
-    {
-        id: 8,
-        title: 'MEGATRON X ROBOT',
-        description: 'Boom and Crash Cracked - Over 99% accuracy',
-        image: '/assets/vip_resources/megatron-x.png',
-        link: '/product/megatron-x-robot'
-    }
-];
+import { productsService } from '@/lib/products';
+import type { WCProductRead } from '@/lib/types';
+import { Loader2 } from 'lucide-react';
 
 const AllVIPResourcesPage = () => {
+    const [products, setProducts] = useState<WCProductRead[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                // Fetch all paid products (min_price: 0.01)
+                const data = await productsService.getProducts(0, 50, 'publish', undefined, undefined, undefined, 0.01);
+                setProducts(data);
+            } catch (err) {
+                console.error('Failed to fetch VIP products:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
     return (
         <div className="font-[family-name:var(--font-dm-sans)] bg-[#f5f5f5] min-h-screen">
             {/* Hero Section - Light Gray Background */}
@@ -120,48 +87,73 @@ const AllVIPResourcesPage = () => {
             {/* Products Grid Section */}
             <section className="bg-white py-16 md:py-20">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {vipProducts.map((product) => (
-                            <div
-                                key={product.id}
-                                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-gray-100"
-                            >
-                                {/* Product Image */}
-                                <div className="aspect-[4/3] bg-gray-100 flex items-center justify-center overflow-hidden">
-                                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                                        <span className="text-gray-400 text-sm">Image</span>
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                            <Loader2 className="w-12 h-12 text-[#1a73e8] animate-spin" />
+                            <p className="text-gray-500 font-medium italic">Loading premium resources...</p>
+                        </div>
+                    ) : products.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {products.map((product) => (
+                                <div
+                                    key={product.id}
+                                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col h-full group"
+                                >
+                                    {/* Product Image */}
+                                    <Link href={`/product/${product.slug}`} className="block relative aspect-[4/3] overflow-hidden bg-gray-100">
+                                        {product.featured_image ? (
+                                            <img
+                                                src={product.featured_image.url}
+                                                alt={product.featured_image.alt_text || product.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        ) : product.gallery_images && product.gallery_images.length > 0 ? (
+                                            <img
+                                                src={product.gallery_images[0].url}
+                                                alt={product.gallery_images[0].alt_text || product.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                                                <span className="text-gray-400 text-sm">No Image</span>
+                                            </div>
+                                        )}
+                                        {/* Price Badge Overlay */}
+                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
+                                            <span className="text-[#1a73e8] font-bold text-sm">
+                                                ${product.price}
+                                            </span>
+                                        </div>
+                                    </Link>
+
+                                    {/* Product Info */}
+                                    <div className="p-5 flex flex-col flex-grow">
+                                        <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#1a73e8] transition-colors">
+                                            {product.name}
+                                        </h3>
+
+                                        <div className="text-sm text-gray-500 mb-4 line-clamp-3 leading-relaxed"
+                                            dangerouslySetInnerHTML={{ __html: product.short_description || '' }}
+                                        />
+
+                                        <div className="mt-auto">
+                                            <Link
+                                                href={`/product/${product.slug}`}
+                                                className="inline-block w-full text-center text-white text-sm font-bold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-lg active:scale-95"
+                                                style={{ backgroundColor: '#1a73e8' }}
+                                            >
+                                                Learn more
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
-
-                                {/* Product Info */}
-                                <div className="p-4">
-                                    {product.subtitle && (
-                                        <p className="text-xs text-gray-500 mb-1">{product.subtitle}</p>
-                                    )}
-                                    <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">
-                                        {product.title}
-                                    </h3>
-                                    {product.author && (
-                                        <p className="text-xs text-gray-600 mb-1">By {product.author}</p>
-                                    )}
-                                    {product.description && (
-                                        <p className="text-xs text-gray-500 mb-3 line-clamp-2">
-                                            {product.description}
-                                        </p>
-                                    )}
-
-                                    {/* Read More Button */}
-                                    <Link
-                                        href={product.link}
-                                        className="inline-block text-white text-sm font-medium px-6 py-2 rounded transition-colors"
-                                        style={{ backgroundColor: '#1a73e8' }}
-                                    >
-                                        Read more
-                                    </Link>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-20">
+                            <p className="text-gray-500 text-lg italic">No premium resources found.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
