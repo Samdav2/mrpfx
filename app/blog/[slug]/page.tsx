@@ -58,9 +58,10 @@ export default function BlogPostPage() {
         setSubmittingComment(true);
         try {
             await commentsService.createComment(post.ID, {
-                author_name: commentName || 'Anonymous',
-                author_email: commentEmail || '',
-                content: commentContent,
+                comment_author: commentName || 'Anonymous',
+                comment_author_email: commentEmail || '',
+                comment_content: commentContent,
+                comment_post_ID: post.ID,
             });
             setCommentContent('');
             setCommentSuccess(true);

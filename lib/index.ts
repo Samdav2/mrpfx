@@ -15,7 +15,7 @@ export type { User, AuthResponse } from './auth';
 
 // WooCommerce Cart
 export { cartService } from './cart';
-export type { CartResponse } from './cart';
+export type { WCCart } from './cart';
 
 // WooCommerce Checkout
 export { checkoutService } from './checkout';

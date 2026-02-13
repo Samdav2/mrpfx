@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -21,7 +22,9 @@ import { productsService } from '@/lib/products';
 import CryptoPaymentModal from '@/components/checkout/CryptoPaymentModal';
 import type { WCCart, WCAddress, CryptoPaymentRead } from '@/lib/types';
 
-export default function CheckoutPage() {
+export const dynamic = 'force-dynamic';
+
+function CheckoutPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [cart, setCart] = useState<WCCart | null>(null);
@@ -471,5 +474,13 @@ export default function CheckoutPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function CheckoutPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#0a0e17] flex items-center justify-center"><Loader2 className="w-8 h-8 text-purple-400 animate-spin" /></div>}>
+            <CheckoutPageContent />
+        </Suspense>
     );
 }
