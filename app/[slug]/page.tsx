@@ -4,7 +4,7 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com';
 
 export default async function GenericPage({ params }: PageProps) {
     const { slug } = await params;

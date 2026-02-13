@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         pathname: '/wp-content/uploads/**',
       },
       {
+        protocol: 'https',
+        hostname: 'mrpfx-backend.onrender.com',
+        port: '',
+        pathname: '/wp-content/uploads/**',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
@@ -33,15 +39,15 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/v1/:path*',
-        destination: `${process.env.BACKEND_URL || 'http://127.0.0.1:8000'}/api/v1/:path*`,
+        destination: `${process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com'}/api/v1/:path*`,
       },
       {
         source: '/wp-content/:path*',
-        destination: `${process.env.BACKEND_URL || 'http://127.0.0.1:8000'}/wp-content/:path*`,
+        destination: `${process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com'}/wp-content/:path*`,
       },
       {
         source: '/media/:path*',
-        destination: `${process.env.BACKEND_URL || 'http://127.0.0.1:8000'}/media/:path*`,
+        destination: `${process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com'}/media/:path*`,
       },
     ];
   },

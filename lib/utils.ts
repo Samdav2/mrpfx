@@ -25,14 +25,15 @@ export function generateSlug(text: string): string {
 export function getMediaUrl(url: string | undefined | null): string | undefined {
     if (!url) return undefined;
 
-    // If it's already a full URL, ensure it uses 127.0.0.1 instead of localhost
-    // This makes it more resilient to different local development setups
+    // If it's already a full URL, ensure it uses the correct host
     if (url.startsWith('http')) {
-        return url.replace(/^http:\/\/localhost:8000/, 'http://127.0.0.1:8000');
+        // If we are in local development, we might want to keep it as is or map it
+        // but for production, we leave it as a full URL.
+        return url;
     }
 
     // If it's a relative path, prepend the backend host
-    const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+    const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://mrpfx-backend.onrender.com';
     const baseUrl = apiBase.replace(/\/api\/v1\/?$/, '');
 
     // Ensure we don't end up with double slashes but have the leading slash
