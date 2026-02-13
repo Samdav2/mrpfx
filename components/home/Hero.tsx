@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Hero = () => {
     return (
@@ -6,10 +7,14 @@ const Hero = () => {
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute inset-0 bg-black/50 z-10"></div>
-                <div
-                    className="w-full h-full bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: "url('https://mrpfx.com/wp-content/uploads/2021/07/mrpfx-home-bg-scaled.jpg')" }}
-                ></div>
+                <Image
+                    src="https://mrpfx.com/wp-content/uploads/2021/07/mrpfx-home-bg-scaled.jpg"
+                    alt="Forex Trading Background"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="100vw"
+                />
             </div>
 
             <div className="container mx-auto px-4 z-20 text-center">
