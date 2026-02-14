@@ -6,7 +6,8 @@ const ScrapedIndicatorsPage = () => {
   return (
     <div
       className="scraped-indicators-page"
-      dangerouslySetInnerHTML={{ __html: `<body class="archive tax-resource_category term-indicator term-26 wp-embed-responsive wp-theme-hello-elementor theme-hello-elementor wcz-woocommerce woocommerce-no-js ehf-header ehf-footer ehf-template-hello-elementor ehf-stylesheet-hello-elementor hello-elementor-default elementor-page-7232 elementor-default elementor-template-full-width elementor-kit-7">
+      dangerouslySetInnerHTML={{
+        __html: `<body class="archive tax-resource_category term-indicator term-26 wp-embed-responsive wp-theme-hello-elementor theme-hello-elementor wcz-woocommerce woocommerce-no-js ehf-header ehf-footer ehf-template-hello-elementor ehf-stylesheet-hello-elementor hello-elementor-default elementor-page-7232 elementor-default elementor-template-full-width elementor-kit-7">
 <!-- GTM Container placement set to automatic -->
 <!-- Google Tag Manager (noscript) -->
 
@@ -337,7 +338,7 @@ const ScrapedIndicatorsPage = () => {
 </div>
 <div class="elementor-element elementor-element-a953bb7 elementor-widget-mobile__width-auto elementor-widget elementor-widget-text-editor" data-element_type="widget" data-id="a953bb7" data-widget_type="text-editor.default">
 <div class="elementor-widget-container">
-<p><span style="color: #ffffff;"><a href="https://one.exnesstrack.net/a/0z72b5esoc" style="color: #ffffff;">CLICK TO USE RECOMMENDED BROKER</a></span></p> </div>
+<p><span style="color: #ffffff;"><a href="https://one.exnessonelink.com/a/0z72b5esoc" style="color: #ffffff;">CLICK TO USE RECOMMENDED BROKER</a></span></p> </div>
 </div>
 </div>
 </div>

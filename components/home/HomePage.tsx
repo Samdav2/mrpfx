@@ -32,7 +32,7 @@ const HomePage = () => {
                                     Enroll For Mentorship
                                 </Button>
                                 <Button
-                                    href="https://one.exnesstrack.net/a/0z72b5esoc"
+                                    href="https://one.exnessonelink.com/a/0z72b5esoc"
                                     variant="outline"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -91,7 +91,7 @@ const HomePage = () => {
                                 Enroll For Mentorship
                             </Button>
                             <Button
-                                href="https://one.exnesstrack.net/a/0z72b5esoc"
+                                href="https://one.exnessonelink.com/a/0z72b5esoc"
                                 variant="outline"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -257,7 +257,7 @@ const HomePage = () => {
 
                         {/* Full width broker link */}
                         <a
-                            href="https://one.exnesstrack.net/a/0z72b5esoc"
+                            href="https://one.exnessonelink.com/a/0z72b5esoc"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group md:col-span-1"

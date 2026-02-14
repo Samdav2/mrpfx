@@ -45,7 +45,7 @@ const ScrapedHome = () => {
 <div class="elementor-element elementor-element-c2b17a8 elementor-widget__width-initial elementor-widget elementor-widget-button" data-element_type="widget" data-id="c2b17a8" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://one.exnesstrack.net/a/0z72b5esoc">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="https://one.exnessonelink.com/a/0z72b5esoc">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">Recommended Broker</span>
 </span>
@@ -101,7 +101,7 @@ const ScrapedHome = () => {
 <div class="elementor-element elementor-element-7e7e1b4 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-button" data-element_type="widget" data-id="7e7e1b4" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://one.exnesstrack.net/a/0z72b5esoc">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="https://one.exnessonelink.com/a/0z72b5esoc">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">Recommended Broker</span>
 </span>
@@ -295,7 +295,7 @@ Signals Group</h3> </div>
 </div>
 </div>
 <div class="elementor-element elementor-element-9776144 e-con-full e-flex e-con e-child" data-element_type="container" data-id="9776144">
-<a class="elementor-element elementor-element-0570201 e-con-full e-flex e-con e-child" data-element_type="container" data-id="0570201" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://one.exnesstrack.net/a/0z72b5esoc">
+<a class="elementor-element elementor-element-0570201 e-con-full e-flex e-con e-child" data-element_type="container" data-id="0570201" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://one.exnessonelink.com/a/0z72b5esoc">
 <div class="elementor-element elementor-element-0a4422e elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="0a4422e" data-widget_type="heading.default">
 <div class="elementor-widget-container">
 <h3 class="elementor-heading-title elementor-size-default">USE RECOMMENDED BROKER</h3> </div>
