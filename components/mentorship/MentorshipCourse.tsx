@@ -54,7 +54,7 @@ const MentorshipCourse = () => {
                 </Link>
                 <a
                   href="#other-courses"
-                  className="border-2 border-[#1e1b4b] text-black font-bold text-sm py-4 px-6 rounded-xl hover:bg-[#1e1b4b] hover:text-white transition-all duration-200"
+                  className="border-2 border-[#1e1b4b] text-black font-bold text-sm py-4 px-6 rounded-xl  hover:text-white transition-all duration-200"
                 >
                   Check Out More Mentorship Packages
                 </a>
@@ -173,12 +173,20 @@ const MentorshipCourse = () => {
                 </li>
               </ul>
 
-              <Link
-                href="/checkout?product=vip-signals"
-                className="inline-block bg-white text-black font-extrabold py-4 px-10 rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg text-lg"
-              >
-                Get Access
-              </Link>
+              <div className="flex flex-wrap gap-4 items-center">
+                <Link
+                  href="/checkout?product=vip-signals"
+                  className="inline-block bg-white text-black font-extrabold py-4 px-10 rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg text-lg"
+                >
+                  Join VIP Signals Group
+                </Link>
+                <Link
+                  href="/vip-signals-group"
+                  className="inline-block border-2 border-white text-white font-bold py-4 px-6 rounded-xl hover:bg-white hover:text-black transition-all duration-200"
+                >
+                  Learn More
+                </Link>
+              </div>
             </div>
 
             {/* Image */}

@@ -126,7 +126,7 @@ const Footer = () => {
 
                             {/* Broker Link */}
                             <a
-                                href="https://one.exnessonelink.com/a/0z72b5esoc"
+                                href="https://one.exnesstrack.net/a/0z72b5esoc"
                                 className="text-white hover:text-gray-300 uppercase text-sm font-semibold tracking-wide transition-colors"
                                 target="_blank"
                                 rel="noopener noreferrer"
