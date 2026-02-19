@@ -1,6 +1,6 @@
-import ScrapedHomePage from "@/components/home/ScrapedHomePage";
-import "./home-scoped.scss";
+import HomePage from "@/components/home/HomePage";
+
 
 export default function Home() {
-  return <ScrapedHomePage />;
+  return <HomePage />;
 }

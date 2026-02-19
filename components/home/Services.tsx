@@ -1,64 +1,58 @@
-import Link from 'next/link';
-import { BookOpen, Signal, Bot, Gift } from 'lucide-react';
+import ServiceCard from './ServiceCard';
 
-const services = [
-    {
-        title: 'Mentorship Courses',
-        description: 'Comprehensive training from basics to advanced strategies.',
-        icon: BookOpen,
-        link: '#',
-    },
-    {
-        title: 'VIP Signals Group',
-        description: 'Real-time trade alerts with high accuracy.',
-        icon: Signal,
-        link: '#',
-    },
-    {
-        title: 'VIP BOTS/INDICATORS',
-        description: 'Automate your trading with our custom tools.',
-        icon: Bot,
-        link: '#',
-    },
-    {
-        title: 'ALL FREE RESOURCES',
-        description: 'Access free guides, webinars, and more.',
-        icon: Gift,
-        link: '#',
-    },
-];
+interface ServicesProps {
+    onMentorshipClick: () => void;
+    onVipClick: () => void;
+    onFreeClick: () => void;
+}
 
-const Services = () => {
+export default function Services({ onMentorshipClick, onVipClick, onFreeClick }: ServicesProps) {
+    const services = [
+        {
+            title: "VIP Mentorship Courses",
+            imageSrc: "/images/home/service-mentorship.png",
+            onClick: onMentorshipClick,
+        },
+        {
+            title: "VIP Signals Group",
+            imageSrc: "/images/home/service-signals.png",
+            href: "/vip-signals-group",
+        },
+        {
+            title: "VIP bots, Indicators & All VIP Resources",
+            imageSrc: "/images/home/service-resources.jpg",
+            onClick: onVipClick,
+        },
+        {
+            title: "Free Robots, Indicators & Videos",
+            imageSrc: "/images/home/service-free.jpg",
+            onClick: onFreeClick,
+        },
+    ];
+
     return (
-        <section className="py-20 bg-black">
-            <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Services</h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                        We provide everything you need to succeed in the forex market.
-                    </p>
+        <section className="bg-white py-16 lg:py-24">
+            <div className="container mx-auto px-4 lg:px-8">
+                <div className="text-center mb-12 lg:mb-16">
+                    <h2 className="text-gray-500 font-medium tracking-wide uppercase text-sm mb-3">Our Services</h2>
+                    <h3 className="text-3xl lg:text-4xl font-bold text-black mb-6">What we have to offer</h3>
+                    <div className="w-24 h-1 bg-blue-100 mx-auto relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-indigo-500 rotate-45 border-2 border-white"></div>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
                     {services.map((service, index) => (
-                        <div key={index} className="bg-gray-900 p-8 rounded-lg border border-gray-800 hover:border-yellow-500 transition-colors group">
-                            <div className="mb-6 text-yellow-500 group-hover:scale-110 transition-transform">
-                                <service.icon size={48} />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-4">{service.title}</h3>
-                            <p className="text-gray-400 mb-6">{service.description}</p>
-                            <Link
-                                href={service.link}
-                                className="text-yellow-500 font-medium hover:underline inline-flex items-center"
-                            >
-                                Learn More &rarr;
-                            </Link>
-                        </div>
+                        <ServiceCard
+                            key={index}
+                            title={service.title}
+                            imageSrc={service.imageSrc}
+                            href={service.href}
+                            onClick={service.onClick}
+                        />
                     ))}
                 </div>
             </div>
         </section>
     );
-};
-
-export default Services;
+}

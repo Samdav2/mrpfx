@@ -1,8 +1,32 @@
 'use client';
 
+import { useState } from 'react';
 import NewsletterSection from '../shared/NewsletterSection';
+import OfferPopup from '../shared/OfferPopup';
 
 const ScrapedHomePage = () => {
+  const [showMentorshipPopup, setShowMentorshipPopup] = useState(false);
+  const [showVipPopup, setShowVipPopup] = useState(false);
+  const [showFreePopup, setShowFreePopup] = useState(false);
+
+  const mentorshipItems = [
+    { label: "Standard Mentorship", href: "/mentorship-course", color: "purple" as const },
+    { label: "One - On - One Class With Mr P", href: "https://wa.me/2349076804442", color: "purple" as const, isExternal: true },
+    { label: "MC100", href: "/mentorship-course", color: "blue" as const }
+  ];
+
+  const vipItems = [
+    { label: "VIP Bots", href: "/vip-signals-group", color: "blue" as const },
+    { label: "VIP Indicator", href: "/vip-signals-group", color: "purple" as const },
+    { label: "All VIP Resources", href: "/product/vip-membership-group", color: "purple" as const }
+  ];
+
+  const freeItems = [
+    { label: "Free Bots", href: "/free-signals-group", color: "blue" as const },
+    { label: "Free Indicators", href: "/free-signals-group", color: "purple" as const },
+    { label: "Free Mentorship videos", href: "/videos", color: "purple" as const },
+    { label: "All Free Resources", href: "/free-signals-group", color: "purple" as const }
+  ];
   return (
     <>
       <div
@@ -29,7 +53,7 @@ const ScrapedHomePage = () => {
 <div class="elementor-element elementor-element-bbba58f elementor-widget__width-initial elementor-widget elementor-widget-button" data-element_type="widget" data-id="bbba58f" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/mentorship-course/">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="/mentorship-course/">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text" style={{ color: '#ffffff' }}>Enroll For Mentorship</span>
 </span>
@@ -85,7 +109,7 @@ const ScrapedHomePage = () => {
 <div class="elementor-element elementor-element-e4a200e elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-button" data-element_type="widget" data-id="e4a200e" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/mentorship-course/">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="/mentorship-course">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">Get Mentorship</span>
 </span>
@@ -139,7 +163,7 @@ const ScrapedHomePage = () => {
 </div>
 </div>
 </a>
-<a class="elementor-element elementor-element-ea6fa75 e-con-full e-flex e-con e-child" data-element_type="container" data-id="ea6fa75" href="https://mrpfx.com/vip-signals-group/">
+<a class="elementor-element elementor-element-ea6fa75 e-con-full e-flex e-con e-child" data-element_type="container" data-id="ea6fa75" href="/vip-signals-group/">
 <div class="elementor-element elementor-element-560d2ac elementor-widget elementor-widget-image" data-element_type="widget" data-id="560d2ac" data-widget_type="image.default">
 <div class="elementor-widget-container">
 <img alt="" class="attachment-large size-large wp-image-43967" decoding="async" height="382" loading="lazy" sizes="(max-width: 330px) 100vw, 330px" src="/assets/home/Group-237655.png" srcset="/assets/home/Group-237655.png 330w, /assets/home/Group-237655-259x300.png 259w" width="330"/> </div>
@@ -180,134 +204,148 @@ const ScrapedHomePage = () => {
 </div>
 </div>
 </div>
-</div>
-<div class="elementor-element elementor-element-4f60027 e-flex e-con-boxed e-con e-parent" data-element_type="container" data-id="4f60027" data-settings='{"background_background":"classic"}'>
-<div class="e-con-inner">
-<div class="elementor-element elementor-element-c2ae70c elementor-widget-mobile__width-initial elementor-absolute elementor-widget elementor-widget-image" data-element_type="widget" data-id="c2ae70c" data-settings='{"_position":"absolute"}' data-widget_type="image.default">
-<div class="elementor-widget-container">
-<img alt="" class="attachment-large size-large wp-image-43338" decoding="async" height="182" loading="lazy" sizes="(max-width: 322px) 100vw, 322px" src="/assets/home/image-62-4.png" srcset="/assets/home/image-62-4.png 322w, /assets/home/image-62-4-300x170.png 300w" width="322"/> </div>
-</div>
-<div class="elementor-element elementor-element-3e400e2 e-con-full e-flex e-con e-child" data-element_type="container" data-id="3e400e2">
-<div class="elementor-element elementor-element-e89986e elementor-widget elementor-widget-heading" data-element_type="widget" data-id="e89986e" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h2 class="elementor-heading-title elementor-size-default">Trading Tools</h2> </div>
-</div>
-<div class="elementor-element elementor-element-4d7db00 elementor-widget__width-initial elementor-widget-mobile__width-inherit elementor-widget elementor-widget-heading" data-element_type="widget" data-id="4d7db00" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h2 class="elementor-heading-title elementor-size-default">With lots of unique tools, you can easily build
-your desired tradeflow</h2> </div>
-</div>
-<div class="elementor-element elementor-element-ede1069 e-con-full e-flex e-con e-child" data-element_type="container" data-id="ede1069">
-<a class="elementor-element elementor-element-7b1b77b e-con-full animated-slow e-flex e-con e-child" data-element_type="container" data-id="7b1b77b" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjQzOTQ1IiwidG9nZ2xlIjpmYWxzZX0%3D">
-<div class="elementor-element elementor-element-b27ef64 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="b27ef64" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">VIP Bots,
-Indicators,
-Resources</h3> </div>
-</div>
-<div class="elementor-element elementor-element-bb8bbee elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="bb8bbee" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-<a class="elementor-element elementor-element-0defb20 e-con-full e-flex e-con e-child" data-element_type="container" data-id="0defb20" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="https://mrpfx.com/mentorship-course/">
-<div class="elementor-element elementor-element-151b334 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="151b334" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">Join VIP Mentorship</h3> </div>
-</div>
-<div class="elementor-element elementor-element-f16fb57 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="f16fb57" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-<a class="elementor-element elementor-element-f8633dc e-con-full e-flex e-con e-child" data-element_type="container" data-id="f8633dc" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://mrpfx.com/vip-signals-group/">
-<div class="elementor-element elementor-element-b86d4aa elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="b86d4aa" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">VIP Signals Group </h3> </div>
-</div>
-<div class="elementor-element elementor-element-6cb47fa elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="6cb47fa" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="elementor-element elementor-element-22956cc e-con-full e-flex e-con e-child" data-element_type="container" data-id="22956cc">
-<a class="elementor-element elementor-element-3e9b894 e-con-full animated-slow e-flex e-con e-child" data-element_type="container" data-id="3e9b894" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjQzOTUxIiwidG9nZ2xlIjpmYWxzZX0%3D">
-<div class="elementor-element elementor-element-0465e23 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="0465e23" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">Free Robots, Indicators &amp; Videos</h3> </div>
-</div>
-<div class="elementor-element elementor-element-2fc0a02 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="2fc0a02" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-<a class="elementor-element elementor-element-7a292ca e-con-full e-flex e-con e-child" data-element_type="container" data-id="7a292ca" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="https://mrpfx.com/free-signals-group/">
-<div class="elementor-element elementor-element-6f91767 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="6f91767" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">Join Free
-Signals Group</h3> </div>
-</div>
-<div class="elementor-element elementor-element-8099997 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="8099997" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-<a class="elementor-element elementor-element-c5d711a e-con-full e-flex e-con e-child" data-element_type="container" data-id="c5d711a" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://mrpfx.com/rent-vps-hosting/">
-<div class="elementor-element elementor-element-c881b0c elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="c881b0c" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">Rent VPS Hosting</h3> </div>
-</div>
-<div class="elementor-element elementor-element-eaec800 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="eaec800" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="elementor-element elementor-element-9776144 e-con-full e-flex e-con e-child" data-element_type="container" data-id="9776144">
-<a class="elementor-element elementor-element-0570201 e-con-full e-flex e-con e-child" data-element_type="container" data-id="0570201" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://one.exnessonelink.com/a/0z72b5esoc">
-<div class="elementor-element elementor-element-0a4422e elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="0a4422e" data-widget_type="heading.default">
-<div class="elementor-widget-container">
-<h3 class="elementor-heading-title elementor-size-default">USE RECOMMENDED BROKER</h3> </div>
-</div>
-<div class="elementor-element elementor-element-20a9c05 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="20a9c05" data-widget_type="icon.default">
-<div class="elementor-widget-container">
-<div class="elementor-icon-wrapper">
-<div class="elementor-icon">
-<i aria-hidden="true" class="fas fa-arrow-circle-right"></i> </div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-</div>
-<section class="elementor-element elementor-element-0f5e79b elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent" data-element_type="container" data-id="0f5e79b" data-settings='{"background_background":"classic"}'>
+</div>` }}
+      />
+
+      <div className="elementor elementor-42554">
+        <div className="elementor-element elementor-element-7b16aa1 e-flex e-con-boxed e-con e-parent" data-element_type="container" data-id="7b16aa1">
+          <div className="e-con-inner">
+            <div className="elementor-element elementor-element-96dff85 e-flex e-con-boxed e-con e-child" data-element_type="container" data-id="96dff85">
+              <div className="e-con-inner">
+                <div className="elementor-element elementor-element-4f60027 e-flex e-con-boxed e-con e-parent" data-element_type="container" data-id="4f60027" data-settings='{"background_background":"classic"}'>
+                  <div className="e-con-inner">
+                    <div className="elementor-element elementor-element-c2ae70c elementor-widget-mobile__width-initial elementor-absolute elementor-widget elementor-widget-image" data-element_type="widget" data-id="c2ae70c" data-settings='{"_position":"absolute"}' data-widget_type="image.default">
+                      <div className="elementor-widget-container">
+                        <img alt="" className="attachment-large size-large wp-image-43338" decoding="async" height="182" loading="lazy" sizes="(max-width: 322px) 100vw, 322px" src="/assets/home/image-62-4.png" srcSet="/assets/home/image-62-4.png 322w, /assets/home/image-62-4-300x170.png 300w" width="322" /> </div>
+                    </div>
+                    <div className="elementor-element elementor-element-3e400e2 e-con-full e-flex e-con e-child" data-element_type="container" data-id="3e400e2" data-settings='{"content_width":"full","container_type":"flex"}'>
+                      <div className="elementor-element elementor-element-e89986e elementor-widget elementor-widget-heading" data-element_type="widget" data-id="e89986e" data-widget_type="heading.default">
+                        <div className="elementor-widget-container">
+                          <h2 className="elementor-heading-title elementor-size-default">Trading Tools</h2> </div>
+                      </div>
+                      <div className="elementor-element elementor-element-4d7db00 elementor-widget__width-initial elementor-widget-mobile__width-inherit elementor-widget elementor-widget-heading" data-element_type="widget" data-id="4d7db00" data-widget_type="heading.default">
+                        <div className="elementor-widget-container">
+                          <h2 className="elementor-heading-title elementor-size-default">With lots of unique tools, you can easily build
+                            your desired tradeflow</h2> </div>
+                      </div>
+                      <div className="elementor-element elementor-element-ede1069 e-con-full e-flex e-con e-child" data-element_type="container" data-id="ede1069" data-settings='{"content_width":"full","container_type":"flex"}' style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+                        <a onClick={(e) => { e.preventDefault(); setShowVipPopup(true); }} className="elementor-element elementor-element-7b1b77b e-con-full animated-slow e-flex e-con e-child cursor-pointer" data-element_type="container" data-id="7b1b77b" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="#">
+                          <div className="elementor-element elementor-element-b27ef64 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="b27ef64" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">VIP Bots,
+                                Indicators,
+                                Resources</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-bb8bbee elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="bb8bbee" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                        <a onClick={(e) => { e.preventDefault(); setShowMentorshipPopup(true); }} className="elementor-element elementor-element-0defb20 e-con-full e-flex e-con e-child cursor-pointer" data-element_type="container" data-id="0defb20" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="#">
+                          <div className="elementor-element elementor-element-151b334 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="151b334" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">Join VIP Mentorship</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-f16fb57 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="f16fb57" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                        <a onClick={(e) => { e.preventDefault(); setShowVipPopup(true); }} className="elementor-element elementor-element-f8633dc e-con-full e-flex e-con e-child cursor-pointer" data-element_type="container" data-id="f8633dc" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="#">
+                          <div className="elementor-element elementor-element-b86d4aa elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="b86d4aa" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">VIP Signals Group </h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-6cb47fa elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="6cb47fa" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                      <div className="elementor-element elementor-element-22956cc e-con-full e-flex e-con e-child" data-element_type="container" data-id="22956cc" data-settings='{"content_width":"full","container_type":"flex"}' style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+                        <a onClick={(e) => { e.preventDefault(); setShowFreePopup(true); }} className="elementor-element elementor-element-3e9b894 e-con-full animated-slow e-flex e-con e-child cursor-pointer" data-element_type="container" data-id="3e9b894" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="#">
+                          <div className="elementor-element elementor-element-0465e23 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="0465e23" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">Free Robots, Indicators &amp; Videos</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-5900222 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="5900222" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                        <a className="elementor-element elementor-element-7a292ca e-con-full e-flex e-con e-child" data-element_type="container" data-id="7a292ca" data-settings='{"background_background":"classic","animation":"slideInLeft"}' href="/free-signals-group">
+                          <div className="elementor-element elementor-element-6f91767 elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="6f91767" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">Join Free
+                                Signals Group</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-8099997 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="8099997" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                        <a className="elementor-element elementor-element-c5d711a e-con-full e-flex e-con e-child" data-element_type="container" data-id="c5d711a" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="/rent-vps-hosting">
+                          <div className="elementor-element elementor-element-c881b0c elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="c881b0c" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">Rent VPS Hosting</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-eaec800 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="eaec800" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                      <div className="elementor-element elementor-element-9776144 e-con-full e-flex e-con e-child" data-element_type="container" data-id="9776144">
+                        <a className="elementor-element elementor-element-0570201 e-con-full e-flex e-con e-child" data-element_type="container" data-id="0570201" data-settings='{"background_background":"classic","animation":"slideInRight"}' href="https://one.exnessonelink.com/a/0z72b5esoc">
+                          <div className="elementor-element elementor-element-0a4422e elementor-widget__width-initial elementor-widget-mobile__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="0a4422e" data-widget_type="heading.default">
+                            <div className="elementor-widget-container">
+                              <h3 className="elementor-heading-title elementor-size-default">USE RECOMMENDED BROKER</h3> </div>
+                          </div>
+                          <div className="elementor-element elementor-element-20a9c05 elementor-widget__width-initial elementor-view-default elementor-widget elementor-widget-icon" data-element_type="widget" data-id="20a9c05" data-widget_type="icon.default">
+                            <div className="elementor-widget-container">
+                              <div className="elementor-icon-wrapper">
+                                <div className="elementor-icon">
+                                  <i aria-hidden="true" className="fas fa-arrow-circle-right"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="elementor elementor-42554" dangerouslySetInnerHTML={{
+        __html: `<section class="elementor-element elementor-element-0f5e79b elementor-hidden-tablet elementor-hidden-mobile e-flex e-con-boxed e-con e-parent" data-element_type="container" data-id="0f5e79b" data-settings='{"background_background":"classic"}'>
 <div class="e-con-inner">
 <div class="elementor-element elementor-element-3d4db66 e-con-full e-flex e-con e-child" data-element_type="container" data-id="3d4db66" data-settings='{"background_background":"classic"}'>
 <div class="elementor-element elementor-element-d69611c elementor-widget__width-initial elementor-widget elementor-widget-heading" data-element_type="widget" data-id="d69611c" data-settings='{"_animation":"fadeIn"}' data-widget_type="heading.default">
@@ -323,7 +361,7 @@ Signals Group</h3> </div>
 <div class="elementor-element elementor-element-a01b06f elementor-widget__width-initial elementor-widget elementor-widget-button" data-element_type="widget" data-id="a01b06f" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/mentorship-course/">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="/mentorship-course/">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">View Course</span>
 </span>
@@ -432,7 +470,7 @@ Signals Group</h3> </div>
 <div class="elementor-element elementor-element-f35af11 elementor-widget__width-initial elementor-mobile-align-center elementor-widget-mobile__width-inherit elementor-widget elementor-widget-button" data-element_type="widget" data-id="f35af11" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/mentorship-course/">
+<a class="elementor-button elementor-button-link elementor-size-sm" href=/mentorship-course/">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">View Course</span>
 </span>
@@ -541,7 +579,7 @@ Signals Group</h3> </div>
 <cite class="elementor-testimonial__cite"><span class="elementor-testimonial__name">Jane T</span></cite> <div aria-label="Read More" class="elementor-testimonial__icon elementor-icon elementor-icon-"></div> </div>
 <div class="elementor-testimonial__content">
 <div class="elementor-testimonial__text">
-						With Mr P fx academy,  its not  about the  capital, its about the strategy, thank you  Mr P.					</div>
+						With Mr P fx academy, its not about the capital, its about the strategy, thank you Mr P.					</div>
 </div>
 </div>
 </div>
@@ -674,7 +712,7 @@ Hope to be in your next VIP group					</div>
 <div class="elementor-element elementor-element-494925a elementor-widget__width-initial elementor-mobile-align-center elementor-widget-mobile__width-auto elementor-widget elementor-widget-button" data-element_type="widget" data-id="494925a" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-sm" href="https://mrpfx.com/product/vip-membership-group/">
+<a class="elementor-button elementor-button-link elementor-size-sm" href="/product/vip-membership-group">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-text">Join VIP</span>
 </span>
@@ -739,11 +777,10 @@ Get yourself equipped into the world of Trading								</div>
 </div>
 </div>
 </div>
-</div>
 <div class="elementor-element elementor-element-d694bcb elementor-widget-mobile__width-inherit elementor-align-center elementor-widget elementor-widget-button" data-element_type="widget" data-id="d694bcb" data-widget_type="button.default">
 <div class="elementor-widget-container">
 <div class="elementor-button-wrapper">
-<a class="elementor-button elementor-button-link elementor-size-md elementor-animation-float" href="https://mrpfx.com/videos/">
+<a class="elementor-button elementor-button-link elementor-size-md elementor-animation-float" href="/videos">
 <span class="elementor-button-content-wrapper">
 <span class="elementor-button-icon">
 </span>
@@ -773,10 +810,20 @@ Get yourself equipped into the world of Trading								</div>
       <div className="scraped-homepage" style={{ backgroundColor: '#ffffff' }}>
         <NewsletterSection />
       </div>
-      <div className="scraped-homepage" dangerouslySetInnerHTML={{
-        __html: `
-<div class="elementor elementor-42554" data-elementor-id="42554" data-elementor-post-type="page" data-elementor-type="wp-page">
-</div>` }}
+      <OfferPopup
+        isOpen={showMentorshipPopup}
+        onClose={() => setShowMentorshipPopup(false)}
+        items={mentorshipItems}
+      />
+      <OfferPopup
+        isOpen={showVipPopup}
+        onClose={() => setShowVipPopup(false)}
+        items={vipItems}
+      />
+      <OfferPopup
+        isOpen={showFreePopup}
+        onClose={() => setShowFreePopup(false)}
+        items={freeItems}
       />
     </>
   );
