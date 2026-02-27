@@ -374,17 +374,12 @@ export default function AccessSection() {
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                     {accessItems.map((item, index) => {
-                        // The default grid has 4 columns.
-                        // For the last 2 items (indices 12 and 13), make them span 2 columns on lg screens.
-                        const isLastTwo = index === accessItems.length - 1 || index === accessItems.length - 2;
-
                         return (
                             <div
                                 key={index}
-                                className={`bg-white rounded-[16px] sm:rounded-[20px] p-4 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col h-full hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300 ${isLastTwo ? 'lg:col-span-2' : ''
-                                    }`}
+                                className="bg-white rounded-[16px] sm:rounded-[20px] p-4 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col h-full hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300"
                             >
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
                                     <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${item.iconBg}`}>
