@@ -244,42 +244,19 @@ const CustomIcons = {
             {/* Door */}
             <rect x="20" y="30" width="8" height="7" rx="1" fill="#DBEAFE" />
         </svg>
+    ),
+
+    // 15. Mentorship Course — Video play button inside a screen
+    MentorshipCourse: () => (
+        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+            <circle cx="24" cy="24" r="23" fill="#2563EB" />
+            <rect x="12" y="14" width="24" height="20" rx="3" fill="white" />
+            <polygon points="20,19 20,29 29,24" fill="#2563EB" />
+        </svg>
     )
 };
 
 const accessItems = [
-    {
-        title: "Copy Trading",
-        description: "Automate profitable trades from top traders.",
-        icon: <CustomIcons.CopyTrading />,
-        iconBg: "bg-transparent",
-        href: "/",
-        buttonStyle: "dark"
-    },
-    {
-        title: "Pass Funded Accounts",
-        description: "System helps you pass prop firm challenges.",
-        icon: <CustomIcons.PassFunded />,
-        iconBg: "bg-transparent",
-        href: "/",
-        buttonStyle: "dark"
-    },
-    {
-        title: "Dr. Trade AI Trading",
-        description: "Level up with AI-boosted trading management.",
-        icon: <CustomIcons.AITrading />,
-        iconBg: "bg-transparent",
-        href: "/all-vip-resources",
-        buttonStyle: "light"
-    },
-    {
-        title: "Account Management",
-        description: "Manage multiple trading accounts in one place.",
-        icon: <CustomIcons.AccountMgmt />,
-        iconBg: "bg-transparent",
-        href: "/support",
-        buttonStyle: "dark"
-    },
     {
         title: "VIP Signals",
         description: "Get elite trade setups & VIP signals.",
@@ -297,17 +274,33 @@ const accessItems = [
         buttonStyle: "light"
     },
     {
-        title: "Risk Calculator",
-        description: "Calculate exact lot size plus risk management.",
-        icon: <CustomIcons.RiskCalc />,
+        title: "Mentorship Course",
+        description: "Learn to trade like a professional.",
+        icon: <CustomIcons.MentorshipCourse />,
         iconBg: "bg-transparent",
-        href: "/",
-        buttonStyle: "light"
+        href: "/mentorship-course",
+        buttonStyle: "dark"
     },
     {
-        title: "Trade Journal",
-        description: "Track and analyze your trades.",
-        icon: <CustomIcons.TradeJournal />,
+        title: "Account Management",
+        description: "Manage multiple trading accounts in one place.",
+        icon: <CustomIcons.AccountMgmt />,
+        iconBg: "bg-transparent",
+        href: "/support",
+        buttonStyle: "dark"
+    },
+    {
+        title: "Copy Trading",
+        description: "Automate profitable trades from top traders.",
+        icon: <CustomIcons.CopyTrading />,
+        iconBg: "bg-transparent",
+        href: "/",
+        buttonStyle: "dark"
+    },
+    {
+        title: "Pass Funded Accounts",
+        description: "System helps you pass prop firm challenges.",
+        icon: <CustomIcons.PassFunded />,
         iconBg: "bg-transparent",
         href: "/",
         buttonStyle: "dark"
@@ -329,19 +322,11 @@ const accessItems = [
         buttonStyle: "light"
     },
     {
-        title: "Paid Indicators",
+        title: "VIP Indicators",
         description: "Premium custom indicators + locators.",
         icon: <CustomIcons.PaidIndicators />,
         iconBg: "bg-transparent",
         href: "/all-vip-resources",
-        buttonStyle: "light"
-    },
-    {
-        title: "Free Indicators",
-        description: "Get access to top-rated free indicators.",
-        icon: <CustomIcons.FreeIndicators />,
-        iconBg: "bg-transparent",
-        href: "/free-signals-group",
         buttonStyle: "light"
     },
     {
@@ -352,6 +337,30 @@ const accessItems = [
         href: "/shop",
         buttonStyle: "light",
         buttonText: "Get Started"
+    },
+    {
+        title: "Trade Journal",
+        description: "Track and analyze your trades.",
+        icon: <CustomIcons.TradeJournal />,
+        iconBg: "bg-transparent",
+        href: "/",
+        buttonStyle: "dark"
+    },
+    {
+        title: "Risk Calculator",
+        description: "Calculate exact lot size plus risk management.",
+        icon: <CustomIcons.RiskCalc />,
+        iconBg: "bg-transparent",
+        href: "/",
+        buttonStyle: "light"
+    },
+    {
+        title: "Dr. Trade AI Trading",
+        description: "Level up with AI-boosted trading management.",
+        icon: <CustomIcons.AITrading />,
+        iconBg: "bg-transparent",
+        href: "/all-vip-resources",
+        buttonStyle: "light"
     },
     {
         title: "Recommended Broker",
