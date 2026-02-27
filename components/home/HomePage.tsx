@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Hero from './Hero';
+import AccessSection from './AccessSection';
 import Services from './Services';
 import TradingTools from './TradingTools';
 import MentorshipPreview from './MentorshipPreview';
@@ -38,6 +39,7 @@ export default function HomePage() {
     return (
         <main className="min-h-screen bg-white">
             <Hero />
+            <AccessSection />
             <Services
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
                 onVipClick={() => setShowVipPopup(true)}
