@@ -22,7 +22,7 @@ const accessItems = [
         description: "Automate profitable trades from top traders.",
         icon: <RefreshCcw className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-blue-100",
-        href: "/copy-trading",
+        href: "/",
         buttonStyle: "dark"
     },
     {
@@ -30,7 +30,7 @@ const accessItems = [
         description: "System helps you pass prop firm challenges.",
         icon: <GraduationCap className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-blue-100",
-        href: "/pass-funded-accounts",
+        href: "/",
         buttonStyle: "dark"
     },
     {
@@ -38,7 +38,7 @@ const accessItems = [
         description: "Level up with AI-boosted trading management.",
         icon: <Bot className="w-6 h-6 text-blue-500" />,
         iconBg: "bg-blue-50",
-        href: "/dr-trade-ai",
+        href: "/all-vip-resources",
         buttonStyle: "light"
     },
     {
@@ -46,7 +46,7 @@ const accessItems = [
         description: "Manage multiple trading accounts in one place.",
         icon: <Laptop className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-blue-100",
-        href: "/account-management",
+        href: "/support",
         buttonStyle: "dark"
     },
     {
@@ -70,7 +70,7 @@ const accessItems = [
         description: "Calculate exact lot size plus risk management.",
         icon: <Calculator className="w-6 h-6 text-gray-600" />,
         iconBg: "bg-gray-100",
-        href: "/risk-calculator",
+        href: "/",
         buttonStyle: "light"
     },
     {
@@ -78,7 +78,7 @@ const accessItems = [
         description: "Track and analyze your trades.",
         icon: <FileText className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-blue-100",
-        href: "/trade-journal",
+        href: "/",
         buttonStyle: "dark"
     },
     {
@@ -94,7 +94,7 @@ const accessItems = [
         description: "Use free bots for automate trading.",
         icon: <Bot className="w-6 h-6 text-blue-800" />,
         iconBg: "bg-blue-100",
-        href: "/all-vip-resources",
+        href: "/free-signals-group",
         buttonStyle: "light"
     },
     {
@@ -110,7 +110,7 @@ const accessItems = [
         description: "Get access to top-rated free indicators.",
         icon: <BarChart2 className="w-6 h-6 text-blue-400" />,
         iconBg: "bg-blue-50",
-        href: "/all-vip-resources",
+        href: "/free-signals-group",
         buttonStyle: "light"
     },
     {
@@ -118,7 +118,7 @@ const accessItems = [
         description: "Improve your knowledge with our curated guides.",
         icon: <BookOpen className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-gray-100",
-        href: "/books",
+        href: "/shop",
         buttonStyle: "light",
         buttonText: "Get Started"
     },
@@ -127,7 +127,7 @@ const accessItems = [
         description: "Trade with top-rated brokers and exclusive offers.",
         icon: <Landmark className="w-6 h-6 text-[#1e3a8a]" />,
         iconBg: "bg-blue-50",
-        href: "/recommended-broker",
+        href: "https://one.exnesstrack.net/a/0z72b5esoc",
         buttonStyle: "light",
         buttonText: "Get Started"
     }
