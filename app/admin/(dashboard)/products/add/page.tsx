@@ -3,14 +3,37 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Package, Image, Trash2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Save, Package, Image, Trash2, ExternalLink, Plus, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { productsService } from '@/lib/products';
 import { adminProductService, WPMediaItem, adminTermService } from '@/lib/admin-api';
+import type { WCProductVariationCreate } from '@/lib/types';
 import { generateSlug, getMediaUrl } from '@/lib/utils';
 import { SuccessModal, ErrorModal } from '@/components/admin/Modals';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import TermSelector from '@/components/admin/TermSelector';
+
+interface VariationDraft {
+    _key: string;
+    attributeName: string;
+    attributeOption: string;
+    regular_price: string;
+    sale_price: string;
+    sku: string;
+    stock_quantity: string;
+    status: string;
+}
+
+const newVariationDraft = (): VariationDraft => ({
+    _key: Math.random().toString(36).slice(2),
+    attributeName: '',
+    attributeOption: '',
+    regular_price: '',
+    sale_price: '',
+    sku: '',
+    stock_quantity: '',
+    status: 'publish',
+});
 
 export default function AddProductPage() {
     const router = useRouter();
@@ -45,6 +68,11 @@ export default function AddProductPage() {
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
+    // Variation State
+    const [variations, setVariations] = useState<VariationDraft[]>([]);
+    const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
+    const [createdProductId, setCreatedProductId] = useState<number | null>(null);
+
     const handleChange = (field: string, value: any) => {
         setFormData(prev => {
             const updates: any = { [field]: value };
@@ -75,6 +103,21 @@ export default function AddProductPage() {
         setGalleryImages(galleryImages.filter(img => img.id !== id));
     };
 
+    // Variation handlers
+    const addVariation = () => {
+        const draft = newVariationDraft();
+        setVariations([...variations, draft]);
+        setExpandedVariation(draft._key);
+    };
+
+    const updateVariation = (key: string, field: keyof VariationDraft, value: string) => {
+        setVariations(prev => prev.map(v => v._key === key ? { ...v, [field]: value } : v));
+    };
+
+    const removeVariation = (key: string) => {
+        setVariations(prev => prev.filter(v => v._key !== key));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.name.trim()) return;
@@ -98,6 +141,8 @@ export default function AddProductPage() {
                 whop_payment_link: formData.whop_payment_link || undefined,
             });
 
+            setCreatedProductId(product.id);
+
             // Update Featured Image
             if (featuredImage) {
                 await adminProductService.updateFeaturedImage(product.id, featuredImage.id);
@@ -112,6 +157,22 @@ export default function AddProductPage() {
             const termIds = [...selectedCategories, ...selectedTags];
             if (termIds.length > 0) {
                 await adminTermService.assignTerms(product.id, termIds);
+            }
+
+            // Create variations
+            if (formData.type === 'variable' && variations.length > 0) {
+                for (const v of variations) {
+                    if (!v.attributeName || !v.attributeOption) continue;
+                    const variationData: WCProductVariationCreate = {
+                        regular_price: v.regular_price || undefined,
+                        sale_price: v.sale_price || undefined,
+                        sku: v.sku || undefined,
+                        stock_quantity: v.stock_quantity ? parseInt(v.stock_quantity) : undefined,
+                        status: v.status || 'publish',
+                        attributes: [{ name: v.attributeName.toLowerCase(), option: v.attributeOption.toLowerCase().replace(/\s+/g, '-') }],
+                    };
+                    await adminProductService.createVariation(product.id, variationData);
+                }
             }
 
             setSuccessModal(true);
@@ -184,7 +245,7 @@ export default function AddProductPage() {
                                     value={formData.slug}
                                     onChange={(e) => handleChange('slug', e.target.value)}
                                 />
-                                <p className="text-xs text-gray-500">The "slug" is the URL-friendly version of the name.</p>
+                                <p className="text-xs text-gray-500">The &quot;slug&quot; is the URL-friendly version of the name.</p>
                             </div>
 
                             <div className="space-y-2">
@@ -209,37 +270,203 @@ export default function AddProductPage() {
                         </div>
                     </div>
 
-                    {/* Pricing */}
-                    <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
-                        <h3 className="text-white font-semibold pb-4 border-b border-gray-800">Pricing</h3>
+                    {/* Pricing — only show for simple products */}
+                    {formData.type !== 'variable' && (
+                        <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
+                            <h3 className="text-white font-semibold pb-4 border-b border-gray-800">Pricing</h3>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-400">Regular Price ($)</label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
-                                    placeholder="0.00"
-                                    value={formData.price}
-                                    onChange={(e) => handleChange('price', e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-400">Sale Price ($)</label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
-                                    placeholder="0.00"
-                                    value={formData.sale_price}
-                                    onChange={(e) => handleChange('sale_price', e.target.value)}
-                                />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-400">Regular Price ($)</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
+                                        placeholder="0.00"
+                                        value={formData.price}
+                                        onChange={(e) => handleChange('price', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-400">Sale Price ($)</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
+                                        placeholder="0.00"
+                                        value={formData.sale_price}
+                                        onChange={(e) => handleChange('sale_price', e.target.value)}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
+
+                    {/* Variations — only show for variable products */}
+                    {formData.type === 'variable' && (
+                        <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
+                            <div className="flex items-center justify-between pb-4 border-b border-gray-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
+                                        <Package className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-white font-semibold">Variations</h3>
+                                        <p className="text-xs text-gray-500 mt-0.5">Define product options like duration, size, etc.</p>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={addVariation}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 rounded-lg text-xs font-medium transition-colors border border-orange-500/20"
+                                >
+                                    <Plus className="w-3.5 h-3.5" />
+                                    Add Variation
+                                </button>
+                            </div>
+
+                            {variations.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <Package className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+                                    <p className="text-gray-500 text-sm">No variations yet.</p>
+                                    <p className="text-gray-600 text-xs mt-1">Click &quot;Add Variation&quot; to create product options (e.g. 1 Month, Lifetime).</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {variations.map((v, idx) => (
+                                        <div key={v._key} className="border border-gray-700 rounded-lg overflow-hidden">
+                                            {/* Variation header */}
+                                            <div
+                                                className="flex items-center justify-between px-4 py-3 bg-[#1F2937]/50 cursor-pointer hover:bg-[#1F2937] transition-colors"
+                                                onClick={() => setExpandedVariation(expandedVariation === v._key ? null : v._key)}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-xs text-gray-500 font-mono">#{idx + 1}</span>
+                                                    <span className="text-sm text-white font-medium">
+                                                        {v.attributeName && v.attributeOption
+                                                            ? `${v.attributeName}: ${v.attributeOption}`
+                                                            : 'New Variation'}
+                                                    </span>
+                                                    {v.regular_price && (
+                                                        <span className="text-xs text-green-400 font-medium">${v.regular_price}</span>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => { e.stopPropagation(); removeVariation(v._key); }}
+                                                        className="p-1 text-gray-500 hover:text-red-400 transition-colors"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                    {expandedVariation === v._key
+                                                        ? <ChevronUp className="w-4 h-4 text-gray-500" />
+                                                        : <ChevronDown className="w-4 h-4 text-gray-500" />
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            {/* Variation body */}
+                                            {expandedVariation === v._key && (
+                                                <div className="p-4 space-y-4 border-t border-gray-700">
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Attribute Name *</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="e.g. Duration"
+                                                                value={v.attributeName}
+                                                                onChange={(e) => updateVariation(v._key, 'attributeName', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Option Value *</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="e.g. 1 Month"
+                                                                value={v.attributeOption}
+                                                                onChange={(e) => updateVariation(v._key, 'attributeOption', e.target.value)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Regular Price ($)</label>
+                                                            <input
+                                                                type="number"
+                                                                step="0.01"
+                                                                min="0"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="0.00"
+                                                                value={v.regular_price}
+                                                                onChange={(e) => updateVariation(v._key, 'regular_price', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Sale Price ($)</label>
+                                                            <input
+                                                                type="number"
+                                                                step="0.01"
+                                                                min="0"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="0.00"
+                                                                value={v.sale_price}
+                                                                onChange={(e) => updateVariation(v._key, 'sale_price', e.target.value)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">SKU</label>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="Optional SKU"
+                                                                value={v.sku}
+                                                                onChange={(e) => updateVariation(v._key, 'sku', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Stock Qty</label>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700 placeholder-gray-600"
+                                                                placeholder="∞"
+                                                                value={v.stock_quantity}
+                                                                onChange={(e) => updateVariation(v._key, 'stock_quantity', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <label className="text-xs font-medium text-gray-400">Status</label>
+                                                            <select
+                                                                className="w-full bg-[#0D1117] text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-orange-500 border border-gray-700"
+                                                                value={v.status}
+                                                                onChange={(e) => updateVariation(v._key, 'status', e.target.value)}
+                                                            >
+                                                                <option value="publish">Publish</option>
+                                                                <option value="draft">Draft</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {formData.type === 'variable' && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    💡 Each variation represents a selectable option (e.g. &quot;Duration: 1 Month&quot; at $49.99, &quot;Duration: Lifetime&quot; at $299.99).
+                                </p>
+                            )}
+                        </div>
+                    )}
 
                     {/* External Payment Links */}
                     <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
@@ -470,7 +697,10 @@ export default function AddProductPage() {
                 title="Product Created"
                 message="Your product has been created successfully."
                 confirmText="Continue Editing"
-                onConfirm={() => setSuccessModal(false)}
+                onConfirm={() => {
+                    setSuccessModal(false);
+                    if (createdProductId) router.push(`/admin/products/${createdProductId}`);
+                }}
                 secondaryText="Back to Products"
                 onSecondary={() => router.push('/admin/products')}
             />

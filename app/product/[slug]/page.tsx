@@ -29,10 +29,8 @@ export default function ProductPage() {
             let found: any = await productsService.getProductBySlug(cleanSlug);
 
             if (found) {
-                // If it's a variable product, we need the full payload for the selector
-                if (found.type === 'variable') {
-                    found = await productsService.getProductFull(found.id);
-                }
+                // Always fetch the full payload for the product page (to get variations, attributes, addons)
+                found = await productsService.getProductFull(found.id);
                 setProduct(found);
 
                 // Fetch related products (first few from the listing)

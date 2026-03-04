@@ -20,6 +20,9 @@ import type {
     WCProductCreate,
     WCProductUpdate,
     WCProductFullRead,
+    WCProductVariationRead,
+    WCProductVariationCreate,
+    WCProductVariationUpdate,
     WPTerm,
     WPPostFull,
     WCOrderCreate,
@@ -55,6 +58,10 @@ export type {
     WCProductRead,
     WCProductCreate,
     WCProductUpdate,
+    WCProductFullRead,
+    WCProductVariationRead,
+    WCProductVariationCreate,
+    WCProductVariationUpdate,
     WPTerm,
     WPPostFull,
     WCOrderCreate,
@@ -74,17 +81,17 @@ export type {
 export const adminStatsService = {
     // Since there is no dedicated stats endpoint, we might need to fetch lists or create a custom aggregator.
     // user said "connect it to backend", so we will fetch basic lists for now.
-    getUsers: async (page = 1, per_page = 10) => {
+    getUsers: async (page = 1, per_page = 100) => {
         const response = await api.get<WPUser[]>('/wordpress/users/', { params: { page, per_page } });
         return response.data;
     },
 
-    getOrders: async (limit = 10) => {
+    getOrders: async (limit = 100) => {
         const response = await api.get<WCOrder[]>('/wordpress/wc/orders', { params: { limit } });
         return response.data;
     },
 
-    getCourses: async (limit = 10) => {
+    getCourses: async (limit = 100) => {
         // Admin endpoint for courses
         const response = await api.get<LPCourse[]>('/admin/learnpress/courses', { params: { limit } });
         return response.data;
@@ -94,9 +101,9 @@ export const adminStatsService = {
     getDashboardSummary: async () => {
         try {
             const [users, orders, courses] = await Promise.all([
-                api.get<WPUser[]>('/wordpress/users/', { params: { per_page: 100 } }),
-                api.get<WCOrder[]>('/wordpress/wc/orders/', { params: { limit: 200 } }),
-                api.get<LPCourse[]>('/admin/learnpress/courses', { params: { limit: 100 } })
+                api.get<WPUser[]>('/wordpress/users/', { params: { per_page: 500 } }),
+                api.get<WCOrder[]>('/wordpress/wc/orders/', { params: { limit: 500 } }),
+                api.get<LPCourse[]>('/admin/learnpress/courses', { params: { limit: 500 } })
             ]);
 
             const completedOrders = orders.data.filter(o => o.status === 'completed' || o.status === 'processing');
@@ -159,7 +166,7 @@ export const adminStatsService = {
 
 export const adminLearnPressService = {
     // Courses
-    getCourses: async (status: string = 'publish', limit = 10, offset = 0) => {
+    getCourses: async (status: string = 'publish', limit = 50, offset = 0) => {
         const response = await api.get<LPCourse[]>('/admin/learnpress/courses', { params: { status, limit, offset } });
         return response.data;
     },
@@ -343,7 +350,7 @@ export const adminLinkService = {
 };
 
 export const adminUserService = {
-    getAll: async (page = 1, per_page = 10) => {
+    getAll: async (page = 1, per_page = 100) => {
         const response = await api.get<WPUser[]>('/wordpress/users', { params: { page, per_page } });
         return response.data;
     },
@@ -373,7 +380,7 @@ export const adminUserService = {
 };
 
 export const adminOrderService = {
-    getAll: async (status?: string, limit = 10, skip = 0) => {
+    getAll: async (status?: string, limit = 100, skip = 0) => {
         const response = await api.get<WCOrder[]>('/wordpress/wc/orders/', { params: { status, limit, skip } });
         return response.data;
     },
@@ -395,7 +402,7 @@ export const adminOrderService = {
 };
 
 export const adminProductService = {
-    getAll: async (status: string = 'any', limit = 10, offset = 0) => {
+    getAll: async (status: string = 'any', limit = 100, offset = 0) => {
         const response = await api.get<WCProductRead[]>('/wordpress/wc/products', { params: { status, limit, offset } });
         return response.data;
     },
@@ -462,6 +469,23 @@ export const adminProductService = {
             data: termIds
         });
         return response.data;
+    },
+
+    // Variation CRUD
+    getVariations: async (productId: number) => {
+        const response = await api.get<WCProductVariationRead[]>(`/wordpress/wc/products/${productId}/variations`);
+        return response.data;
+    },
+    createVariation: async (productId: number, data: WCProductVariationCreate) => {
+        const response = await api.post<WCProductVariationRead>(`/wordpress/wc/products/${productId}/variations`, data);
+        return response.data;
+    },
+    updateVariation: async (productId: number, variationId: number, data: WCProductVariationUpdate) => {
+        const response = await api.put<WCProductVariationRead>(`/wordpress/wc/products/${productId}/variations/${variationId}`, data);
+        return response.data;
+    },
+    deleteVariation: async (productId: number, variationId: number) => {
+        await api.delete(`/wordpress/wc/products/${productId}/variations/${variationId}`);
     }
 };
 

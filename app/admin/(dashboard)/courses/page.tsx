@@ -22,7 +22,7 @@ export default function CoursesPage() {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [statusFilter, setStatusFilter] = useState('any');
-    const limit = 10;
+    const limit = 50;
 
     // Modal State
     const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean, courseId: number | null }>({ isOpen: false, courseId: null });

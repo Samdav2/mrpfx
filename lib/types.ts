@@ -228,15 +228,49 @@ export interface WCProductVariationRead {
     stock_quantity?: number | null;
     stock_status?: string | null;
     manage_stock: boolean;
+    weight?: string | null;
+    dimensions?: { length: string | null; width: string | null; height: string | null; } | null;
     attributes: { name: string; option: string; }[];
     image?: { id: number; src: string; name: string; alt: string; } | null;
+    date_created?: string | null;
+    date_modified?: string | null;
+    description?: string | null;
+    status?: string | null;
+}
+
+export interface WCProductVariationCreate {
+    sku?: string | null;
+    regular_price?: string | null;
+    sale_price?: string | null;
+    price?: string | null;
+    stock_quantity?: number | null;
+    stock_status?: string | null;
+    manage_stock?: boolean;
+    weight?: string | null;
+    attributes: { name: string; option: string; }[];
+    description?: string | null;
+    status?: string | null;
+}
+
+export interface WCProductVariationUpdate {
+    sku?: string | null;
+    regular_price?: string | null;
+    sale_price?: string | null;
+    price?: string | null;
+    stock_quantity?: number | null;
+    stock_status?: string | null;
+    manage_stock?: boolean;
+    weight?: string | null;
+    attributes?: { name: string; option: string; }[];
+    description?: string | null;
+    status?: string | null;
 }
 
 export interface WCProductRead {
     id: number;
     name: string;
     slug: string;
-    type: 'simple' | 'variable' | 'grouped' | 'external';
+    type: 'simple' | 'variable' | 'variable-subscription' | 'grouped' | 'external';
     sku?: string | null;
     price?: string | null;
     regular_price?: string | null;
@@ -273,7 +307,7 @@ export interface WCProductFullRead extends WCProductRead {
 
 export interface WCProductCreate {
     name: string;
-    type?: 'simple' | 'variable' | 'grouped' | 'external';
+    type?: 'simple' | 'variable' | 'variable-subscription' | 'grouped' | 'external';
     sku?: string | null;
     price?: number | string | null;
     regular_price?: number | string | null;
@@ -295,7 +329,7 @@ export interface WCProductCreate {
 
 export interface WCProductUpdate {
     name?: string | null;
-    type?: 'simple' | 'variable' | 'grouped' | 'external';
+    type?: 'simple' | 'variable' | 'variable-subscription' | 'grouped' | 'external';
     sku?: string | null;
     price?: number | string | null;
     regular_price?: number | string | null;

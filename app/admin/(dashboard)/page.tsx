@@ -53,8 +53,9 @@ export default function AdminDashboard() {
             try {
                 const summary = await adminStatsService.getDashboardSummary();
 
+                const usersCount = Number(summary.users);
                 setCounts({
-                    users: summary.users,
+                    users: usersCount >= 500 ? '500+' : summary.users,
                     orders: summary.orders,
                     courses: summary.courses
                 });
@@ -261,10 +262,10 @@ export default function AdminDashboard() {
                                     <td className="px-6 py-4 text-gray-400 text-sm">{order.date}</td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${order.status === 'Paid'
-                                                ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                                                : order.status === 'Pending'
-                                                    ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
-                                                    : 'bg-red-500/10 text-red-500 border-red-500/20'
+                                            ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                            : order.status === 'Pending'
+                                                ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                                                : 'bg-red-500/10 text-red-500 border-red-500/20'
                                             }`}>
                                             <span className={`w-1 h-1 rounded-full ${order.status === 'Paid' ? 'bg-green-500' : order.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500'
                                                 }`}></span>

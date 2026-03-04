@@ -5,13 +5,8 @@ import Link from 'next/link';
 import {
     Search,
     Plus,
-    MoreVertical,
     Edit2,
     Trash2,
-    Database,
-    User,
-    Heart,
-    MoreHorizontal,
     ChevronLeft,
     ChevronRight,
     ArrowUpDown
@@ -22,21 +17,18 @@ import { ConfirmModal, SuccessModal, ErrorModal } from '@/components/admin/Modal
 export default function UsersPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [users, setUsers] = useState<WPUser[]>([]);
-    const [deleteId, setDeleteId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const limit = 100;
     const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean, userId: number | null }>({ isOpen: false, userId: null });
     const [successModal, setSuccessModal] = useState({ isOpen: false, message: '' });
     const [errorModal, setErrorModal] = useState({ isOpen: false, message: '' });
 
-    // Available WP roles
-    const wpRoles = ['administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'shop_manager', 'lp_teacher'];
-
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const data = await adminUserService.getAll();
+            const data = await adminUserService.getAll(page, limit);
             if (Array.isArray(data)) {
-                // Fetch roles for each user
                 const usersWithRoles = await Promise.all(
                     data.map(async (user) => {
                         try {
@@ -64,14 +56,13 @@ export default function UsersPage() {
             setLoading(false);
         } catch (error) {
             console.error("Failed to fetch users", error);
-            // Fallback (keep existing dummy data fallback if desired, or just empty)
             setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [page]);
 
     const handleDeleteClick = (id: number) => {
         setConfirmDelete({ isOpen: true, userId: id });
@@ -90,21 +81,17 @@ export default function UsersPage() {
         }
     };
 
-
-    // Helper to get random color/fields for UI demo if missing from API
     const getUserMeta = (user: any, index: number) => {
         const colors = ['bg-purple-500', 'bg-pink-500', 'bg-blue-500', 'bg-yellow-500', 'bg-green-500', 'bg-orange-500', 'bg-red-500'];
-        const companies = ['Google', 'Webflow', 'Facebook', 'Twitter', 'YouTube', 'Reddit', 'Spotify'];
-
         return {
             avatar: user.avatar || colors[index % colors.length],
-            company: user.company || 'Unknown',
-            location: user.location || 'Unknown',
-            phone: user.phone || 'N/A',
-            status: user.status || 'Active',
-            companyIcon: user.companyIcon || 'bg-white text-black'
         };
     };
+
+    const filteredUsers = users.filter(user =>
+        (user.display_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.user_email || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="space-y-6">
@@ -136,7 +123,7 @@ export default function UsersPage() {
             <div className="bg-[#111827] border border-gray-800 rounded-xl overflow-hidden">
                 <div className="flex items-center justify-between p-4 border-b border-gray-800">
                     <h3 className="text-white font-semibold">All Users</h3>
-                    <span className="text-xs text-purple-400">{users.length} found</span>
+                    <span className="text-xs text-purple-400">{filteredUsers.length} found (Page {page})</span>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -152,55 +139,93 @@ export default function UsersPage() {
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {users.map((user, index) => {
-                                const meta = getUserMeta(user, index);
-                                return (
-                                    <tr key={user.ID} className="border-b border-gray-800 hover:bg-[#1F2937]/50 transition-colors group">
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full ${meta.avatar} flex items-center justify-center text-white text-xs font-bold`}>
-                                                    {user.display_name?.charAt(0) || user.user_email?.charAt(0) || 'U'}
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={4} className="p-8 text-center text-gray-500">
+                                        <div className="flex items-center justify-center gap-3">
+                                            <div className="w-5 h-5 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+                                            <span>Loading users...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : filteredUsers.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="p-8 text-center text-gray-500">No users found.</td>
+                                </tr>
+                            ) : (
+                                filteredUsers.map((user, index) => {
+                                    const meta = getUserMeta(user, index);
+                                    return (
+                                        <tr key={user.ID} className="border-b border-gray-800 hover:bg-[#1F2937]/50 transition-colors group">
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-8 h-8 rounded-full ${meta.avatar} flex items-center justify-center text-white text-xs font-bold`}>
+                                                        {user.display_name?.charAt(0) || user.user_email?.charAt(0) || 'U'}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-white font-medium">{user.display_name || 'Unknown'}</p>
+                                                        <p className="text-gray-500 text-xs text-nowrap">ID: {user.ID}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-white font-medium">{user.display_name || 'Unknown'}</p>
-                                                    <p className="text-gray-500 text-xs text-nowrap">ID: {user.ID}</p>
+                                            </td>
+                                            <td className="p-4 text-gray-300">{user.user_email}</td>
+                                            <td className="p-4">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {((user as any).roles || []).map((role: string) => (
+                                                        <span key={role} className="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-xs border border-blue-500/20">
+                                                            {role}
+                                                        </span>
+                                                    ))}
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-4 text-gray-300">{user.user_email}</td>
-                                        <td className="p-4">
-                                            <div className="flex flex-wrap gap-1">
-                                                {((user as any).roles || []).map((role: string) => (
-                                                    <span key={role} className="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-xs border border-blue-500/20">
-                                                        {role}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </td>
-                                        <td className="p-4 text-right align-middle">
-                                            <div className="flex items-center justify-end gap-2 transition-opacity">
-                                                <Link
-                                                    href={`/admin/users/${user.ID}`}
-                                                    className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
-                                                    title="Edit User"
-                                                >
-                                                    <Edit2 className="w-4 h-4" />
-                                                </Link>
-                                                <button
-                                                    onClick={() => handleDeleteClick(user.ID)}
-                                                    className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
-                                                    title="Delete User"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                            </td>
+                                            <td className="p-4 text-right align-middle">
+                                                <div className="flex items-center justify-end gap-2 transition-opacity">
+                                                    <Link
+                                                        href={`/admin/users/${user.ID}`}
+                                                        className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
+                                                        title="Edit User"
+                                                    >
+                                                        <Edit2 className="w-4 h-4" />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => handleDeleteClick(user.ID)}
+                                                        className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
+                                                        title="Delete User"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
                         </tbody>
                     </table>
-                    {loading && <div className="p-4 text-center text-gray-400">Loading users...</div>}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-between p-4 border-t border-gray-800 text-sm text-gray-400">
+                    <div>Showing {filteredUsers.length} results (Page {page})</div>
+                    <div className="flex items-center gap-2">
+                        <span>Per page: {limit}</span>
+                        <div className="flex gap-1 ml-4">
+                            <button
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1}
+                                className="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={() => setPage(p => p + 1)}
+                                disabled={users.length < limit}
+                                className="p-1 hover:bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

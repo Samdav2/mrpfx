@@ -34,6 +34,8 @@ export default function OrdersPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('all');
+    const [page, setPage] = useState(1);
+    const limit = 100;
     const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean, orderId: number | null }>({ isOpen: false, orderId: null });
     const [successModal, setSuccessModal] = useState({ isOpen: false, message: '' });
     const [errorModal, setErrorModal] = useState({ isOpen: false, message: '' });
@@ -45,7 +47,8 @@ export default function OrdersPage() {
         try {
             setLoading(true);
             const status = statusFilter === 'all' ? undefined : statusFilter;
-            const data = await adminOrderService.getAll(status);
+            const skip = (page - 1) * limit;
+            const data = await adminOrderService.getAll(status, limit, skip);
             setOrders(data || []);
             setLoading(false);
         } catch (error) {
@@ -57,7 +60,7 @@ export default function OrdersPage() {
 
     useEffect(() => {
         fetchOrders(activeTab);
-    }, [activeTab]);
+    }, [activeTab, page]);
 
     const handleDeleteClick = (id: number) => {
         setConfirmDelete({ isOpen: true, orderId: id });
@@ -134,8 +137,8 @@ export default function OrdersPage() {
                         <button
                             onClick={() => setShowFilters(!showFilters)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${showFilters
-                                    ? 'bg-purple-500/10 border-purple-500 text-purple-400'
-                                    : 'bg-[#1F2937] border-gray-800 text-gray-300 hover:bg-[#374151]'
+                                ? 'bg-purple-500/10 border-purple-500 text-purple-400'
+                                : 'bg-[#1F2937] border-gray-800 text-gray-300 hover:bg-[#374151]'
                                 }`}
                         >
                             <Filter className="w-4 h-4" />
@@ -281,13 +284,22 @@ export default function OrdersPage() {
                 {/* Pagination Placeholder */}
                 <div className="flex items-center justify-between p-4 border-t border-gray-800 bg-[#111827]/30">
                     <p className="text-xs text-gray-500">
-                        Showing <span className="text-gray-300">{filteredOrders.length}</span> of <span className="text-gray-300">{orders.length}</span> orders
+                        Showing <span className="text-gray-300">{filteredOrders.length}</span> of <span className="text-gray-300">{orders.length}</span> orders (Page {page})
                     </p>
                     <div className="flex items-center gap-2">
-                        <button disabled className="p-2 text-gray-600 hover:text-white disabled:opacity-30 transition-colors">
+                        <span className="text-xs text-gray-500">Per page: {limit}</span>
+                        <button
+                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                            disabled={page === 1}
+                            className="p-2 text-gray-600 hover:text-white disabled:opacity-30 transition-colors"
+                        >
                             <ChevronLeft className="w-5 h-5" />
                         </button>
-                        <button disabled className="p-2 text-gray-600 hover:text-white disabled:opacity-30 transition-colors">
+                        <button
+                            onClick={() => setPage(p => p + 1)}
+                            disabled={orders.length < limit}
+                            className="p-2 text-gray-600 hover:text-white disabled:opacity-30 transition-colors"
+                        >
                             <ChevronRight className="w-5 h-5" />
                         </button>
                     </div>

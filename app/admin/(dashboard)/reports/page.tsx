@@ -240,7 +240,7 @@ export default function ReportsPage() {
 
     // ─── Stat cards config ────────────────────────────────────
     const statCards = [
-        { label: 'Total Users', value: stats.users, icon: Users, gradient: 'from-blue-600 to-cyan-500', bg: 'bg-blue-500/10', text: 'text-blue-400' },
+        { label: 'Total Users', value: stats.users >= 500 ? '500+' : stats.users, icon: Users, gradient: 'from-blue-600 to-cyan-500', bg: 'bg-blue-500/10', text: 'text-blue-400' },
         { label: 'Total Orders', value: stats.orders, icon: ShoppingCart, gradient: 'from-purple-600 to-pink-500', bg: 'bg-purple-500/10', text: 'text-purple-400' },
         { label: 'Revenue', value: formatCurrency(stats.revenue), icon: DollarSign, gradient: 'from-emerald-600 to-teal-500', bg: 'bg-emerald-500/10', text: 'text-emerald-400' },
         { label: 'Products', value: stats.products, icon: Package, gradient: 'from-orange-500 to-amber-500', bg: 'bg-orange-500/10', text: 'text-orange-400' },

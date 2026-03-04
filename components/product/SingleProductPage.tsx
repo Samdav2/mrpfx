@@ -96,7 +96,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
 
     // Initialize selected attributes
     useEffect(() => {
-        if (product.type === 'variable' && product.attributes) {
+        if ((product.type === 'variable' || product.type === 'variable-subscription') && product.attributes) {
             const initial: Record<string, string> = {};
             product.attributes.forEach(attr => {
                 if (attr.variation && attr.options.length > 0) {
@@ -112,7 +112,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
 
     // Update selected variation when attributes change
     useEffect(() => {
-        if (product.type === 'variable' && product.variations) {
+        if ((product.type === 'variable' || product.type === 'variable-subscription') && product.variations) {
             const match = product.variations.find(v => {
                 return v.attributes.every(attr => {
                     // Variation attributes use slugified names (e.g. "subscription-plan")
@@ -144,7 +144,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
     }, [product.addons]);
 
     const handleAddToCart = async () => {
-        if (product.type === 'variable' && !selectedVariation) return;
+        if ((product.type === 'variable' || product.type === 'variable-subscription') && !selectedVariation) return;
 
         // Validate required custom fields
         for (const addon of product.addons || []) {
@@ -159,7 +159,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
             await cartService.addToCart(
                 product.id,
                 quantity,
-                product.type === 'variable' ? selectedVariation?.id : undefined,
+                (product.type === 'variable' || product.type === 'variable-subscription') ? selectedVariation?.id : undefined,
                 customFields
             );
 
@@ -189,7 +189,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
             await cartService.addToCart(
                 product.id,
                 quantity,
-                product.type === 'variable' ? selectedVariation?.id : undefined,
+                (product.type === 'variable' || product.type === 'variable-subscription') ? selectedVariation?.id : undefined,
                 customFields
             );
             // Redirect to checkout with the method pre-selected
@@ -326,7 +326,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
 
                         {/* Price */}
                         <div className="flex items-center gap-3 mb-6">
-                            {product.type === 'variable' && selectedVariation ? (
+                            {(product.type === 'variable' || product.type === 'variable-subscription') && selectedVariation ? (
                                 <>
                                     {selectedVariation.sale_price && selectedVariation.regular_price &&
                                         parseFloat(selectedVariation.sale_price) < parseFloat(selectedVariation.regular_price) && (
@@ -346,7 +346,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                                         </span>
                                     )}
                                     <span className="text-3xl font-bold text-white">
-                                        {product.type === 'variable'
+                                        {(product.type === 'variable' || product.type === 'variable-subscription')
                                             ? `${formatCurrency(product.regular_price)} - ${formatCurrency(product.price)}`
                                             : formatCurrency(product.price)}
                                     </span>
@@ -355,7 +355,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                         </div>
 
                         {/* Attribute Selectors for Variable Products */}
-                        {product.type === 'variable' && product.attributes && (
+                        {(product.type === 'variable' || product.type === 'variable-subscription') && product.attributes && (
                             <div className="space-y-4 mb-8">
                                 {product.attributes.filter(a => a.variation).map(attr => (
                                     <div key={attr.id} className="space-y-2">
@@ -391,7 +391,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
 
                         {/* Stock */}
                         <div className="flex items-center gap-2 mb-6">
-                            {product.type === 'variable' ? (
+                            {(product.type === 'variable' || product.type === 'variable-subscription') ? (
                                 selectedVariation ? (
                                     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${selectedVariation.stock_status === 'outofstock'
                                         ? 'bg-red-500/10 text-red-400'
