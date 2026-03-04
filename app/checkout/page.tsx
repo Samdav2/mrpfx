@@ -84,6 +84,16 @@ function CheckoutPageContent() {
         setSubmitting(true);
         setError('');
         try {
+            // Aggregate all custom fields from cart items
+            const aggregatedCustomFields: Record<string, string> = {};
+            if (cart && cart.items) {
+                cart.items.forEach(item => {
+                    if (item.custom_fields) {
+                        Object.assign(aggregatedCustomFields, item.custom_fields);
+                    }
+                });
+            }
+
             const request = checkoutService.buildCheckoutRequest(
                 billing,
                 paymentMethod,
@@ -91,7 +101,8 @@ function CheckoutPageContent() {
                     customerNote: customerNote || undefined,
                     paymentMethodTitle: paymentMethod === 'whop' ? 'Whop Checkout' :
                         paymentMethod === 'seller' ? 'Seller Payment' :
-                            paymentMethod === 'crypto' ? 'Pay with Crypto' : 'Bank Transfer'
+                            paymentMethod === 'crypto' ? 'Pay with Crypto' : 'Bank Transfer',
+                    customFields: Object.keys(aggregatedCustomFields).length > 0 ? aggregatedCustomFields : undefined
                 }
             );
             const response = await checkoutService.checkout(request);
@@ -370,12 +381,23 @@ function CheckoutPageContent() {
                             {/* Items */}
                             <div className="space-y-3 mb-4">
                                 {cart!.items.map(item => (
-                                    <div key={item.product_id} className="flex items-center justify-between text-sm">
-                                        <div className="flex items-center gap-2 min-w-0 flex-1">
-                                            <span className="text-gray-300 truncate">{item.product_name}</span>
-                                            <span className="text-gray-600 shrink-0">×{item.quantity}</span>
+                                    <div key={item.product_id} className="text-sm">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                                                <span className="text-gray-300 truncate">{item.product_name}</span>
+                                                <span className="text-gray-600 shrink-0">×{item.quantity}</span>
+                                            </div>
+                                            <span className="text-white font-medium ml-3">{formatPrice(item.line_total)}</span>
                                         </div>
-                                        <span className="text-white font-medium ml-3">{formatPrice(item.line_total)}</span>
+                                        {item.custom_fields && Object.keys(item.custom_fields).length > 0 && (
+                                            <div className="mt-1 pl-1">
+                                                {Object.entries(item.custom_fields).map(([key, val]) => (
+                                                    <p key={key} className="text-xs text-gray-400">
+                                                        <span className="text-gray-500">{key}:</span> {val}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>

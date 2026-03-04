@@ -177,6 +177,17 @@ export default function CartPage() {
                                     <div className="flex-1 min-w-0">
                                         <h3 className="text-white font-semibold text-sm truncate">{item.product_name}</h3>
                                         <p className="text-gray-500 text-xs mt-0.5">{formatPrice(item.product_price)} each</p>
+
+                                        {/* Display Custom Fields */}
+                                        {item.custom_fields && Object.keys(item.custom_fields).length > 0 && (
+                                            <div className="mt-2 space-y-1">
+                                                {Object.entries(item.custom_fields).map(([key, val]) => (
+                                                    <p key={key} className="text-xs text-gray-400">
+                                                        <span className="font-medium text-gray-300">{key}:</span> {val}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Quantity */}

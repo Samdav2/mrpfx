@@ -203,6 +203,22 @@ export interface WCProductAttributeRead {
     options: string[];
 }
 
+export interface WCProductAddonField {
+    name: string;
+    type: string;
+    description: string;
+    required: boolean;
+    position: number;
+    options: string[];
+    placeholder?: string | null;
+    max_length?: number | null;
+}
+
+export interface WCProductAddonsRead {
+    product_id: number;
+    addons: WCProductAddonField[];
+}
+
 export interface WCProductVariationRead {
     id: number;
     sku?: string | null;
@@ -247,6 +263,7 @@ export interface WCProductRead {
 export interface WCProductFullRead extends WCProductRead {
     attributes: WCProductAttributeRead[];
     variations: WCProductVariationRead[];
+    addons?: WCProductAddonField[];
     categories: WPTerm[];
     tags: WPTerm[];
     related_ids?: number[];
@@ -271,6 +288,7 @@ export interface WCProductCreate {
     images?: { id: number; src: string; name: string; alt: string; }[];
     featured_image?: WPFeaturedImage | null;
     slug?: string;
+    addons?: WCProductAddonField[];
     seller_payment_link?: string | null;
     whop_payment_link?: string | null;
 }
@@ -325,6 +343,7 @@ export interface WCAddToCartRequest {
     product_id: number;
     variation_id?: number | null;
     quantity?: number;
+    custom_fields?: Record<string, string>;
 }
 
 export interface WCUpdateCartItemRequest {
@@ -345,6 +364,7 @@ export interface WCCartItem {
     product_price: number;
     line_total: number;
     product_image?: string | null;
+    custom_fields?: Record<string, string>;
 }
 
 export interface WCCart {
@@ -386,6 +406,7 @@ export interface WCCheckoutRequest {
     customer_note?: string | null;
     shipping_method?: string | null;
     coupon_codes?: string[];
+    custom_fields?: Record<string, string>;
 }
 
 export interface WCCheckoutResponse {

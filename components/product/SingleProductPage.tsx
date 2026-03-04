@@ -47,6 +47,9 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
     const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
     const [selectedVariation, setSelectedVariation] = useState<WCProductVariationRead | null>(null);
 
+    // Addons state
+    const [customFields, setCustomFields] = useState<Record<string, string>>({});
+
     // Review form
     const [reviewRating, setReviewRating] = useState(5);
     const [reviewText, setReviewText] = useState('');
@@ -104,27 +107,60 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
         }
     }, [product.id, product.type, product.attributes]);
 
+    // Helper to slugify attribute names for comparison
+    const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
     // Update selected variation when attributes change
     useEffect(() => {
         if (product.type === 'variable' && product.variations) {
             const match = product.variations.find(v => {
                 return v.attributes.every(attr => {
-                    return selectedAttributes[attr.name] === attr.option;
+                    // Variation attributes use slugified names (e.g. "subscription-plan")
+                    // while selectedAttributes uses display names (e.g. "Subscription Plan")
+                    // Try exact match first, then slugified match
+                    const directMatch = selectedAttributes[attr.name] === attr.option;
+                    if (directMatch) return true;
+
+                    // Find matching key by slugifying both sides
+                    const matchingKey = Object.keys(selectedAttributes).find(
+                        key => slugify(key) === slugify(attr.name)
+                    );
+                    return matchingKey ? selectedAttributes[matchingKey] === attr.option : false;
                 });
             });
             setSelectedVariation(match || null);
         }
     }, [selectedAttributes, product.variations, product.type]);
 
+    // Initialize custom fields
+    useEffect(() => {
+        if (product.addons && product.addons.length > 0) {
+            const initial: Record<string, string> = {};
+            product.addons.forEach(addon => {
+                initial[addon.name] = '';
+            });
+            setCustomFields(initial);
+        }
+    }, [product.addons]);
+
     const handleAddToCart = async () => {
         if (product.type === 'variable' && !selectedVariation) return;
+
+        // Validate required custom fields
+        for (const addon of product.addons || []) {
+            if (addon.required && !customFields[addon.name]) {
+                alert(`${addon.name} is required`);
+                return;
+            }
+        }
 
         setAddingToCart(true);
         try {
             await cartService.addToCart(
                 product.id,
                 quantity,
-                product.type === 'variable' ? selectedVariation?.id : undefined
+                product.type === 'variable' ? selectedVariation?.id : undefined,
+                customFields
             );
 
             // 3. Increment Cart Count by the selected Quantity
@@ -138,6 +174,14 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
     };
 
     const handleDirectCheckout = async (method: 'whop' | 'seller') => {
+        // Validate required custom fields
+        for (const addon of product.addons || []) {
+            if (addon.required && !customFields[addon.name]) {
+                alert(`${addon.name} is required`);
+                return;
+            }
+        }
+
         setAddingToCart(true);
         try {
             // First clear cart and add this product
@@ -145,7 +189,8 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
             await cartService.addToCart(
                 product.id,
                 quantity,
-                product.type === 'variable' ? selectedVariation?.id : undefined
+                product.type === 'variable' ? selectedVariation?.id : undefined,
+                customFields
             );
             // Redirect to checkout with the method pre-selected
             window.location.href = `/checkout?method=${method}`;
@@ -371,6 +416,54 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                                 </span>
                             )}
                         </div>
+
+                        {/* Custom Addon Fields */}
+                        {product.addons && product.addons.length > 0 && (
+                            <div className="space-y-4 mb-6">
+                                {product.addons.map(addon => (
+                                    <div key={addon.name} className="space-y-2">
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                            {addon.name} {addon.required && <span className="text-red-400">*</span>}
+                                        </label>
+                                        {addon.type === 'select' ? (
+                                            <select
+                                                value={customFields[addon.name] || ''}
+                                                onChange={e => setCustomFields({ ...customFields, [addon.name]: e.target.value })}
+                                                className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white focus:outline-none focus:border-purple-500/30 transition-colors appearance-none"
+                                            >
+                                                <option value="">Select...</option>
+                                                {addon.options.map(opt => (
+                                                    <option key={opt} value={opt} className="bg-[#111827] text-white">
+                                                        {opt}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : addon.type === 'textarea' ? (
+                                            <textarea
+                                                rows={3}
+                                                placeholder={addon.placeholder || ''}
+                                                maxLength={addon.max_length || undefined}
+                                                required={addon.required}
+                                                value={customFields[addon.name] || ''}
+                                                onChange={e => setCustomFields({ ...customFields, [addon.name]: e.target.value })}
+                                                className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/30 transition-colors resize-none"
+                                            />
+                                        ) : (
+                                            <input
+                                                type={addon.type || 'text'}
+                                                placeholder={addon.placeholder || ''}
+                                                maxLength={addon.max_length || undefined}
+                                                required={addon.required}
+                                                value={customFields[addon.name] || ''}
+                                                onChange={e => setCustomFields({ ...customFields, [addon.name]: e.target.value })}
+                                                className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/30 transition-colors"
+                                            />
+                                        )}
+                                        {addon.description && <p className="text-xs text-gray-500">{addon.description}</p>}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Quantity + Add to Cart */}
                         <div className="flex items-center gap-3 mb-6">

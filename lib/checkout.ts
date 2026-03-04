@@ -35,6 +35,7 @@ export const checkoutService = {
             shippingMethod?: string;
             couponCodes?: string[];
             paymentMethodTitle?: string;
+            customFields?: Record<string, string>;
         }
     ): WCCheckoutRequest => {
         return {
@@ -45,6 +46,7 @@ export const checkoutService = {
             customer_note: options?.customerNote,
             shipping_method: options?.shippingMethod,
             coupon_codes: options?.couponCodes || [],
+            custom_fields: options?.customFields,
         };
     },
 
@@ -60,6 +62,7 @@ export const checkoutService = {
             shippingMethod?: string;
             couponCodes?: string[];
             paymentMethodTitle?: string;
+            customFields?: Record<string, string>;
         }
     ): WCCheckoutRequest => {
         return {
@@ -71,6 +74,7 @@ export const checkoutService = {
             customer_note: options?.customerNote,
             shipping_method: options?.shippingMethod,
             coupon_codes: options?.couponCodes || [],
+            custom_fields: options?.customFields,
         };
     },
 };

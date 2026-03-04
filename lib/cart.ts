@@ -28,12 +28,14 @@ export const cartService = {
     addToCart: async (
         productId: number,
         quantity: number = 1,
-        variationId?: number
+        variationId?: number,
+        customFields?: Record<string, string>
     ): Promise<WCCart> => {
         const data: WCAddToCartRequest = {
             product_id: productId,
             quantity,
             variation_id: variationId,
+            custom_fields: customFields,
         };
         const response = await api.post<WCCart>('/wordpress/wc/cart/add', data);
         return response.data;
