@@ -4,7 +4,7 @@ import Link from 'next/link';
 const CustomIcons = {
     // 1. Copy Trading — two curved arrows forming a cycle inside a dark navy circle
     CopyTrading: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#1C3278" />
             {/* Top arrow curving right */}
             <path d="M28 16l4 4-4 4" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -17,7 +17,7 @@ const CustomIcons = {
 
     // 2. Pass Funded Accounts — graduation cap inside a dark navy circle
     PassFunded: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#1C3278" />
             {/* Cap top */}
             <path d="M24 14L10 21l14 7 14-7-14-7z" fill="white" />
@@ -31,7 +31,7 @@ const CustomIcons = {
 
     // 3. Dr. Trade AI Trading — cartoon robot head with antenna inside a blue circle
     AITrading: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#2563EB" />
             {/* Antenna */}
             <line x1="24" y1="14" x2="24" y2="10" stroke="#93C5FD" strokeWidth="2" strokeLinecap="round" />
@@ -53,7 +53,7 @@ const CustomIcons = {
 
     // 4. Account Management — laptop screen showing a chart, light blue bg circle
     AccountMgmt: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#DBEAFE" />
             {/* Laptop screen */}
             <rect x="10" y="12" width="28" height="18" rx="2" fill="#1C3278" />
@@ -70,7 +70,7 @@ const CustomIcons = {
 
     // 5. VIP Signals — golden crown on dark navy circle
     VIPSignals: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#1C3278" />
             {/* Crown */}
             <path d="M12 30l3-12 5 6 4-8 4 8 5-6 3 12H12z" fill="#F59E0B" />
@@ -84,7 +84,7 @@ const CustomIcons = {
 
     // 6. Free Signals — white paper airplane on blue circle (like Telegram)
     FreeSignals: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#2563EB" />
             {/* Paper airplane */}
             <path d="M12 24l26-12-8 28-6-10-12-6z" fill="white" />
@@ -94,7 +94,7 @@ const CustomIcons = {
 
     // 7. Risk Calculator — flat calculator with display and buttons grid
     RiskCalc: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Calculator body */}
             <rect x="12" y="6" width="24" height="36" rx="3" fill="#1C3278" />
             {/* Display */}
@@ -116,7 +116,7 @@ const CustomIcons = {
 
     // 8. Trade Journal — clipboard/notepad with horizontal lines
     TradeJournal: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Clipboard body */}
             <rect x="10" y="8" width="28" height="34" rx="3" fill="#1C3278" />
             {/* Clipboard clip */}
@@ -131,7 +131,7 @@ const CustomIcons = {
 
     // 9. VIP Bots — robot face with antenna, square eyes, inside a navy circle
     VIPBots: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#1C3278" />
             {/* Antenna */}
             <line x1="24" y1="13" x2="24" y2="9" stroke="#93C5FD" strokeWidth="2" strokeLinecap="round" />
@@ -154,7 +154,7 @@ const CustomIcons = {
 
     // 10. Free Bots — small tank-treaded robot, mechanical style
     FreeBots: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Robot body */}
             <rect x="14" y="14" width="20" height="14" rx="3" fill="#1C3278" />
             {/* Robot head visor */}
@@ -184,7 +184,7 @@ const CustomIcons = {
 
     // 11. Paid Indicators — chart trending up with plus badge, blue circle
     PaidIndicators: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#2563EB" />
             {/* Upward trend line */}
             <polyline points="10,34 18,26 24,30 34,16" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -198,7 +198,7 @@ const CustomIcons = {
 
     // 12. Free Indicators — bar chart columns growing taller with trend line
     FreeIndicators: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Bars */}
             <rect x="8" y="28" width="7" height="12" rx="1.5" fill="#93C5FD" />
             <rect x="17" y="22" width="7" height="18" rx="1.5" fill="#3B82F6" />
@@ -213,7 +213,7 @@ const CustomIcons = {
 
     // 13. Forex Books — stacked books, dark blue and blue layers
     ForexBooks: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Bottom book */}
             <rect x="10" y="30" width="28" height="6" rx="1.5" fill="#1C3278" />
             <rect x="12" y="31" width="2" height="4" rx="0.5" fill="#93C5FD" />
@@ -230,7 +230,7 @@ const CustomIcons = {
 
     // 14. Recommended Broker — bank/institutional building with columns
     Broker: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             {/* Roof triangle */}
             <path d="M24 8L8 20h32L24 8z" fill="#1C3278" />
             {/* Roof beam */}
@@ -248,7 +248,7 @@ const CustomIcons = {
 
     // 15. Mentorship Course — Video play button inside a screen
     MentorshipCourse: () => (
-        <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-12 sm:h-12" fill="none">
+        <svg viewBox="0 0 48 48" className="w-8 h-8 sm:w-12 sm:h-12" fill="none">
             <circle cx="24" cy="24" r="23" fill="#2563EB" />
             <rect x="12" y="14" width="24" height="20" rx="3" fill="white" />
             <polygon points="20,19 20,29 29,24" fill="#2563EB" />
@@ -302,7 +302,7 @@ const accessItems = [
         description: "System helps you pass prop firm challenges.",
         icon: <CustomIcons.PassFunded />,
         iconBg: "bg-transparent",
-        href: "/",
+        href: "/pass-funded-accounts",
         buttonStyle: "dark"
     },
     {
@@ -351,7 +351,7 @@ const accessItems = [
         description: "Calculate exact lot size plus risk management.",
         icon: <CustomIcons.RiskCalc />,
         iconBg: "bg-transparent",
-        href: "/",
+        href: "/risk-calculator",
         buttonStyle: "light"
     },
     {
@@ -383,29 +383,29 @@ export default function AccessSection() {
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-6">
                     {accessItems.map((item, index) => {
                         return (
                             <div
                                 key={index}
-                                className="bg-white rounded-[16px] sm:rounded-[20px] p-4 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col h-full hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300"
+                                className="bg-white rounded-[12px] sm:rounded-[20px] p-2.5 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center sm:items-start h-full hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300"
                             >
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${item.iconBg}`}>
+                                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-4 mb-2 sm:mb-4 w-full">
+                                    <div className={`flex items-center justify-center shrink-0 ${item.iconBg}`}>
                                         {item.icon}
                                     </div>
-                                    <h3 className="font-bold text-[#1a1a1a] text-[14px] sm:text-[17px] leading-tight flex-1">
+                                    <h3 className="font-bold text-[#1a1a1a] text-[11px] max-[360px]:text-[10px] sm:text-[17px] leading-tight flex-1 text-center sm:text-left">
                                         {item.title}
                                     </h3>
                                 </div>
 
-                                <p className="text-gray-500 text-[12px] sm:text-sm mb-4 sm:mb-6 flex-1 pr-1 sm:pr-2 leading-snug">
+                                <p className="text-gray-500 text-[10px] max-[360px]:text-[9px] sm:text-sm mb-3 sm:mb-6 flex-1 text-center sm:text-left sm:pr-2 leading-snug">
                                     {item.description}
                                 </p>
 
                                 <Link href={item.href} className="w-full mt-auto block">
                                     <button
-                                        className={`w-full py-2 sm:py-2.5 rounded-lg font-semibold text-[13px] sm:text-sm transition-colors duration-200 ${item.buttonStyle === 'dark'
+                                        className={`w-full py-1.5 sm:py-2.5 rounded-md sm:rounded-lg font-semibold text-[10px] max-[360px]:text-[9px] sm:text-sm transition-colors duration-200 ${item.buttonStyle === 'dark'
                                             ? 'bg-[#1e3aa0] text-white hover:bg-[#152a7a]'
                                             : 'bg-[#eef2fc] text-[#1e3aa0] hover:bg-[#dfe6f7]'
                                             }`}
