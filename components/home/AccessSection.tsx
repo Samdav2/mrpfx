@@ -256,7 +256,18 @@ const CustomIcons = {
     )
 };
 
-const accessItems = [
+interface AccessItem {
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    iconBg: string;
+    href: string;
+    buttonStyle: "dark" | "light";
+    buttonText?: string;
+    onClick?: () => void;
+}
+
+const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
     {
         title: "VIP Signals",
         description: "Get elite trade setups & VIP signals.",
@@ -278,8 +289,9 @@ const accessItems = [
         description: "Learn to trade like a professional.",
         icon: <CustomIcons.MentorshipCourse />,
         iconBg: "bg-transparent",
-        href: "/mentorship-course",
-        buttonStyle: "dark"
+        href: "#",
+        buttonStyle: "dark",
+        onClick: onMentorshipClick
     },
     {
         title: "Account Management",
@@ -373,7 +385,13 @@ const accessItems = [
     }
 ];
 
-export default function AccessSection() {
+interface AccessSectionProps {
+    onMentorshipClick?: () => void;
+}
+
+export default function AccessSection({ onMentorshipClick }: AccessSectionProps) {
+    const accessItems = getAccessItems(onMentorshipClick);
+
     return (
         <section className="bg-[#f8f9fc] py-16 lg:py-24">
             <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
@@ -403,7 +421,12 @@ export default function AccessSection() {
                                     {item.description}
                                 </p>
 
-                                <Link href={item.href} className="w-full mt-auto block">
+                                <Link href={item.href} className="w-full mt-auto block" onClick={(e) => {
+                                    if (item.onClick) {
+                                        e.preventDefault();
+                                        item.onClick();
+                                    }
+                                }}>
                                     <button
                                         className={`w-full py-1.5 sm:py-2.5 rounded-md sm:rounded-lg font-semibold text-[10px] max-[360px]:text-[9px] sm:text-sm transition-colors duration-200 ${item.buttonStyle === 'dark'
                                             ? 'bg-[#1e3aa0] text-white hover:bg-[#152a7a]'

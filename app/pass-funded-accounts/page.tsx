@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 
 export default function PassFundedAccountsPage() {
     return (
@@ -76,9 +77,9 @@ export default function PassFundedAccountsPage() {
                                     </li>
                                 </ul>
 
-                                <button className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md">
+                                <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Step%201%20Pass%20Only)&price=490" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md text-center block">
                                     Select Step 1 Pass
-                                </button>
+                                </Link>
                             </div>
                         </div>
 
@@ -108,9 +109,9 @@ export default function PassFundedAccountsPage() {
                                     ))}
                                 </ul>
 
-                                <button className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md">
-                                    Select Step 1 Pass
-                                </button>
+                                <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Full)" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md text-center block">
+                                    Select Guaranteed Full Pass
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -144,9 +145,9 @@ export default function PassFundedAccountsPage() {
                                     </li>
                                 </ul>
 
-                                <button className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md">
-                                    Select Step 1 Pass
-                                </button>
+                                <Link href="/pass-funded-accounts/checkout?plan=Standard&type=2-Step%20Challenge%20(Full)&price=390" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md text-center block">
+                                    Select Standard Pass
+                                </Link>
                             </div>
                         </div>
 
@@ -176,9 +177,9 @@ export default function PassFundedAccountsPage() {
                                     ))}
                                 </ul>
 
-                                <button className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md">
-                                    Select 1-Step Completion
-                                </button>
+                                <Link href="/pass-funded-accounts/checkout?plan=Standard&type=Full%20Completion" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-3.5 rounded-lg transition-colors duration-200 mt-auto shadow-md text-center block">
+                                    Select Standard Completion
+                                </Link>
                             </div>
                         </div>
                     </div>

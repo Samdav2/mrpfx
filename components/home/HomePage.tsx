@@ -11,6 +11,7 @@ import Community from './Community';
 import TradingStrategy from './TradingStrategy';
 import NewsletterSection from '../shared/NewsletterSection';
 import OfferPopup from '../shared/OfferPopup';
+import MentorshipModal from './MentorshipModal';
 
 export default function HomePage() {
     const [showMentorshipPopup, setShowMentorshipPopup] = useState(false);
@@ -39,7 +40,9 @@ export default function HomePage() {
     return (
         <main className="min-h-screen bg-white">
             <Hero />
-            <AccessSection />
+            <AccessSection
+                onMentorshipClick={() => setShowMentorshipPopup(true)}
+            />
             <Services
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
                 onVipClick={() => setShowVipPopup(true)}
@@ -56,10 +59,9 @@ export default function HomePage() {
             <TradingStrategy />
             <NewsletterSection />
 
-            <OfferPopup
+            <MentorshipModal
                 isOpen={showMentorshipPopup}
                 onClose={() => setShowMentorshipPopup(false)}
-                items={mentorshipItems}
             />
             <OfferPopup
                 isOpen={showVipPopup}
