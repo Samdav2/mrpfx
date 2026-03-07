@@ -261,49 +261,9 @@ const Header = () => {
       </div>
 
       {/* Mobile Header */}
-      <div className="lg:hidden flex flex-col p-4 bg-white">
-        {/* Top Row: Login / Sign Up Buttons or User Info */}
-        <div className="flex justify-center gap-4 mb-6 w-full">
-          {user ? (
-            <div className="flex flex-col items-center w-full">
-              <div className="text-center mb-4">
-                <p className="text-[#2A3596] font-bold text-sm">Hello, {user.user_email}</p>
-              </div>
-              <div className="flex gap-3">
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center bg-white border border-[#2A3596] text-[#2A3596] font-bold text-sm px-6 py-2 rounded-md"
-                >
-                  My Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center bg-red-50 border border-red-200 text-red-600 font-bold text-sm px-6 py-2 rounded-md"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center bg-white border border-[#1a237e] text-[#1a237e] font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
-              >
-                Login
-              </Link>
-              <Link
-                href="/sign-up"
-                className="inline-flex items-center justify-center bg-[#1a237e] text-white font-bold text-sm px-8 py-2.5 rounded-md w-[120px]"
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Bottom Row: Logo and Menu Toggle */}
-        <div className="flex justify-between items-center w-full relative">
+      <div className="lg:hidden flex flex-col bg-white">
+        {/* Logo and Menu Toggle */}
+        <div className="flex justify-between items-center w-full p-4 relative z-50">
           <Link href="/">
             <img
               alt="Mr P FX"
@@ -334,9 +294,9 @@ const Header = () => {
 
         {/* Mobile Menu Dropdown Overlay */}
         {isMenuOpen && (
-          <nav className="fixed left-0 w-full bg-black z-50 overflow-y-auto animate-fadeIn" style={{
-            top: '160px',
-            height: 'calc(100vh - 160px)',
+          <nav className="fixed left-0 w-full bg-black z-40 overflow-y-auto animate-fadeIn" style={{
+            top: '84px',
+            height: 'calc(100vh - 84px)',
             padding: '40px 20px'
           }}>
             <ul className="flex flex-col items-center gap-6 list-none p-0 m-0 w-full">
@@ -418,6 +378,41 @@ const Header = () => {
                   Support
                 </Link>
               </li>
+
+              {/* Divider */}
+              <li className="w-full border-t border-gray-800 my-4"></li>
+
+              {/* Auth Actions in Mobile Menu */}
+              {user ? (
+                <>
+                  <li className="w-full text-center mb-2">
+                    <p className="text-gray-400 font-medium text-sm">Hello, {user.user_email}</p>
+                  </li>
+                  <li className="w-full text-center">
+                    <Link href="/dashboard" onClick={closeMenu} className="text-white font-bold text-lg uppercase tracking-wide hover:text-gray-300 transition-colors block py-2">
+                      My Dashboard
+                    </Link>
+                  </li>
+                  <li className="w-full text-center">
+                    <button onClick={() => { handleLogout(); closeMenu(); }} className="text-red-500 font-bold text-lg uppercase tracking-wide hover:text-red-400 transition-colors block py-2 w-full">
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="w-full text-center">
+                    <Link href="/login" onClick={closeMenu} className="text-white font-bold text-lg uppercase tracking-wide hover:text-gray-300 transition-colors block py-2">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="w-full text-center">
+                    <Link href="/sign-up" onClick={closeMenu} className="text-[#5B2EFF] font-bold text-lg uppercase tracking-wide hover:text-[#4920cc] transition-colors block py-2 mt-2">
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         )}
