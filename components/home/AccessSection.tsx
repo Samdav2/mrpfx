@@ -298,7 +298,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Manage multiple trading accounts in one place.",
         icon: <CustomIcons.AccountMgmt />,
         iconBg: "bg-transparent",
-        href: "/support",
+        href: "/account-management",
         buttonStyle: "dark"
     },
     {
@@ -306,7 +306,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Automate profitable trades from top traders.",
         icon: <CustomIcons.CopyTrading />,
         iconBg: "bg-transparent",
-        href: "/",
+        href: "/copy-trading",
         buttonStyle: "dark"
     },
     {

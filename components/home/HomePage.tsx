@@ -21,7 +21,7 @@ export default function HomePage() {
     const mentorshipItems = [
         { label: "Standard Mentorship", href: "/mentorship-course", color: "purple" as const },
         { label: "One - On - One Class With Mr P", href: "https://wa.me/2349076804442", color: "purple" as const, isExternal: true },
-        { label: "MC100", href: "/mentorship-course", color: "blue" as const }
+        { label: "MC100", href: "/mentorship-course-100", color: "blue" as const }
     ];
 
     const vipItems = [
