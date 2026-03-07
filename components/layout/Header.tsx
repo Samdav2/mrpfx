@@ -274,22 +274,35 @@ const Header = () => {
             />
           </Link>
 
-          <button
-            onClick={toggleMenu}
-            className="p-2 cursor-pointer bg-transparent border-none outline-none"
-            aria-label="Toggle menu"
-            style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent' }}
-          >
-            {isMenuOpen ? (
-              <svg className="w-8 h-8" fill="none" stroke="black" viewBox="0 0 24 24" style={{ border: 'none', outline: 'none' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-8 h-8" fill="none" stroke="black" viewBox="0 0 24 24" style={{ border: 'none', outline: 'none' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+          <div className="flex items-center gap-3">
+            {/* Profile Icon for logged-in users */}
+            {user && (
+              <Link
+                href="/dashboard"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-[#2A3596] text-white font-bold text-sm uppercase shadow-md hover:bg-[#1a237e] transition-colors flex-shrink-0"
+                aria-label="Go to Dashboard"
+              >
+                {user.user_email?.charAt(0) || 'U'}
+              </Link>
             )}
-          </button>
+
+            <button
+              onClick={toggleMenu}
+              className="p-2 cursor-pointer bg-transparent border-none outline-none"
+              aria-label="Toggle menu"
+              style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent' }}
+            >
+              {isMenuOpen ? (
+                <svg className="w-8 h-8" fill="none" stroke="black" viewBox="0 0 24 24" style={{ border: 'none', outline: 'none' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-8 h-8" fill="none" stroke="black" viewBox="0 0 24 24" style={{ border: 'none', outline: 'none' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Dropdown Overlay */}
