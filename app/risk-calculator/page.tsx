@@ -81,10 +81,10 @@ export default function RiskCalculator() {
                                         onChange={(e) => setInstrument(e.target.value)}
                                         className="appearance-none bg-transparent text-right font-medium text-slate-700 outline-none pr-4 focus:outline-none cursor-pointer"
                                     >
-                                        <option value="EURUSD">EURUSD</option>
-                                        <option value="GBPUSD">GBPUSD</option>
-                                        <option value="USDJPY">USDJPY</option>
-                                        <option value="XAUUSD">XAUUSD</option>
+                                        <option value="XAGUSD">XAGUSD</option>
+                                        <option value="US100">US100</option>
+                                        <option value="US30">US30</option>
+                                        <option value="USOIL">USOIL</option>
                                     </select>
                                     <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                                 </div>

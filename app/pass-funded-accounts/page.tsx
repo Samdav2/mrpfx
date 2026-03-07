@@ -30,183 +30,288 @@ export default function PassFundedAccountsPage() {
                 </p>
 
                 <div className="w-full flex justify-center mb-16 px-4">
-                    <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-16">
+                    <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-16 md:gap-24">
+
                         {/* Guaranteed Pass Section */}
                         <div className="w-full flex flex-col items-center">
-                            <div className="w-full max-w-5xl mx-auto flex flex-row shadow-xl rounded-xl overflow-hidden mb-16 border border-gray-200">
-                                {/* Guaranteed Pass Column */}
-                                <div className="flex-1 flex flex-col bg-white w-1/2">
-                                    <div className="text-center py-3 md:py-4 px-1 md:px-2 bg-[#f8fafc] border-b border-gray-100 flex flex-col items-center justify-center min-h-[90px] md:min-h-[100px]">
-                                        <div className="flex flex-col xl:flex-row items-center gap-1 xl:gap-2">
-                                            <span className="font-bold text-[#2A2A72] text-sm sm:text-lg md:text-xl">Guaranteed Pass</span>
-                                            <span className="bg-[#5c6bc0] text-white text-[8px] md:text-[10px] uppercase font-bold px-1.5 py-0.5 rounded tracking-wide whitespace-nowrap">Most Popular 👍</span>
+                            <h2 className="text-2xl md:text-3xl font-bold text-[#2A2A72] mb-2 font-palanquin-dark tracking-tight">Guaranteed Pass</h2>
+                            <p className="text-sm md:text-base text-[#4b5563] mb-10 font-medium">Full refund if we don't pass your evaluation</p>
+
+                            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 relative max-w-5xl mx-auto">
+                                {/* Card 1: 2-Step Challenge (Step 1 Pass Only) */}
+                                <div className="bg-[#e8ebfb] rounded-xl overflow-hidden flex flex-col shadow-sm">
+                                    <div className="p-6 md:p-8 text-left flex flex-col flex-1">
+                                        <h4 className="text-[#2e377f] text-xl font-bold tracking-tight mb-1">2-Step Challenge</h4>
+                                        <p className="text-[#5c6bc0] text-[15px] font-medium mb-4">Step 1 Pass Only</p>
+                                        <p className="text-[#4b5563] text-[13px] leading-relaxed mb-8">Best for traders who want help clearing the first stage. We handle Step 1 only. After passing, control is returned to you.</p>
+
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-gray-300/50">
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
                                         </div>
-                                        <span className="text-[10px] md:text-sm text-[#4b5563] mt-1 md:mt-2 font-medium leading-tight px-1">Full refund if we don't pass your evaluation</span>
-                                    </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$800' },
+                                                { label: '$100k Account', price: '$1200' },
+                                                { label: '$200k Account', price: '$1700' },
+                                                { label: '$500k Account', price: '$2500' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#334155] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-[#5c6bc0] text-white font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
 
-                                    <div className="p-2 sm:p-4 md:p-6 flex flex-col gap-4 md:gap-6">
-                                        {/* Card 1: 2-Step Challenge (Step 1 Pass Only) */}
-                                        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col relative">
-                                            <div className="bg-[#2e377f] p-3 md:p-5 text-left relative">
-                                                <h4 className="text-white text-sm sm:text-base md:text-[20px] font-bold tracking-tight leading-snug">2-Step Challenge <span className="block xl:inline font-normal text-[10px] sm:text-xs md:text-sm opacity-90 xl:ml-1 mt-0.5 xl:mt-0">Step 1 Pass Only</span></h4>
-                                            </div>
-                                            <div className="p-3 md:p-5 text-left flex flex-col flex-1 bg-gray-50/50">
-                                                <div className="flex justify-between items-baseline mb-2 pb-1 border-b border-gray-200">
-                                                    <span className="text-[#64748b] font-bold text-xs uppercase tracking-wider">Account</span>
-                                                    <span className="text-[#64748b] font-bold text-xs uppercase tracking-wider">Pricing</span>
-                                                </div>
-                                                <ul className="space-y-3 mb-6 flex-1">
-                                                    {[
-                                                        { label: '$50k Account', price: '$800' },
-                                                        { label: '$100k Account', price: '$1200' },
-                                                        { label: '$200k Account', price: '$1700' },
-                                                        { label: '$500k Account', price: '$2500' }
-                                                    ].map((item, i) => (
-                                                        <li key={i} className="flex items-center justify-between">
-                                                            <div className="flex items-center">
-                                                                <span className="text-[#334155] text-[11px] sm:text-[13px] md:text-[14px] font-medium">{item.label}</span>
-                                                            </div>
-                                                            <span className="text-[#1a1a1a] font-bold text-xs sm:text-sm md:text-[15px]">{item.price}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-[#1e293b] font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">You may continue Step 2 yourself</span>
+                                                </li>
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Or upgrade later to full completion</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
 
-                                                <div className="mb-6">
-                                                    <p className="text-[#1e293b] font-semibold text-xs md:text-sm mb-2 md:mb-3">Benefits</p>
-                                                    <ul className="space-y-2">
-                                                        <li className="flex items-start">
-                                                            <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 mt-0.5 flex-shrink-0" />
-                                                            <span className="text-[#334155] text-[10px] sm:text-[12px] md:text-[13px] font-medium leading-tight">Pass prop firm evaluation for you</span>
-                                                        </li>
-                                                        <li className="flex items-start">
-                                                            <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 mt-0.5 flex-shrink-0" />
-                                                            <span className="text-[#334155] text-[10px] sm:text-[12px] md:text-[13px] font-medium leading-tight">Full refund if evaluation fails</span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Step%201%20Pass%20Only)" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-2 md:py-3 rounded-lg transition-colors duration-200 mt-auto shadow-sm text-center block text-xs sm:text-sm md:text-[15px]">
-                                                    Select Step 1 Pass
-                                                </Link>
-                                            </div>
-                                        </div>
-
-                                        {/* Card 2: 2-Step Challenge Full */}
-                                        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col relative">
-                                            <div className="bg-[#2e377f] p-3 md:p-5 text-left">
-                                                <h4 className="text-white text-sm sm:text-base md:text-[20px] font-bold tracking-tight leading-snug">2-Step Challenge <span className="block xl:inline font-normal text-[10px] sm:text-xs md:text-sm opacity-90 xl:ml-1 mt-0.5 xl:mt-0">Full (Step 1 + Step 2)</span></h4>
-                                            </div>
-                                            <div className="p-3 md:p-5 text-left flex flex-col flex-1 bg-gray-50/50">
-                                                <ul className="space-y-3 mb-6 border-b border-gray-200 pb-4">
-                                                    {[
-                                                        { label: '$50k Account', price: '$1100' },
-                                                        { label: '$100k Account', price: '$1600' },
-                                                        { label: '$200k Account', price: '$2200' },
-                                                        { label: '$500k Account', price: '$3200' }
-                                                    ].map((item, i) => (
-                                                        <li key={i} className="flex items-center justify-between">
-                                                            <div className="flex items-center">
-                                                                <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 flex-shrink-0" />
-                                                                <span className="text-[#334155] text-[11px] sm:text-[13px] md:text-[14px] font-medium">{item.label}</span>
-                                                            </div>
-                                                            <span className="text-[#1a1a1a] font-bold text-xs sm:text-sm md:text-[15px]">{item.price}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-
-                                                <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Full)" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-2 md:py-3 rounded-lg transition-colors duration-200 mt-auto shadow-sm text-center block text-xs sm:text-sm md:text-[15px]">
-                                                    Select Guaranteed Full Pass
-                                                </Link>
-                                            </div>
-                                        </div>
+                                        <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Step%201%20Pass%20Only)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select Step 1 Pass
+                                        </Link>
                                     </div>
                                 </div>
 
-                                {/* Divider Line on Desktop */}
-                                <div className="block w-px bg-gray-200 shrink-0"></div>
-
-                                {/* Standard Pass Column */}
-                                <div className="flex-1 flex flex-col bg-white w-1/2">
-                                    <div className="text-center py-3 md:py-4 px-1 md:px-2 bg-[#f8fafc] border-b border-gray-100 flex flex-col items-center justify-center min-h-[90px] md:min-h-[100px]">
-                                        <span className="font-bold text-[#2A2A72] text-sm sm:text-lg md:text-xl">Standard Pass</span>
-                                        <span className="text-[10px] md:text-sm text-[#4b5563] mt-1 md:mt-2 font-medium leading-tight px-1">Professional evaluation passing service</span>
+                                {/* Card 2: 2-Step Challenge Full */}
+                                <div className="bg-[#2a2b53] rounded-xl overflow-hidden flex flex-col shadow-xl transform md:-translate-y-4 relative border-[1.5px] border-[#5c6bc0]">
+                                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#5c6bc0] text-white text-[11px] font-bold uppercase tracking-wider py-1.5 px-4 rounded-b-lg flex items-center gap-1.5 z-10 w-max">
+                                        MOST CHOSEN <span className="text-sm">👍</span>
                                     </div>
+                                    <div className="p-6 md:p-8 pt-12 text-left flex flex-col flex-1">
+                                        <h4 className="text-white text-xl font-bold tracking-tight mb-1">2-Step Challenge</h4>
+                                        <p className="text-[#a5b4fc] text-[15px] font-medium mb-4">Full (Step 1 + Step 2)</p>
+                                        <p className="text-[#cbd5e1] text-[13px] leading-relaxed mb-8">Best for traders who want the entire challenge completed. We complete both Step 1 and Step 2, then return the passed account to you.</p>
 
-                                    <div className="p-2 sm:p-4 md:p-6 flex flex-col gap-4 md:gap-6">
-                                        {/* Card 1: 2-Step Challenge (Step 1 Pass Only) Standard Form */}
-                                        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col relative">
-                                            <div className="bg-[#2e377f] p-3 md:p-5 text-left relative">
-                                                <h4 className="text-white text-sm sm:text-base md:text-[20px] font-bold tracking-tight leading-snug">2-Step Challenge <span className="block xl:inline font-normal text-[10px] sm:text-xs md:text-sm opacity-90 xl:ml-1 mt-0.5 xl:mt-0">Full (Step 1 + Step 2)</span></h4>
-                                            </div>
-                                            <div className="p-3 md:p-5 text-left flex flex-col flex-1 bg-gray-50/50">
-                                                <div className="flex justify-between items-baseline mb-2 pb-1 border-b border-gray-200">
-                                                    <span className="text-[#64748b] font-bold text-xs uppercase tracking-wider">Account</span>
-                                                    <span className="text-[#64748b] font-bold text-xs uppercase tracking-wider">Pricing</span>
-                                                </div>
-                                                <ul className="space-y-3 mb-6 flex-1">
-                                                    {[
-                                                        { label: '$50k Account', price: '$650' },
-                                                        { label: '$100k Account', price: '$850' },
-                                                        { label: '$200k Account', price: '$1290' },
-                                                        { label: '$500k Account', price: '$1790' }
-                                                    ].map((item, i) => (
-                                                        <li key={i} className="flex items-center justify-between">
-                                                            <div className="flex items-center">
-                                                                <span className="text-[#334155] text-[11px] sm:text-[13px] md:text-[14px] font-medium">{item.label}</span>
-                                                            </div>
-                                                            <span className="text-[#1a1a1a] font-bold text-xs sm:text-sm md:text-[15px]">{item.price}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-
-                                                <div className="mb-6">
-                                                    <p className="text-[#1e293b] font-semibold text-xs md:text-sm mb-2 md:mb-3">Benefits</p>
-                                                    <ul className="space-y-2">
-                                                        <li className="flex items-start">
-                                                            <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 mt-0.5 flex-shrink-0" />
-                                                            <span className="text-[#334155] text-[10px] sm:text-[12px] md:text-[13px] font-medium leading-tight">You may continue Step 2 yourself</span>
-                                                        </li>
-                                                        <li className="flex items-start">
-                                                            <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 mt-0.5 flex-shrink-0" />
-                                                            <span className="text-[#334155] text-[10px] sm:text-[12px] md:text-[13px] font-medium leading-tight">Or upgrade later to full completion</span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <Link href="/pass-funded-accounts/checkout?plan=Standard&type=2-Step%20Challenge%20(Full)" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-2 md:py-3 rounded-lg transition-colors duration-200 mt-auto shadow-sm text-center block text-xs sm:text-sm md:text-[15px]">
-                                                    Select Full Challenge
-                                                </Link>
-                                            </div>
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-white/10">
+                                            <span className="text-[#94a3b8] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#94a3b8] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
                                         </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$1100' },
+                                                { label: '$100k Account', price: '$1600' },
+                                                { label: '$200k Account', price: '$2200' },
+                                                { label: '$500k Account', price: '$3200' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#e2e8f0] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-white text-[#2a2b53] font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
 
-                                        {/* Card 2: 1-Step Challenge */}
-                                        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden flex flex-col relative">
-                                            <div className="bg-[#2e377f] p-3 md:p-5 text-left">
-                                                <h4 className="text-white text-sm sm:text-base md:text-[20px] font-bold tracking-tight leading-snug">1-Step Challenge <span className="block xl:inline font-normal text-[10px] sm:text-xs md:text-sm opacity-90 xl:ml-1 mt-0.5 xl:mt-0">Full</span></h4>
-                                            </div>
-                                            <div className="p-3 md:p-5 text-left flex flex-col flex-1 bg-gray-50/50">
-                                                <ul className="space-y-3 mb-6 border-b border-gray-200 pb-4">
-                                                    {[
-                                                        { label: '$50k Account', price: '$1400' },
-                                                        { label: '$100k Account', price: '$1900' },
-                                                        { label: '$200k Account', price: '$2600' },
-                                                        { label: '$500k Account', price: '$3800' }
-                                                    ].map((item, i) => (
-                                                        <li key={i} className="flex items-center justify-between">
-                                                            <div className="flex items-center">
-                                                                <Check className="h-3 w-3 sm:h-4 sm:w-4 text-[#3f51b5] mr-1.5 md:mr-2 flex-shrink-0" />
-                                                                <span className="text-[#334155] text-[11px] sm:text-[13px] md:text-[14px] font-medium">{item.label}</span>
-                                                            </div>
-                                                            <span className="text-[#1a1a1a] font-bold text-xs sm:text-sm md:text-[15px]">{item.price}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-white font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#a5b4fc] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#cbd5e1] text-[13px] font-medium leading-tight">Optional access to the PropSol Trading System for funded trading support</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
 
-                                                <Link href="/pass-funded-accounts/checkout?plan=Standard&type=1-Step%20Challenge%20(Full)" className="w-full bg-[#3f51b5] hover:bg-[#303f9f] text-white font-medium py-2 md:py-3 rounded-lg transition-colors duration-200 mt-auto shadow-sm text-center block text-xs sm:text-sm md:text-[15px]">
-                                                    Select 1-Step Completion
-                                                </Link>
-                                            </div>
+                                        <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=2-Step%20Challenge%20(Full)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select Full 2-Step Completion
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Card 3: 1-Step Challenge Full */}
+                                <div className="bg-[#e8ebfb] rounded-xl overflow-hidden flex flex-col shadow-sm">
+                                    <div className="p-6 md:p-8 text-left flex flex-col flex-1">
+                                        <h4 className="text-[#2e377f] text-xl font-bold tracking-tight mb-1">1-Step Challenge</h4>
+                                        <p className="text-[#5c6bc0] text-[15px] font-medium mb-4">Full</p>
+                                        <p className="text-[#4b5563] text-[13px] leading-relaxed mb-8">Best for firms with single-phase challenges. We complete the entire 1-Step challenge in one structured phase.</p>
+
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-gray-300/50">
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
                                         </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$1400' },
+                                                { label: '$100k Account', price: '$1900' },
+                                                { label: '$200k Account', price: '$2600' },
+                                                { label: '$500k Account', price: '$3800' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#334155] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-[#5c6bc0] text-white font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-[#1e293b] font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Funded account returned to you</span>
+                                                </li>
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Optional access to the PropSol Trading System</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
+
+                                        <Link href="/pass-funded-accounts/checkout?plan=Guaranteed&type=1-Step%20Challenge%20(Full)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select 1-Step Completion
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {/* Standard Pass Section */}
+                        <div className="w-full flex flex-col items-center">
+                            <h2 className="text-2xl md:text-3xl font-bold text-[#2A2A72] mb-2 font-palanquin-dark tracking-tight">Standard Pass</h2>
+                            <p className="text-sm md:text-base text-[#4b5563] mb-10 font-medium">Professional evaluation passing service - No Refund Guarantee</p>
+
+                            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 relative max-w-5xl mx-auto">
+                                {/* Card 1: 2-Step Challenge (Step 1 Pass Only) */}
+                                <div className="bg-[#e8ebfb] rounded-xl overflow-hidden flex flex-col shadow-sm">
+                                    <div className="p-6 md:p-8 text-left flex flex-col flex-1">
+                                        <h4 className="text-[#2e377f] text-xl font-bold tracking-tight mb-1">2-Step Challenge</h4>
+                                        <p className="text-[#5c6bc0] text-[15px] font-medium mb-4">Step 1 Pass Only</p>
+                                        <p className="text-[#4b5563] text-[13px] leading-relaxed mb-8">Best for traders who want help clearing the first stage. We handle Step 1 only. After passing, control is returned to you.</p>
+
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-gray-300/50">
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
+                                        </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$490' },
+                                                { label: '$100k Account', price: '$690' },
+                                                { label: '$200k Account', price: '$990' },
+                                                { label: '$300k Account', price: '$1390' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#334155] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-[#5c6bc0] text-white font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-[#1e293b] font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">You may continue Step 2 yourself</span>
+                                                </li>
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Or upgrade later to full completion</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
+
+                                        <Link href="/pass-funded-accounts/checkout?plan=Standard&type=2-Step%20Challenge%20(Step%201%20Pass%20Only)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select Step 1 Pass
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Card 2: 2-Step Challenge Full */}
+                                <div className="bg-[#2a2b53] rounded-xl overflow-hidden flex flex-col shadow-xl transform md:-translate-y-4 relative border-[1.5px] border-[#5c6bc0]">
+                                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[#5c6bc0] text-white text-[11px] font-bold uppercase tracking-wider py-1.5 px-4 rounded-b-lg flex items-center gap-1.5 z-10 w-max">
+                                        MOST CHOSEN <span className="text-sm">👍</span>
+                                    </div>
+                                    <div className="p-6 md:p-8 pt-12 text-left flex flex-col flex-1">
+                                        <h4 className="text-white text-xl font-bold tracking-tight mb-1">2-Step Challenge</h4>
+                                        <p className="text-[#a5b4fc] text-[15px] font-medium mb-4">Full (Step 1 + Step 2)</p>
+                                        <p className="text-[#cbd5e1] text-[13px] leading-relaxed mb-8">Best for traders who want the entire challenge completed. We complete both Step 1 and Step 2, then return the passed account to you.</p>
+
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-white/10">
+                                            <span className="text-[#94a3b8] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#94a3b8] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
+                                        </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$650' },
+                                                { label: '$100k Account', price: '$850' },
+                                                { label: '$200k Account', price: '$1290' },
+                                                { label: '$500k Account', price: '$1790' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#e2e8f0] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-white text-[#2a2b53] font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-white font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#a5b4fc] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#cbd5e1] text-[13px] font-medium leading-tight">Optional access to the PropSol Trading System for funded trading support</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
+
+                                        <Link href="/pass-funded-accounts/checkout?plan=Standard&type=2-Step%20Challenge%20(Full)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select Full 2-Step Completion
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Card 3: 1-Step Challenge Full */}
+                                <div className="bg-[#e8ebfb] rounded-xl overflow-hidden flex flex-col shadow-sm">
+                                    <div className="p-6 md:p-8 text-left flex flex-col flex-1">
+                                        <h4 className="text-[#2e377f] text-xl font-bold tracking-tight mb-1">1-Step Challenge</h4>
+                                        <p className="text-[#5c6bc0] text-[15px] font-medium mb-4">Full</p>
+                                        <p className="text-[#4b5563] text-[13px] leading-relaxed mb-8">Best for firms with single-phase challenges. We complete the entire 1-Step challenge in one structured phase.</p>
+
+                                        <div className="flex justify-between items-baseline mb-4 pb-2 border-b border-gray-300/50">
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Account</span>
+                                            <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
+                                        </div>
+                                        <ul className="space-y-3 mb-10">
+                                            {[
+                                                { label: '$50k Account', price: '$1400' },
+                                                { label: '$100k Account', price: '$1900' },
+                                                { label: '$200k Account', price: '$2600' },
+                                                { label: '$500k Account', price: '$3800' }
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-center justify-between">
+                                                    <span className="text-[#334155] text-[15px] font-medium">{item.label}</span>
+                                                    <span className="bg-[#5c6bc0] text-white font-bold text-sm px-2.5 py-1 rounded shadow-sm">{item.price}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* <div className="mb-10 mt-auto">
+                                            <p className="text-[#1e293b] font-semibold text-[15px] mb-4">Benefits</p>
+                                            <ul className="space-y-3">
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Funded account returned to you</span>
+                                                </li>
+                                                <li className="flex items-start gap-2.5">
+                                                    <Check className="h-4 w-4 text-[#5c6bc0] mt-0.5 flex-shrink-0" />
+                                                    <span className="text-[#4b5563] text-[13px] font-medium leading-tight">Optional access to the PropSol Trading System</span>
+                                                </li>
+                                            </ul>
+                                        </div> */}
+
+                                        <Link href="/pass-funded-accounts/checkout?plan=Standard&type=1-Step%20Challenge%20(Full)" className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px]">
+                                            Select 1-Step Completion
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

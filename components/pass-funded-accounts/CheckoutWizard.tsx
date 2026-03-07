@@ -57,8 +57,8 @@ function CheckoutWizardContent() {
                 }
                 return true;
             case 2:
-                if (!formData.propFirmName || formData.propFirmName.length < 3) {
-                    toast.error("Prop Firm Name must be at least 3 characters");
+                if (!formData.propFirmName) {
+                    toast.error("Please select a Prop Firm");
                     return false;
                 }
                 if (!formData.propFirmWebsite || formData.propFirmWebsite.length < 5) {
@@ -197,14 +197,20 @@ function CheckoutWizardContent() {
                     <div className="space-y-6 animate-fadeIn">
                         <div>
                             <label className={labelClass}>Name of Prop Firm</label>
-                            <input
-                                type="text"
-                                name="propFirmName"
-                                value={formData.propFirmName}
-                                onChange={handleInputChange}
-                                placeholder="e.g. FTMO, MyForexFunds"
-                                className={inputClass}
-                            />
+                            <div className="relative">
+                                <select
+                                    name="propFirmName"
+                                    value={formData.propFirmName}
+                                    onChange={handleInputChange}
+                                    className={`${inputClass} appearance-none cursor-pointer`}
+                                >
+                                    <option value="" disabled>Select Prop Firm</option>
+                                    <option value="FundedNext">FundedNext</option>
+                                    <option value="FTMO">FTMO</option>
+                                    <option value="Fundingpips">Fundingpips</option>
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                            </div>
                         </div>
                         <div>
                             <label className={labelClass}>Link to Prop Firm Website</label>
