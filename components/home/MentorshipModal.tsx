@@ -13,130 +13,136 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto">
-            <div
-                className="relative bg-[#f8f5ff] rounded-3xl p-6 sm:p-8 w-full max-w-5xl shadow-2xl animate-in zoom-in-95 duration-200 border border-purple-100 my-8"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 bg-white hover:bg-gray-100 rounded-full transition-colors shadow-sm z-10"
+        <div
+            className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto"
+            onClick={onClose}
+        >
+            <div className="flex min-h-full items-start justify-center p-4 sm:p-6 text-center">
+                <div
+                    className="relative bg-[#f8f5ff] text-left rounded-3xl p-5 sm:p-8 w-full max-w-5xl shadow-2xl animate-in zoom-in-95 duration-200 border border-purple-100 my-4 sm:my-8"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <X className="w-5 h-5 text-gray-500" />
-                </button>
+                    <button
+                        onClick={onClose}
+                        className="absolute top-3 right-3 sm:top-5 sm:right-5 p-2 bg-white hover:bg-gray-100 rounded-full transition-colors shadow-sm z-10"
+                        aria-label="Close modal"
+                    >
+                        <X className="w-5 h-5 text-gray-500 hover:text-gray-800" />
+                    </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-0">
-                    {/* Standard Mentorship */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
-                        <div className="absolute top-0 left-0 bg-[#7B61FF] text-white text-xs font-bold px-4 py-1.5 rounded-br-lg rounded-tl-2xl tracking-wider uppercase">
-                            POPULAR
-                        </div>
-                        <div className="flex gap-4 items-start mb-4">
-                            <div className="shrink-0 text-[#7B61FF]">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-8 sm:mt-0">
+                        {/* Standard Mentorship */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
+                            <div className="absolute top-0 left-0 bg-[#7B61FF] text-white text-xs font-bold px-4 py-1.5 rounded-br-lg rounded-tl-2xl tracking-wider uppercase">
+                                POPULAR
                             </div>
-                            <div>
-                                <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Standard Mentorship</h3>
-                                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                                    Gain immediate access to 10 intensive recorded sessions from beginner to pro level trading.
-                                </p>
+                            <div className="flex gap-4 items-start mb-4">
+                                <div className="shrink-0 text-[#7B61FF]">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Standard Mentorship</h3>
+                                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        Gain immediate access to 10 intensive recorded sessions from beginner to pro level trading.
+                                    </p>
+                                </div>
                             </div>
+                            <Link href="/mentorship-course" onClick={onClose} className="block mt-6">
+                                <button className="w-full py-3 bg-gradient-to-r from-[#7B61FF] to-[#9B88ED] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-purple-200">
+                                    Get Started
+                                </button>
+                            </Link>
                         </div>
-                        <Link href="/mentorship-course" onClick={onClose} className="block mt-6">
-                            <button className="w-full py-3 bg-gradient-to-r from-[#7B61FF] to-[#9B88ED] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-purple-200">
-                                Get Started
-                            </button>
-                        </Link>
+
+                        {/* One-On-One Mentorship */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
+                            <div className="absolute top-0 right-0 bg-gradient-to-r from-[#E6C687] to-[#C9A056] text-black text-xs font-bold px-4 py-1.5 rounded-bl-lg rounded-tr-2xl tracking-wider uppercase">
+                                PREMIUM
+                            </div>
+                            <div className="flex gap-4 items-start mb-4">
+                                <div className="shrink-0 text-[#7B61FF]">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        <path d="M8 10h.01"></path>
+                                        <path d="M12 10h.01"></path>
+                                        <path d="M16 10h.01"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>One-On-One Mentorship</h3>
+                                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        Get direct access to be mentored personally by Mr P, with one-on-one sessions focused solely your growth.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link href="/private-mentorship" onClick={onClose} className="block mt-6">
+                                <button className="w-full py-3 bg-gradient-to-r from-[#D6B56E] to-[#EBD299] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-yellow-100">
+                                    Get Started
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Physical Classes */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
+                            <div className="flex gap-4 items-start mb-4">
+                                <div className="shrink-0 text-[#7B61FF]">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                                        <path d="M7 11l2 2 4-4"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Physical Classes</h3>
+                                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        Visit any of our branches to be mentored in person by our expert traders for hands-on learing.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link href="/contact" onClick={onClose} className="block mt-6 md:mt-auto">
+                                <button className="w-full py-3 bg-gradient-to-r from-[#7B61FF] to-[#9B88ED] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-purple-200">
+                                    Get Started
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Mentorship Course 100 */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10 flex flex-col">
+                            <div className="absolute top-0 right-0 bg-[#A62B54] text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg rounded-tr-2xl tracking-wider uppercase">
+                                ONLY 100 SPOTS
+                            </div>
+                            <div className="flex gap-4 items-start mb-4 flex-1">
+                                <div className="shrink-0 text-[#7B61FF]">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                        <path d="M16 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Mentorship Course 100</h3>
+                                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                                        Book a spot among 100 max spots available where Mr P will be teaching one-on-one through Zoom.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link href="/mentorship-course" onClick={onClose} className="block mt-6">
+                                <button className="w-full py-3 bg-[#9E2A68] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-pink-200">
+                                    Get Started
+                                </button>
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* One-On-One Mentorship */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
-                        <div className="absolute top-0 right-0 bg-gradient-to-r from-[#E6C687] to-[#C9A056] text-black text-xs font-bold px-4 py-1.5 rounded-bl-lg rounded-tr-2xl tracking-wider uppercase">
-                            PREMIUM
-                        </div>
-                        <div className="flex gap-4 items-start mb-4">
-                            <div className="shrink-0 text-[#7B61FF]">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                    <path d="M8 10h.01"></path>
-                                    <path d="M12 10h.01"></path>
-                                    <path d="M16 10h.01"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>One-On-One Mentorship</h3>
-                                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                                    Get direct access to be mentored personally by Mr P, with one-on-one sessions focused solely your growth.
-                                </p>
-                            </div>
-                        </div>
-                        <Link href="/private-mentorship" onClick={onClose} className="block mt-6">
-                            <button className="w-full py-3 bg-gradient-to-r from-[#D6B56E] to-[#EBD299] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-yellow-100">
-                                Get Started
-                            </button>
-                        </Link>
+                    <div className="mt-8 text-center text-[#312E81] sm:text-lg">
+                        Unlock Your Trading Potential with MR P FX's Proven <strong>Mentorship Programs.</strong>
                     </div>
-
-                    {/* Physical Classes */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10">
-                        <div className="flex gap-4 items-start mb-4">
-                            <div className="shrink-0 text-[#7B61FF]">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                                    <path d="M7 11l2 2 4-4"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Physical Classes</h3>
-                                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                                    Visit any of our branches to be mentored in person by our expert traders for hands-on learing.
-                                </p>
-                            </div>
-                        </div>
-                        <Link href="/contact" onClick={onClose} className="block mt-6 md:mt-auto">
-                            <button className="w-full py-3 bg-gradient-to-r from-[#7B61FF] to-[#9B88ED] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-purple-200">
-                                Get Started
-                            </button>
-                        </Link>
-                    </div>
-
-                    {/* Mentorship Course 100 */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 relative pt-10 flex flex-col">
-                        <div className="absolute top-0 right-0 bg-[#A62B54] text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg rounded-tr-2xl tracking-wider uppercase">
-                            ONLY 100 SPOTS
-                        </div>
-                        <div className="flex gap-4 items-start mb-4 flex-1">
-                            <div className="shrink-0 text-[#7B61FF]">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                    <path d="M16 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 className="text-[#312E81] text-xl sm:text-2xl font-semibold mb-2" style={{ fontFamily: '"Outfit", sans-serif' }}>Mentorship Course 100</h3>
-                                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                                    Book a spot among 100 max spots available where Mr P will be teaching one-on-one through Zoom.
-                                </p>
-                            </div>
-                        </div>
-                        <Link href="/mentorship-course" onClick={onClose} className="block mt-6">
-                            <button className="w-full py-3 bg-[#9E2A68] text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-md shadow-pink-200">
-                                Get Started
-                            </button>
-                        </Link>
-                    </div>
-                </div>
-
-                <div className="mt-8 text-center text-[#312E81] sm:text-lg">
-                    Unlock Your Trading Potential with MR P FX's Proven <strong>Mentorship Programs.</strong>
                 </div>
             </div>
         </div>
