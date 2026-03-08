@@ -322,7 +322,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Automate your trades with premium robots.",
         icon: <CustomIcons.VIPBots />,
         iconBg: "bg-transparent",
-        href: "/all-vip-resources",
+        href: "/vip-trading-bots",
         buttonStyle: "dark"
     },
     {
@@ -330,15 +330,15 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Use free bots for automate trading.",
         icon: <CustomIcons.FreeBots />,
         iconBg: "bg-transparent",
-        href: "/free-signals-group",
+        href: "/free-robots",
         buttonStyle: "light"
     },
     {
-        title: "VIP Indicators",
+        title: "Free Indicators",
         description: "Premium custom indicators + locators.",
-        icon: <CustomIcons.PaidIndicators />,
+        icon: <CustomIcons.FreeIndicators />,
         iconBg: "bg-transparent",
-        href: "/all-vip-resources",
+        href: "/free-trading-indicators",
         buttonStyle: "light"
     },
     {
@@ -346,7 +346,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Improve your knowledge with our curated guides.",
         icon: <CustomIcons.ForexBooks />,
         iconBg: "bg-transparent",
-        href: "/shop",
+        href: "/forex-books",
         buttonStyle: "light",
         buttonText: "Get Started"
     },

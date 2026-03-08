@@ -25,14 +25,14 @@ export default function HomePage() {
     ];
 
     const vipItems = [
-        { label: "VIP Bots", href: "/all-vip-resources", color: "blue" as const },
-        { label: "VIP Indicator", href: "/all-vip-resources", color: "purple" as const },
+        { label: "VIP Bots", href: "/vip-trading-bots", color: "blue" as const },
+        { label: "VIP Indicator", href: "/vip-trading-indicators", color: "purple" as const },
         { label: "All VIP Resources", href: "/all-vip-resources", color: "purple" as const }
     ];
 
     const freeItems = [
-        { label: "Free Bots", href: "/free-signals-group", color: "blue" as const },
-        { label: "Free Indicators", href: "/free-signals-group", color: "purple" as const },
+        { label: "Free Bots", href: "/free-robots", color: "blue" as const },
+        { label: "Free Indicator", href: "/free-trading-indicators", color: "blue" as const },
         { label: "Free Mentorship videos", href: "/videos", color: "purple" as const },
         { label: "All Free Resources", href: "/free-signals-group", color: "purple" as const }
     ];
