@@ -19,42 +19,42 @@ export default function MentorshipCourse100Page() {
             {/* Main Content Container */}
             <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
-                {/* Hero Titles - Full Width at Top on Mobile */}
-                <div className="w-full mb-6 sm:mb-12 lg:mb-6">
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-1 sm:gap-2 border border-[#B68C36]/30 bg-[#2A1C0F]/50 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full backdrop-blur-sm mb-4">
-                        <svg className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="12" y1="20" x2="12" y2="10"></line>
-                            <line x1="18" y1="20" x2="18" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="16"></line>
-                        </svg>
-                        <span className="text-white text-[10px] sm:text-xs font-bold tracking-[0.1em] sm:tracking-widest uppercase">
-                            Mentorship Course <span className="text-[#D4AF37]">100</span>
-                        </span>
-                    </div>
+                {/* Hero Layout Grid */}
+                <div className="grid grid-cols-[1fr_150px] sm:grid-cols-[1fr_220px] lg:grid-cols-[1.2fr_1fr] gap-x-4 sm:gap-x-12 lg:gap-x-16 gap-y-6 sm:gap-y-8 items-start w-full">
 
-                    <div className="space-y-0.5 sm:space-y-2">
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold text-white leading-tight sm:leading-[1.1] tracking-tight">
-                            Live One-On-One
-                        </h1>
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] italic text-[#D4AF37] font-serif leading-tight sm:leading-[1.1] tracking-tight">
-                            Trading Mentorship
-                        </h2>
-                        <div className="flex items-center gap-2 sm:gap-4 mt-1">
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
-                            <h3 className="text-base sm:text-2xl md:text-3xl text-gray-300 font-light tracking-wide whitespace-nowrap">
-                                With Mr P
-                            </h3>
-                            <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
+                    {/* 1. Hero Titles */}
+                    <div className="col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-1 w-full">
+                        {/* Badge */}
+                        <div className="inline-flex items-center gap-1 sm:gap-2 border border-[#B68C36]/30 bg-[#2A1C0F]/50 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full backdrop-blur-sm mb-4">
+                            <svg className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="12" y1="20" x2="12" y2="10"></line>
+                                <line x1="18" y1="20" x2="18" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="16"></line>
+                            </svg>
+                            <span className="text-white text-[10px] sm:text-xs font-bold tracking-[0.1em] sm:tracking-widest uppercase">
+                                Mentorship Course <span className="text-[#D4AF37]">100</span>
+                            </span>
+                        </div>
+
+                        <div className="space-y-0.5 sm:space-y-2">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold text-white leading-tight sm:leading-[1.1] tracking-tight">
+                                Live One-On-One
+                            </h1>
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] italic text-[#D4AF37] font-serif leading-tight sm:leading-[1.1] tracking-tight">
+                                Trading Mentorship
+                            </h2>
+                            <div className="flex items-center gap-2 sm:gap-4 mt-1 lg:mt-3">
+                                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
+                                <h3 className="text-base sm:text-2xl md:text-3xl text-gray-300 font-light tracking-wide whitespace-nowrap">
+                                    With Mr P
+                                </h3>
+                                <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Top Grid: Hero Content & Image/Video (Side-by-Side) */}
-                <div className="flex flex-row items-center lg:items-start gap-4 sm:gap-12 lg:gap-16">
-
-                    {/* Hero Content (Left) */}
-                    <div className="flex-1 w-full space-y-4 sm:space-y-8 lg:mt-2">
+                    {/* 2. Hero Content (Date & Description) */}
+                    <div className="col-span-1 lg:col-span-1 lg:col-start-1 lg:row-start-2 w-full space-y-4 sm:space-y-8 lg:mt-2">
                         {/* Date Row */}
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-[#2A1C0F] rounded-lg flex items-center justify-center border border-[#D4AF37]/30 shadow-lg">
@@ -83,9 +83,9 @@ export default function MentorshipCourse100Page() {
                         </div>
                     </div>
 
-                    {/* Hero Video/Image (Right) - Blended into background */}
-                    <div className="flex-1 w-full max-w-[180px] sm:max-w-none relative mt-1 sm:mt-0">
-                        <div className="relative aspect-[4/5] sm:aspect-[4/3] w-full group cursor-pointer overflow-hidden rounded-lg sm:rounded-none lg:translate-y-[-10%]">
+                    {/* 3. Hero Video/Image (Right on Desktop, Side on Mobile) */}
+                    <div className="col-span-1 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:row-span-3 relative w-full lg:-mt-[-90px]">
+                        <div className="relative aspect-[4/5] sm:aspect-[4/3] w-full group cursor-pointer overflow-hidden rounded-lg sm:rounded-none">
                             {/* Inner Glow */}
                             <div className="absolute inset-0 rounded-lg sm:rounded-none shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] z-10 pointer-events-none"></div>
 
@@ -113,24 +113,23 @@ export default function MentorshipCourse100Page() {
                         </div>
                     </div>
 
-                </div>
-
-                {/* Pinned Note - Full Width on Mobile */}
-                <div className="mt-6 sm:mt-8 w-full">
-                    <div className="flex gap-3 bg-[#1A110A]/80 p-3 sm:p-5 rounded-xl border border-[#D4AF37]/20 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div className="mt-0.5 shrink-0">
-                            <div className="p-1 sm:p-1.5 bg-[#D4AF37]/10 rounded-full">
-                                <svg className="w-4 h-4 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="#D4AF37" stroke="none">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3" fill="#110905"></circle>
-                                </svg>
+                    {/* 4. Pinned Note */}
+                    <div className="col-span-2 lg:col-span-1 lg:col-start-1 lg:row-start-3 w-full lg:mt-4">
+                        <div className="flex gap-3 bg-[#1A110A]/80 p-3 sm:p-5 rounded-xl border border-[#D4AF37]/20 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="mt-0.5 shrink-0">
+                                <div className="p-1 sm:p-1.5 bg-[#D4AF37]/10 rounded-full">
+                                    <svg className="w-4 h-4 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="#D4AF37" stroke="none">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3" fill="#110905"></circle>
+                                    </svg>
+                                </div>
                             </div>
+                            <p className="text-[11px] sm:text-[16px] text-gray-200 leading-snug sm:leading-relaxed font-semibold">
+                                All classes will be recorded and sent to the <strong className="text-white underline decoration-[#D4AF37]/50">private group</strong> after
+                                each session in case you miss any live class.
+                            </p>
                         </div>
-                        <p className="text-[11px] sm:text-[16px] text-gray-200 leading-snug sm:leading-relaxed font-semibold">
-                            All classes will be recorded and sent to the <strong className="text-white underline decoration-[#D4AF37]/50">private group</strong> after
-                            each session in case you miss any live class.
-                        </p>
                     </div>
                 </div>
 
