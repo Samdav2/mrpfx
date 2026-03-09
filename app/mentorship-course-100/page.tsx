@@ -20,7 +20,7 @@ export default function MentorshipCourse100Page() {
             <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
                 {/* Hero Titles - Full Width at Top on Mobile */}
-                <div className="w-full mb-6 sm:mb-12">
+                <div className="w-full mb-6 sm:mb-12 lg:mb-6">
                     {/* Badge */}
                     <div className="inline-flex items-center gap-1 sm:gap-2 border border-[#B68C36]/30 bg-[#2A1C0F]/50 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full backdrop-blur-sm mb-4">
                         <svg className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -51,10 +51,10 @@ export default function MentorshipCourse100Page() {
                 </div>
 
                 {/* Top Grid: Hero Content & Image/Video (Side-by-Side) */}
-                <div className="flex flex-row items-center lg:items-center gap-4 sm:gap-12 lg:gap-16">
+                <div className="flex flex-row items-center lg:items-start gap-4 sm:gap-12 lg:gap-16">
 
                     {/* Hero Content (Left) */}
-                    <div className="flex-1 w-full space-y-4 sm:space-y-8">
+                    <div className="flex-1 w-full space-y-4 sm:space-y-8 lg:mt-2">
                         {/* Date Row */}
                         <div className="flex items-center gap-3">
                             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-[#2A1C0F] rounded-lg flex items-center justify-center border border-[#D4AF37]/30 shadow-lg">
