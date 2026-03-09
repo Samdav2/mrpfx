@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -25,7 +26,7 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: '127.0.0.1',
         port: '8000',
-        pathname: '/wp-content/uploads/**',
+        pathname: '/**',
       },
       {
         protocol: 'https',
@@ -37,7 +38,7 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
-        pathname: '/wp-content/uploads/**',
+        pathname: '/**',
       },
     ],
   },
@@ -54,6 +55,10 @@ const nextConfig: NextConfig = {
       {
         source: '/media/:path*',
         destination: `${process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com'}/media/:path*`,
+      },
+      {
+        source: '/assets/:path*',
+        destination: `${process.env.BACKEND_URL || 'https://mrpfx-backend.onrender.com'}/assets/:path*`,
       },
     ];
   },
@@ -86,7 +91,7 @@ const nextConfig: NextConfig = {
             // Basic CSP to prevent obvious XSS but allow necessary scripts/styles
             // Adjust 'self' and domains as needed based on actual usage (e.g. Google Fonts, Analytics)
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https:;"
+            value: "default-src 'self' http: https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: http: https:; connect-src 'self' http: https:; frame-src 'self' https:;"
           }
         ]
       }

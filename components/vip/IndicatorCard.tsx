@@ -1,9 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
+import { cartService } from '@/lib/cart';
 
 interface IndicatorCardProps {
+    id: number;
     name: string;
     price: string;
     description: string;
@@ -13,7 +16,20 @@ interface IndicatorCardProps {
     platforms?: string; // e.g. "MT4 / MT5"
 }
 
-const IndicatorCard = ({ name, price, description, features, imageSrc, productUrl = "#", platforms = "MT4 / MT5" }: IndicatorCardProps) => {
+const IndicatorCard = ({ id, name, price, description, features, imageSrc, productUrl = "#", platforms = "MT4 / MT5" }: IndicatorCardProps) => {
+    const router = useRouter();
+
+    const handleAddToCart = async () => {
+        try {
+            await cartService.addToCart(id, 1);
+            router.push('/checkout');
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            if (productUrl && productUrl !== "#") {
+                window.location.href = productUrl;
+            }
+        }
+    };
     return (
         <div className="bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col h-full group hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-500">
             {/* Image Section */}
@@ -51,12 +67,12 @@ const IndicatorCard = ({ name, price, description, features, imageSrc, productUr
                         <span className="text-3xl font-black text-[#1e293b]">
                             ${price}
                         </span>
-                        <a
-                            href={productUrl}
+                        <button
+                            onClick={handleAddToCart}
                             className="bg-gradient-to-r from-[#FFD700] to-[#FFC000] hover:from-[#FFC000] hover:to-[#FFB000] text-[#1e293b] font-bold py-2.5 px-6 rounded-lg shadow-[0_4px_12px_rgba(255,215,0,0.25)] hover:shadow-[0_6px_15px_rgba(255,215,0,0.35)] transition-all duration-300 active:scale-95 text-sm"
                         >
                             Get Access
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

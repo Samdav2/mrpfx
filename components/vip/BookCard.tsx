@@ -1,9 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Star, Download, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
+import { cartService } from '@/lib/cart';
 
 interface BookCardProps {
+    id: number;
     title: string;
     subtitle?: string;
     description: string;
@@ -16,6 +19,7 @@ interface BookCardProps {
 }
 
 const BookCard = ({
+    id,
     title,
     subtitle = "The Complete Guide",
     description,
@@ -26,6 +30,20 @@ const BookCard = ({
     downloadUrl = "#",
     imageSrc
 }: BookCardProps) => {
+    const router = useRouter();
+
+    const handleAddToCart = async () => {
+        try {
+            await cartService.addToCart(id, 1);
+            router.push('/checkout');
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            const fallbackUrl = isFree ? downloadUrl : buyUrl;
+            if (fallbackUrl && fallbackUrl !== "#") {
+                window.location.href = fallbackUrl;
+            }
+        }
+    };
     return (
         <div className="bg-[#1e293b]/40 backdrop-blur-md rounded-xl overflow-hidden border border-white/10 flex flex-col h-full shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] group hover:border-white/20 transition-all duration-500 max-w-[400px] mx-auto w-full">
             {/* Image Section */}
@@ -62,20 +80,20 @@ const BookCard = ({
 
                 <div className="mt-auto flex flex-col items-center gap-3">
                     {isFree ? (
-                        <a
-                            href={downloadUrl}
+                        <button
+                            onClick={handleAddToCart}
                             className="w-full bg-gradient-to-b from-[#14532d] to-[#064e3b] hover:from-[#166534] hover:to-[#14532d] text-white font-black py-2.5 md:py-3.5 px-4 md:px-6 rounded border border-emerald-500/20 active:scale-95 transition-all duration-300 shadow-[0_4px_0_rgb(6,78,59)] hover:shadow-[0_6px_0_rgb(6,78,59)] hover:-translate-y-0.5 block text-center uppercase tracking-tighter text-lg md:text-xl"
                         >
                             Free Download
-                        </a>
+                        </button>
                     ) : (
                         <>
-                            <a
-                                href={buyUrl}
+                            <button
+                                onClick={handleAddToCart}
                                 className="w-full bg-gradient-to-b from-[#2d3a54] to-[#1e293b] hover:from-[#374151] hover:to-[#1f2937] text-white font-black py-2.5 md:py-3.5 px-4 md:px-6 rounded border border-white/10 active:scale-95 transition-all duration-300 shadow-[0_4px_0_rgb(15,23,42)] hover:shadow-[0_6px_0_rgb(15,23,42)] hover:-translate-y-0.5 block text-center uppercase tracking-tighter text-xl md:text-2xl"
                             >
                                 BUY NOW
-                            </a>
+                            </button>
                             <span className="text-gray-400 font-black text-xs md:text-sm tracking-widest mt-1">
                                 {price}
                             </span>

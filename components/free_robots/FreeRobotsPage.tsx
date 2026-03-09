@@ -3,8 +3,50 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import NewsletterSection from '@/components/shared/NewsletterSection';
+import RobotCard from '../vip/RobotCard';
+import FreeIndicatorCard from '../vip/FreeIndicatorCard';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { TradingTool } from '@/lib/types';
+
+const FALLBACK_FREE_RESOURCES: TradingTool[] = [
+    {
+        id: 1,
+        title: "MEGATRON X LITE",
+        status: 'active',
+        tool_type: 'bot',
+        category: 'free',
+        price: "0",
+        description: "Trial version of our premium Boom & Crash bot.",
+        image_url: "/assets/vip/robot-combat.png",
+    },
+    {
+        id: 2,
+        title: "Support & Resistance",
+        status: 'active',
+        tool_type: 'indicator',
+        category: 'free',
+        description: "Basic Support & Resistance indicator for beginners.",
+        image_url: "/assets/free-indicators/support-resistance.png",
+    }
+];
 
 const FreeRobotsPage = () => {
+    const { data: bots } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_FREE_RESOURCES.filter(r => r.tool_type === 'bot'),
+        'bot',
+        'free',
+        6
+    );
+
+    const { data: indicators } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_FREE_RESOURCES.filter(r => r.tool_type === 'indicator'),
+        'indicator',
+        'free',
+        6
+    );
     return (
         <div className="font-[family-name:var(--font-dm-sans)] bg-white">
             {/* Hero Section - White Background */}
@@ -81,7 +123,7 @@ const FreeRobotsPage = () => {
             </section>
 
             {/* Middle Section - White Background with Text */}
-            <section className="bg-white py-16 md:py-20">
+            <section className="bg-white pt-16 md:pt-20 pb-8">
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 text-center space-y-6">
                     <p className="text-gray-700 text-sm md:text-base leading-[1.5em] font-[family-name:var(--font-dm-sans)] font-medium">
                         Trading robots are a great way to automate your trading experience and increase your overall profit potential. Trading Indicators show you the exact positions of a market with high profit potentials. Seminar videos teaches new and updated trading strategies to always gain ground in the market.
@@ -94,6 +136,65 @@ const FreeRobotsPage = () => {
                     </p>
                 </div>
             </section>
+
+            {/* Dynamic Resources Section */}
+            {(bots.length > 0 || indicators.length > 0) && (
+                <section className="bg-slate-50 py-20">
+                    <div className="max-w-7xl mx-auto px-4 md:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 uppercase tracking-tight">Explore Free Resources</h2>
+                            <div className="w-20 h-1.5 bg-[#3442D9] mx-auto rounded-full" />
+                        </div>
+
+                        {/* Free Bots */}
+                        {bots.length > 0 && (
+                            <div className="mb-20">
+                                <div className="flex items-center gap-4 mb-10">
+                                    <h3 className="text-xl font-bold text-slate-800 uppercase tracking-widest">Free Trading Bots</h3>
+                                    <div className="h-px flex-grow bg-slate-200" />
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {bots.map((bot: any, i: number) => (
+                                        <RobotCard
+                                            key={bot.id || i}
+                                            id={bot.id || i}
+                                            name={bot.title}
+                                            price={bot.price || "0"}
+                                            description={bot.description}
+                                            features={bot.features || []}
+                                            imageSrc={bot.image_url || "/assets/vip/robot-combat.png"}
+                                            productUrl={bot.purchase_url}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Free Indicators */}
+                        {indicators.length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-4 mb-10">
+                                    <h3 className="text-xl font-bold text-slate-800 uppercase tracking-widest">Free Indicators</h3>
+                                    <div className="h-px flex-grow bg-slate-200" />
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {indicators.map((indicator: any, i: number) => (
+                                        <FreeIndicatorCard
+                                            key={indicator.id || i}
+                                            id={indicator.id || i}
+                                            name={indicator.title}
+                                            description={indicator.description}
+                                            features={indicator.features || []}
+                                            imageSrc={indicator.image_url || "/assets/free-indicators/support-resistance.png"}
+                                            downloadUrl={indicator.download_url}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* Newsletter Section - Using shared component */}
             <section className="bg-white py-8 md:py-12">

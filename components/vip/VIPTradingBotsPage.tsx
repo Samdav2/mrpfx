@@ -4,74 +4,121 @@ import Image from 'next/image';
 import { Check, Bot, Zap, Globe, Cpu } from 'lucide-react';
 import RobotCard from './RobotCard';
 import NewsletterSection from '@/components/shared/NewsletterSection';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { TradingTool } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
+
+const FALLBACK_BOTS: any[] = [
+    {
+        id: 4001,
+        title: "MEGATRON X ROBOT",
+        price: "199",
+        description: "Automated Boom & Crash Trading System",
+        features: ["MT5 Compatible", "Fully Automated"],
+        image_url: "/assets/vip/robot-combat.png",
+        category: "Boom & Crash Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4002,
+        title: "BOOM CRASH MINER",
+        price: "199",
+        description: "Boom & Crash Automated Trading Bot",
+        features: ["MT5 Compatible", "24/7 Monitoring"],
+        image_url: "/assets/vip/robot-sleek.png",
+        category: "Boom & Crash Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4003,
+        title: "VIKING V75 BOT",
+        price: "199",
+        description: "Automated Volatility 75 Trading Bot",
+        features: ["MT5 Compatible", "Fully Automated"],
+        image_url: "/assets/vip/robot-astro.png",
+        category: "Volatility Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4004,
+        title: "CRYSTAL BEAST BOT",
+        price: "199",
+        description: "Automated Volatility 75 Trading Bot",
+        features: ["MT5 Compatible", "NASDAQ Included"],
+        image_url: "/assets/vip/robot-combat.png",
+        category: "Volatility Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4005,
+        title: "ASTRO X",
+        price: "199",
+        description: "AI Powered Auto Trading Bot",
+        features: ["MT5 Compatible", "Fully Automated", "Mobile & PC"],
+        image_url: "/assets/vip/robot-astro.png",
+        category: "AI Trading Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4006,
+        title: "ALISA G ROBOT",
+        price: "199",
+        description: "AI Forex & Boom / Crash Bot",
+        features: ["MT5 Compatible", "Fully Automated", "Gold Trading"],
+        image_url: "/assets/vip/robot-sleek.png",
+        category: "AI Trading Bots",
+        type: 'bot',
+        is_free: false
+    },
+    {
+        id: 4007,
+        title: "DERIV VISION ATTACKER",
+        price: "199",
+        description: "All-In-One Synthetic Index Bot",
+        features: ["MT5 Compatible", "Volatility Index"],
+        image_url: "/assets/vip/robot-combat.png",
+        category: "AI Trading Bots",
+        type: 'bot',
+        is_free: false
+    }
+];
 
 const VIPTradingBotsPage = () => {
-    const categories = [
-        {
-            title: "Boom & Crash Bots",
-            robots: [
-                {
-                    name: "MEGATRON X ROBOT",
-                    price: "199",
-                    description: "Automated Boom & Crash Trading System",
-                    features: ["MT5 Compatible", "Fully Automated"],
-                    imageSrc: "/assets/vip/robot-combat.png"
-                },
-                {
-                    name: "BOOM CRASH MINER",
-                    price: "199",
-                    description: "Boom & Crash Automated Trading Bot",
-                    features: ["MT5 Compatible", "24/7 Monitoring"],
-                    imageSrc: "/assets/vip/robot-sleek.png"
-                }
-            ]
-        },
-        {
-            title: "Volatility Bots",
-            robots: [
-                {
-                    name: "VIKING V75 BOT",
-                    price: "199",
-                    description: "Automated Volatility 75 Trading Bot",
-                    features: ["MT5 Compatible", "Fully Automated"],
-                    imageSrc: "/assets/vip/robot-astro.png"
-                },
-                {
-                    name: "CRYSTAL BEAST BOT",
-                    price: "199",
-                    description: "Automated Volatility 75 Trading Bot",
-                    features: ["MT5 Compatible", "NASDAQ Included"],
-                    imageSrc: "/assets/vip/robot-combat.png"
-                }
-            ]
-        },
-        {
-            title: "AI Trading Bots",
-            robots: [
-                {
-                    name: "ASTRO X",
-                    price: "199",
-                    description: "AI Powered Auto Trading Bot",
-                    features: ["MT5 Compatible", "Fully Automated", "Mobile & PC"],
-                    imageSrc: "/assets/vip/robot-astro.png"
-                },
-                {
-                    name: "ALISA G ROBOT",
-                    price: "199",
-                    description: "AI Forex & Boom / Crash Bot",
-                    features: ["MT5 Compatible", "Fully Automated", "Gold Trading"],
-                    imageSrc: "/assets/vip/robot-sleek.png"
-                },
-                {
-                    name: "DERIV VISION ATTACKER",
-                    price: "199",
-                    description: "All-In-One Synthetic Index Bot",
-                    features: ["MT5 Compatible", "Volatility Index"],
-                    imageSrc: "/assets/vip/robot-combat.png"
-                }
-            ]
+    const { data: bots } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_BOTS,
+        'bot',
+        'vip',
+        20
+    );
+
+    // Group bots by category with safe typing
+    const groupedCategories = (bots || []).reduce((acc: any[], bot: any) => {
+        const catTitle = bot.category || (bot.title.includes('Boom') ? 'Boom & Crash Bots' : 'General Bots');
+        let category = acc.find(c => c.title === catTitle);
+        if (!category) {
+            category = { title: catTitle, robots: [] };
+            acc.push(category);
         }
-    ];
+        category.robots.push({
+            id: bot.id,
+            name: bot.title,
+            price: (bot.price !== undefined && bot.price !== null) ? (typeof bot.price === 'number' ? bot.price.toFixed(2) : bot.price) : "199",
+            description: bot.description,
+            features: bot.features || bot.description.split('\n').filter((l: string) => l.trim().length > 0).slice(0, 3),
+            imageSrc: getMediaUrl(bot.image_url) || "/assets/vip/robot-combat.png",
+            productUrl: bot.purchase_url
+        });
+        return acc;
+    }, []);
+
+    const categories = groupedCategories;
 
     return (
         <div className="min-h-screen bg-white font-sans overflow-x-hidden">
@@ -154,7 +201,7 @@ const VIPTradingBotsPage = () => {
 
                             {/* Robots Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-10">
-                                {category.robots.map((robot, robIndex) => (
+                                {category.robots.map((robot: any, robIndex: number) => (
                                     <RobotCard
                                         key={robIndex}
                                         {...robot}

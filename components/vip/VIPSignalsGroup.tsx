@@ -1,28 +1,104 @@
 'use client';
 
 import Link from 'next/link';
+
 import Image from 'next/image';
 import NewsletterSection from '../shared/NewsletterSection';
 import { Check, X } from 'lucide-react';
+import { signalsService } from '@/lib/signals';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { Signal, TradingVideo, WCProductRead } from '@/lib/types';
+import { productsService } from '@/lib/products';
+import { useState, useEffect } from 'react';
+import { getMediaUrl } from '@/lib/utils';
+
+const FALLBACK_VIDEOS: TradingVideo[] = [
+    {
+        id: 'ZhgT9W0g3K0',
+        title: 'LIVE TRADING GOLD, NASDAQ, US30, EURUSD, GBPUSD, BTCUSD',
+        thumbnail: 'https://i.ytimg.com/vi/ZhgT9W0g3K0/sddefault.jpg'
+    },
+    {
+        id: 'yPJSje5NzYg',
+        title: 'My Trading Focus Moving Forward (2026)',
+        thumbnail: 'https://i.ytimg.com/vi/yPJSje5NzYg/sddefault.jpg'
+    },
+    {
+        id: 'jpVgMjM0hWE',
+        title: 'A Real Day in the Life of a 28-Year-Old Day Trader in Cape Town, South Africa',
+        thumbnail: 'https://i.ytimg.com/vi/jpVgMjM0hWE/sddefault.jpg'
+    }
+];
+
+const FALLBACK_SIGNALS: Signal[] = [
+    {
+        id: 1,
+        title: 'Gold Signal',
+        status: 'publish',
+        instrument: 'GOLD (XAUUSD)',
+        type: 'buy',
+        entry: '2335',
+        sl: '2331',
+        tp1: '2355',
+        tp2: '2375',
+        date: new Date().toISOString(),
+        signal_type: 'vip'
+    },
+    {
+        id: 2,
+        title: 'Euro Signal',
+        status: 'publish',
+        instrument: 'EUR/USD',
+        type: 'buy',
+        entry: '1.07800',
+        sl: '1.07300',
+        tp1: '1.08110',
+        date: new Date().toISOString(),
+        signal_type: 'vip'
+    },
+    {
+        id: 3,
+        title: 'Nasdaq Signal',
+        status: 'publish',
+        instrument: 'US100 (NASDAQ)',
+        type: 'buy',
+        entry: '24874.71',
+        sl: '',
+        tp1: '25313.46',
+        date: new Date().toISOString(),
+        signal_type: 'vip'
+    }
+];
 
 const VIPSignalsGroup = () => {
-    const youtubeVideos = [
-        {
-            id: 'ZhgT9W0g3K0',
-            title: 'LIVE TRADING GOLD, NASDAQ, US30, EURUSD, GBPUSD, BTCUSD',
-            thumbnail: 'https://i.ytimg.com/vi/ZhgT9W0g3K0/sddefault.jpg'
-        },
-        {
-            id: 'yPJSje5NzYg',
-            title: 'My Trading Focus Moving Forward (2026)',
-            thumbnail: 'https://i.ytimg.com/vi/yPJSje5NzYg/sddefault.jpg'
-        },
-        {
-            id: 'jpVgMjM0hWE',
-            title: 'A Real Day in the Life of a 28-Year-Old Day Trader in Cape Town, South Africa',
-            thumbnail: 'https://i.ytimg.com/vi/jpVgMjM0hWE/sddefault.jpg'
-        }
-    ];
+    const { data: youtubeVideos } = useDataWithFallback(
+        signalsService.getVideos,
+        FALLBACK_VIDEOS,
+        3
+    );
+
+    const { data: signals } = useDataWithFallback(
+        signalsService.getSignals,
+        FALLBACK_SIGNALS,
+        'vip',
+        3
+    );
+
+    const [vipProduct, setVipProduct] = useState<WCProductRead | null>(null);
+
+    useEffect(() => {
+        const fetchVipProduct = async () => {
+            try {
+                const product = await productsService.getProductBySlug('vip-membership');
+                setVipProduct(product);
+            } catch (error) {
+                console.error('Failed to fetch VIP product:', error);
+            }
+        };
+        fetchVipProduct();
+    }, []);
+
+    const vipPrice = vipProduct?.price ? `$${vipProduct.price}` : '$39';
 
     const CheckIcon = () => (
         <svg className="w-4 h-4 text-[#eab308] mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -33,6 +109,13 @@ const VIPSignalsGroup = () => {
     const CrossIcon = () => (
         <X className="w-5 h-5 text-[#ef4444] mr-2 mt-0.5 flex-shrink-0" strokeWidth={3} />
     );
+
+    const getSignalIcon = (instrument: string) => {
+        if (instrument.includes('GOLD')) return '🪙';
+        if (instrument.includes('EUR') || instrument.includes('GBP')) return '📈';
+        if (instrument.includes('US100') || instrument.includes('NASDAQ')) return '🎫';
+        return '📊';
+    };
 
     return (
         <div className="bg-[#e6e9f5] text-black font-dm-sans overflow-hidden">
@@ -72,7 +155,7 @@ const VIPSignalsGroup = () => {
                                     Private Signals Channel
                                 </div>
                                 <div className="text-xl md:text-2xl text-[#2A2A72] font-semibold mb-6">
-                                    For Serious Traders
+                                    Only {vipPrice} / Month
                                 </div>
 
                                 <p className="text-[16px] md:text-[18px] text-[#4b5563] leading-relaxed mb-8">
@@ -114,43 +197,19 @@ const VIPSignalsGroup = () => {
 
                                         {/* App Content */}
                                         <div className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-[#334155]/10 to-[#1e293b]/20 hide-scrollbar pb-4">
-
-                                            {/* Original Message */}
-                                            <div className="bg-white/95 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200">
-                                                <div className="flex items-center gap-1.5 font-bold text-[#1e293b] text-sm mb-3 truncate">
-                                                    <span>🪙</span> GOLD (XAUUSD) - <span className="text-green-600">Buy</span>
+                                            {signals.map((signal, index) => (
+                                                <div key={signal.id} className="bg-white/95 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200">
+                                                    <div className="flex items-center gap-1.5 font-bold text-[#1e293b] text-sm mb-3 truncate">
+                                                        <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                                    </div>
+                                                    <ul className="space-y-1.5 text-xs text-gray-800 font-medium">
+                                                        <li className="flex items-center"><CheckIcon /> Entry: {signal.entry}</li>
+                                                        {signal.sl && <li className="flex items-center"><CheckIcon /> Stop Loss: {signal.sl}</li>}
+                                                        <li className="flex items-center"><CheckIcon /> Take Profit 1: {signal.tp1}</li>
+                                                        {signal.tp2 && <li className="flex items-center"><CheckIcon /> Take Profit 2: {signal.tp2}</li>}
+                                                    </ul>
                                                 </div>
-                                                <ul className="space-y-1.5 text-xs text-gray-800 font-medium">
-                                                    <li className="flex items-center"><CheckIcon /> Entry: 2335</li>
-                                                    <li className="flex items-center"><CheckIcon /> Stop Loss: 2331</li>
-                                                    <li className="flex items-center"><CheckIcon /> Take Profit 1: 2355</li>
-                                                    <li className="flex items-center"><CheckIcon /> Take Profit 2: 2375</li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Second Message in Mobile Phone */}
-                                            <div className="bg-white/95 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200">
-                                                <div className="flex items-center gap-1.5 font-bold text-[#1e293b] text-sm mb-3 truncate">
-                                                    <span>📈</span> EUR/USD - <span className="text-green-600">Buy</span>
-                                                </div>
-                                                <ul className="space-y-1.5 text-xs text-gray-800 font-medium">
-                                                    <li className="flex items-center"><CheckIcon /> Entry: 1.07800</li>
-                                                    <li className="flex items-center"><CheckIcon /> Stop Loss: 1.07300</li>
-                                                    <li className="flex items-center"><CheckIcon /> Take Profit: 1.08110</li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Third Message in Mobile Phone */}
-                                            <div className="bg-white/95 backdrop-blur rounded-xl p-4 shadow-sm border border-gray-200 relative">
-                                                <div className="flex items-center gap-1.5 font-bold text-[#1e293b] text-sm mb-3 truncate">
-                                                    <span>🎫</span> US100 (NASDAQ) - <span className="text-green-600">Buy</span>
-                                                </div>
-                                                <ul className="space-y-1.5 text-xs text-gray-800 font-medium relative z-10">
-                                                    <li className="flex items-center"><CheckIcon /> Entry: 24874.71</li>
-                                                    <li className="flex items-center"><CheckIcon /> Stop Loss: </li>
-                                                    <li className="flex items-center"><CheckIcon /> Take Profit: 25313.46</li>
-                                                </ul>
-                                            </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
@@ -195,32 +254,20 @@ const VIPSignalsGroup = () => {
                                         <span className="text-2xl">🔔</span>
                                         <span className="font-bold text-[#334155] tracking-wide text-lg">VIP SIGNAL UPDATE</span>
                                     </div>
-                                    {/* Message 1 */}
-                                    <div className="p-6 border-b border-gray-200 bg-white">
-                                        <div className="flex items-center gap-2 font-bold text-[#1e293b] text-lg mb-4">
-                                            <span>🪙</span> GOLD (XAUUSD) - <span className="text-green-600">Buy</span>
+                                    {/* Dialogue Block Content */}
+                                    {signals.slice(0, 2).map((signal, index) => (
+                                        <div key={signal.id} className={`p-6 bg-white ${index === 0 ? 'border-b border-gray-200' : 'relative'}`}>
+                                            <div className="flex items-center gap-2 font-bold text-[#1e293b] text-lg mb-4">
+                                                <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                            </div>
+                                            <ul className="space-y-2.5 text-[#4b5563] font-medium text-[15px]">
+                                                <li className="flex items-center"><CheckIcon /> Entry: {signal.entry}</li>
+                                                {signal.sl && <li className="flex items-center"><CheckIcon /> Stop Loss: {signal.sl}</li>}
+                                                <li className="flex items-center"><CheckIcon /> Take Profit 1: {signal.tp1}</li>
+                                                {signal.tp2 && <li className="flex items-center"><CheckIcon /> Take Profit 2: {signal.tp2}</li>}
+                                            </ul>
                                         </div>
-                                        <ul className="space-y-2.5 text-[#4b5563] font-medium text-[15px]">
-                                            <li className="flex items-center"><CheckIcon /> Entry: 2335</li>
-                                            <li className="flex items-center"><CheckIcon /> Stop Loss: 2331</li>
-                                            <li className="flex items-center"><CheckIcon /> Take Profit 1: 2355</li>
-                                            <li className="flex items-center"><CheckIcon /> Take Profit 2: 2375</li>
-                                        </ul>
-                                    </div>
-                                    {/* Message 2 - User Requested Desktop Dialog */}
-                                    <div className="p-6 bg-white relative">
-                                        {/* Green scribble overlay effect like in image */}
-                                        {/* <div className="absolute bottom-2 left-6 right-6 h-3 bg-green-400/40 rounded-full blur-[2px]"></div> */}
-
-                                        <div className="flex items-center gap-2 font-bold text-[#1e293b] text-lg mb-4">
-                                            <span>🎫</span> US100 (NASDAQ) - <span className="text-green-600">Buy</span>
-                                        </div>
-                                        <ul className="space-y-2.5 text-[#4b5563] font-medium text-[15px] relative z-10">
-                                            <li className="flex items-center"><CheckIcon /> Entry: 24874.71</li>
-                                            <li className="flex items-center"><CheckIcon /> Stop Loss: </li>
-                                            <li className="flex items-center"><CheckIcon /> Take Profit: 25313.46</li>
-                                        </ul>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

@@ -1,9 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Check, Download } from 'lucide-react';
+import { cartService } from '@/lib/cart';
 
 interface FreeIndicatorCardProps {
+    id: number;
     name: string;
     description?: string;
     features: string[];
@@ -12,7 +15,20 @@ interface FreeIndicatorCardProps {
     platforms?: string; // e.g. "MT4 / MT5"
 }
 
-const FreeIndicatorCard = ({ name, description = "", features, imageSrc, downloadUrl = "#", platforms = "MT4 / MT5" }: FreeIndicatorCardProps) => {
+const FreeIndicatorCard = ({ id, name, description = "", features, imageSrc, downloadUrl = "#", platforms = "MT4 / MT5" }: FreeIndicatorCardProps) => {
+    const router = useRouter();
+
+    const handleAddToCart = async () => {
+        try {
+            await cartService.addToCart(id, 1);
+            router.push('/checkout');
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            if (downloadUrl && downloadUrl !== "#") {
+                window.location.href = downloadUrl;
+            }
+        }
+    };
     return (
         <div className="bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col h-full group hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-500">
             {/* Image Section */}
@@ -46,13 +62,13 @@ const FreeIndicatorCard = ({ name, description = "", features, imageSrc, downloa
                 </ul>
 
                 <div className="mt-auto">
-                    <a
-                        href={downloadUrl}
+                    <button
+                        onClick={handleAddToCart}
                         className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#106b52] to-[#147b62] hover:from-[#147b62] hover:to-[#188c72] text-white font-bold py-3.5 px-6 rounded-lg shadow-[0_4px_12px_rgba(16,107,82,0.25)] hover:shadow-[0_6px_15px_rgba(16,107,82,0.35)] transition-all duration-300 active:scale-95 text-lg"
                     >
                         <Download className="w-5 h-5 stroke-[2.5]" />
                         Free Download
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

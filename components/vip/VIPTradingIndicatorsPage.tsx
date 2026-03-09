@@ -5,60 +5,36 @@ import { Check, ShieldCheck, TrendingUp, BarChart3, Target } from 'lucide-react'
 import IndicatorCard from './IndicatorCard';
 import NewsletterSection from '@/components/shared/NewsletterSection';
 
+import { useState, useEffect } from 'react';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { TradingTool } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
+
 const VIPTradingIndicatorsPage = () => {
-    const categories = [
-        {
-            title: "Forex & Indices Signals",
-            indicators: [
-                {
-                    name: "CRYSTAL BALL",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "Buy/Sell Signals", "Trend & Reversal Zones"],
-                    imageSrc: "/assets/indicators/crystal-ball.png"
-                },
-                {
-                    name: "VWAP ZONE",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "VWAP Zones", "Dynamic Support & Resistance"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                }
-            ]
-        },
-        {
-            title: "Trend & Momentum Indicators",
-            indicators: [
-                {
-                    name: "SmartTrend Pro",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "Trend Following Oscillator", "Simple Buy/Sell Signals"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                },
-                {
-                    name: "Sniper Entry",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "Scalping Zones", "Precise Entry Signals"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                }
-            ]
-        },
-        {
-            title: "Volume & Scalping Indicators",
-            indicators: [
-                {
-                    name: "Scalper Master",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "Volume Scalping Arrows", "Trend & Reversal Scalping"],
-                    imageSrc: "/assets/indicators/scalper-robot.png"
-                },
-                {
-                    name: "Smart Money Concepts",
-                    price: "199",
-                    features: ["MT4 / MT5 Compatible", "SMC Order Blocks", "Breakers & Liquidity Zones"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                }
-            ]
-        }
-    ];
+    const [indicators, setIndicators] = useState<TradingTool[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchIndicators = async () => {
+            try {
+                const data = await tradingToolsService.getTools('indicator', 'vip');
+                setIndicators(data);
+            } catch (error) {
+                console.error("Failed to fetch VIP indicators:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchIndicators();
+    }, []);
+
+    // Helper to get image based on title
+    const getIndicatorImage = (title: string) => {
+        const t = title.toLowerCase();
+        if (t.includes('crystal') || t.includes('ball')) return "/assets/indicators/crystal-ball.png";
+        if (t.includes('scalp')) return "/assets/indicators/scalper-robot.png";
+        return "/assets/indicators/chart-tablet.png";
+    };
 
     return (
         <div className="min-h-screen bg-white font-sans overflow-x-hidden">
@@ -117,30 +93,42 @@ const VIPTradingIndicatorsPage = () => {
             </section>
 
             {/* Main Content Grid */}
-            <section className="py-24 bg-slate-50 relative">
+            <section className="py-24 bg-slate-50 relative min-h-[400px]">
                 <div className="max-w-[1280px] mx-auto px-6">
-                    {categories.map((category, catIndex) => (
-                        <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
-                            {/* Category Header */}
-                            <div className="flex items-center gap-6 mb-12">
-                                <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight">
-                                    {category.title}
-                                </h2>
-                                <div className="h-px w-full bg-slate-200 shadow-sm" />
-                            </div>
+                    {/* Category Header */}
+                    <div className="flex items-center gap-6 mb-12">
+                        <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight uppercase">
+                            VIP Indicator Collection
+                        </h2>
+                        <div className="h-px w-full bg-slate-200 shadow-sm" />
+                    </div>
 
-                            {/* Indicators Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
-                                {category.indicators.map((indicator, indIndex) => (
-                                    <IndicatorCard
-                                        key={indIndex}
-                                        {...indicator}
-                                        description=""
-                                    />
-                                ))}
-                            </div>
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {[1, 2, 3, 4].map(i => (
+                                <div key={i} className="bg-white rounded-[20px] h-[300px] animate-pulse" />
+                            ))}
                         </div>
-                    ))}
+                    ) : indicators.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                            <p className="text-slate-500">New VIP indicators coming soon!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                            {indicators.map((indicator) => (
+                                <IndicatorCard
+                                    key={indicator.id}
+                                    id={indicator.id}
+                                    name={indicator.title}
+                                    // `price` is stored as a string from API; just use it or fallback
+                                    price={indicator.price ?? "199"}
+                                    description={indicator.description}
+                                    features={indicator.description.split('\n').filter(l => l.trim().length > 0).slice(0, 3)}
+                                    imageSrc={getMediaUrl(indicator.image_url) || getIndicatorImage(indicator.title)}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 

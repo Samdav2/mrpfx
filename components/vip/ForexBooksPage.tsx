@@ -4,58 +4,101 @@ import { Star, Download, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import BookCard from './BookCard';
 import NewsletterSection from '@/components/shared/NewsletterSection';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { TradingTool } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
+
+const FALLBACK_PAID_BOOKS: any[] = [
+    {
+        id: 1001,
+        title: "FOREX TRADING",
+        description: "Proven Forex strategies & in-depth price actions.",
+        price: "$39",
+        is_free: false,
+        image_url: "/assets/forex-books/book-cover-1.png",
+        type: 'book'
+    },
+    {
+        id: 1002,
+        title: "TRADING PSYCHOLOGY",
+        description: "Master Your mindset for and profitable trading.",
+        price: "$39",
+        is_free: false,
+        image_url: "/assets/forex-books/book-cover-2.png",
+        type: 'book'
+    },
+    {
+        id: 1003,
+        title: "ADVANCED FOREX",
+        description: "Powerful Forex trading strategies for consistent gains.",
+        price: "$39",
+        is_free: false,
+        image_url: "/assets/forex-books/book-cover-3.png",
+        type: 'book'
+    }
+];
+
+const FALLBACK_FREE_BOOKS: any[] = [
+    {
+        id: 2001,
+        title: "TECHNICAL ANALYSIS",
+        description: "Master chart patterns, indicators, and price action.",
+        is_free: true,
+        image_url: "/assets/forex-books/book-cover-4.png",
+        type: 'book'
+    },
+    {
+        id: 2002,
+        title: "FOREX FUNDAMENTALS",
+        description: "Learn how economic news affects Forex markets.",
+        is_free: true,
+        image_url: "/assets/forex-books/book-cover-5.png",
+        type: 'book'
+    },
+    {
+        id: 2003,
+        title: "CANDLESTICK PATTERNS",
+        description: "Identify and trade candlestick chart patterns with confidence.",
+        is_free: true,
+        image_url: "/assets/forex-books/book-cover-6.png",
+        type: 'book'
+    }
+];
 
 const ForexBooksPage = () => {
-    const paidBooks = [
-        {
-            title: "FOREX TRADING",
-            subtitle: "The Complete Guide",
-            description: "Proven Forex strategies & in-depth price actions.",
-            price: "$39",
-            isFree: false,
-            imageSrc: "/assets/forex-books/book-cover-1.png"
-        },
-        {
-            title: "TRADING PSYCHOLOGY",
-            subtitle: "SECRETS",
-            description: "Master Your mindset for and profitable trading.",
-            price: "$39",
-            isFree: false,
-            imageSrc: "/assets/forex-books/book-cover-2.png"
-        },
-        {
-            title: "ADVANCED FOREX",
-            subtitle: "STRATEGIES",
-            description: "Powerful Forex trading strategies for consistent gains.",
-            price: "$39",
-            isFree: false,
-            imageSrc: "/assets/forex-books/book-cover-3.png"
-        }
-    ];
+    const { data: paidBooksSource } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_PAID_BOOKS,
+        'book',
+        'vip',
+        3
+    );
 
-    const freeBooks = [
-        {
-            title: "TECHNICAL ANALYSIS",
-            subtitle: "OF CURRENCY PAIRS",
-            description: "Master chart patterns, indicators, and price action.",
-            isFree: true,
-            imageSrc: "/assets/forex-books/book-cover-4.png"
-        },
-        {
-            title: "FOREX FUNDAMENTALS",
-            subtitle: "MADE SIMPLE",
-            description: "Learn how economic news affects Forex markets.",
-            isFree: true,
-            imageSrc: "/assets/forex-books/book-cover-5.png"
-        },
-        {
-            title: "CANDLESTICK PATTERNS",
-            subtitle: "MASTERY",
-            description: "Identify and trade candlestick chart patterns with confidence.",
-            isFree: true,
-            imageSrc: "/assets/forex-books/book-cover-6.png"
-        }
-    ];
+    const { data: freeBooksSource } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_FREE_BOOKS,
+        'book',
+        'free',
+        3
+    );
+
+    // Map data to BookCard props with sensible defaults
+    const mapToBookProps = (item: any, index: number) => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        price: (item.price !== undefined && item.price !== null) ?
+            (typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : `$${item.price.toString().replace('$', '')}`) :
+            (item.is_free ? "FREE" : "$39"),
+        isFree: item.is_free ?? true,
+        imageSrc: getMediaUrl(item.image_url) || item.thumbnail || `/assets/forex-books/book-cover-${(index % 6) + 1}.png`,
+        buyUrl: item.purchase_url,
+        downloadUrl: item.download_url
+    });
+
+    const paidBooks = paidBooksSource.map((book: any, i: number) => mapToBookProps(book, i));
+    const freeBooks = freeBooksSource.map((book: any, i: number) => mapToBookProps(book, i + 3));
 
     return (
         <div className="min-h-screen bg-[#0a0f1e] font-sans text-white overflow-x-hidden selection:bg-blue-500/30">

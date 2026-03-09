@@ -1,18 +1,35 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
+import { cartService } from '@/lib/cart';
 
 interface RobotCardProps {
+    id: number;
     name: string;
     price: string;
     description: string;
     features: string[];
     imageSrc: string;
-    productUrl?: string;
+    productUrl?: string; // Optional for backward compatibility, but we use id now
 }
 
-const RobotCard = ({ name, price, description, features, imageSrc, productUrl = "#" }: RobotCardProps) => {
+const RobotCard = ({ id, name, price, description, features, imageSrc, productUrl = "#" }: RobotCardProps) => {
+    const router = useRouter();
+
+    const handleAddToCart = async () => {
+        try {
+            await cartService.addToCart(id, 1);
+            router.push('/checkout');
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+            // Fallback to product URL if cart fails
+            if (productUrl && productUrl !== "#") {
+                window.location.href = productUrl;
+            }
+        }
+    };
     return (
         <div className="bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden border border-gray-100 flex flex-col h-full group hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-all duration-500">
             {/* Image Section */}
@@ -57,12 +74,12 @@ const RobotCard = ({ name, price, description, features, imageSrc, productUrl = 
 
                 {/* Button Section */}
                 <div className="mt-auto">
-                    <a
-                        href={productUrl}
+                    <button
+                        onClick={handleAddToCart}
                         className="block w-full text-center bg-gradient-to-r from-[#FFD700] to-[#FFC000] hover:from-[#FFC000] hover:to-[#FFB000] text-[#1e293b] font-bold py-3.5 rounded-xl shadow-[0_4px_15px_rgba(255,215,0,0.3)] hover:shadow-[0_6px_20px_rgba(255,215,0,0.4)] transition-all duration-300 active:scale-95"
                     >
                         Get Access
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

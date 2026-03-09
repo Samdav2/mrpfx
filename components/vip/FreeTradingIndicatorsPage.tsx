@@ -4,50 +4,101 @@ import Image from 'next/image';
 import { Check, ShieldCheck, TrendingUp, BarChart3, Target, Download } from 'lucide-react';
 import FreeIndicatorCard from './FreeIndicatorCard';
 import NewsletterSection from '@/components/shared/NewsletterSection';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { TradingTool } from '@/lib/types';
+
+const FALLBACK_INDICATORS: any[] = [
+    {
+        id: 3001,
+        title: "Support & Resistance",
+        description: "MT4 / MT5 Compatible Support & Resistance Indicator",
+        features: ["MT4 / MT5 Compatible", "Buy/Sell Signals", "Trend & Reversal Zones"],
+        image_url: "/assets/free-indicators/support-resistance.png",
+        category: "Forex & Indices Signals",
+        type: 'indicator',
+        is_free: true
+    },
+    {
+        id: 3002,
+        title: "Gold Detector",
+        description: "MT4 / MT5 Compatible Gold Detector Indicator",
+        features: ["MT4 / MT5 Compatible", "VWAP Zones", "Dynamic Support & Resistance"],
+        image_url: "/assets/free-indicators/gold-detector.png",
+        category: "Forex & Indices Signals",
+        type: 'indicator',
+        is_free: true
+    },
+    {
+        id: 3003,
+        title: "Advanced Trend",
+        description: "MT4 / MT5 Compatible Advanced Trend Indicator",
+        features: ["MT4 / MT5 Compatible", "Simple Buy/Sell Signals", "Precise Entry Signals"],
+        image_url: "/assets/indicators/chart-tablet.png",
+        category: "Forex & Indices Signals",
+        type: 'indicator',
+        is_free: true
+    },
+    {
+        id: 3004,
+        title: "Precision Entry",
+        description: "MT4 / MT5 Compatible Precision Entry Indicator",
+        features: ["MT4 / MT5 Compatible", "Trend & Momentum Bot", "Strategy & Suggestions"],
+        image_url: "/assets/free-indicators/precision-entry.png",
+        category: "Trend & Entry Indicators",
+        type: 'indicator',
+        is_free: true
+    },
+    {
+        id: 3005,
+        title: "Premium Oscillator",
+        description: "MT4 / MT5 Compatible Premium Oscillator Indicator",
+        features: ["MT4 / MT5 Compatible", "Scalping Zones", "Precise Entry Signals"],
+        image_url: "/assets/indicators/chart-tablet.png",
+        category: "Trend & Entry Indicators",
+        type: 'indicator',
+        is_free: true
+    },
+    {
+        id: 3006,
+        title: "Scalping Detector",
+        description: "MT4 / MT5 Compatible Scalping Detector Indicator",
+        features: ["MT4 / MT5 Compatible", "SMC Order Blocks", "Breakers & Liquidity Zones"],
+        image_url: "/assets/indicators/scalper-robot.png",
+        category: "Trend & Entry Indicators",
+        type: 'indicator',
+        is_free: true
+    }
+];
 
 const FreeTradingIndicatorsPage = () => {
-    const categories = [
-        {
-            title: "Forex & Indices Signals",
-            indicators: [
-                {
-                    name: "Support & Resistance",
-                    features: ["MT4 / MT5 Compatible", "Buy/Sell Signals", "Trend & Reversal Zones"],
-                    imageSrc: "/assets/free-indicators/support-resistance.png"
-                },
-                {
-                    name: "Gold Detector",
-                    features: ["MT4 / MT5 Compatible", "VWAP Zones", "Dynamic Support & Resistance"],
-                    imageSrc: "/assets/free-indicators/gold-detector.png"
-                },
-                {
-                    name: "Advanced Trend",
-                    features: ["MT4 / MT5 Compatible", "Simple Buy/Sell Signals", "Precise Entry Signals"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                }
-            ]
-        },
-        {
-            title: "Trend & Entry Indicators",
-            indicators: [
-                {
-                    name: "Precision Entry",
-                    features: ["MT4 / MT5 Compatible", "Trend & Momentum Bot", "Strategy & Suggestions"],
-                    imageSrc: "/assets/free-indicators/precision-entry.png"
-                },
-                {
-                    name: "Premium Oscillator",
-                    features: ["MT4 / MT5 Compatible", "Scalping Zones", "Precise Entry Signals"],
-                    imageSrc: "/assets/indicators/chart-tablet.png"
-                },
-                {
-                    name: "Scalping Detector",
-                    features: ["MT4 / MT5 Compatible", "SMC Order Blocks", "Breakers & Liquidity Zones"],
-                    imageSrc: "/assets/indicators/scalper-robot.png"
-                }
-            ]
+    const { data: indicators } = useDataWithFallback(
+        tradingToolsService.getTools,
+        FALLBACK_INDICATORS,
+        'indicator',
+        'free',
+        20
+    );
+
+    // Group indicators by category
+    const groupedCategories = indicators.reduce((acc: any[], indicator) => {
+        const catTitle = indicator.category || "General Indicators";
+        let category = acc.find(c => c.title === catTitle);
+        if (!category) {
+            category = { title: catTitle, indicators: [] };
+            acc.push(category);
         }
-    ];
+        category.indicators.push({
+            id: indicator.id,
+            name: indicator.title,
+            features: indicator.features || [],
+            imageSrc: indicator.image_url || "/assets/indicators/chart-tablet.png",
+            downloadUrl: indicator.download_url
+        });
+        return acc;
+    }, []);
+
+    const categories = groupedCategories;
 
     return (
         <div className="min-h-screen bg-white font-sans overflow-x-hidden">
@@ -120,7 +171,7 @@ const FreeTradingIndicatorsPage = () => {
 
                             {/* Indicators Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {category.indicators.map((indicator, indIndex) => (
+                                {category.indicators.map((indicator: any, indIndex: number) => (
                                     <FreeIndicatorCard
                                         key={indIndex}
                                         {...indicator}

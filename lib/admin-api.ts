@@ -35,7 +35,15 @@ import type {
     WPCommentUpdate,
     WPPostRead,
     WPPostCreate,
-    WPPostUpdate
+    WPPostUpdate,
+    DynamicSignal,
+    DynamicSignalCreate,
+    DynamicTradingTool,
+    DynamicTradingToolCreate,
+    DynamicBook,
+    DynamicBookCreate,
+    DynamicVideo,
+    DynamicVideoCreate
 } from './types';
 
 export type {
@@ -74,7 +82,15 @@ export type {
     WPCommentUpdate,
     WPPostRead,
     WPPostCreate,
-    WPPostUpdate
+    WPPostUpdate,
+    DynamicSignal,
+    DynamicSignalCreate,
+    DynamicTradingTool,
+    DynamicTradingToolCreate,
+    DynamicBook,
+    DynamicBookCreate,
+    DynamicVideo,
+    DynamicVideoCreate
 };
 
 // Stats Service
@@ -703,5 +719,76 @@ export const adminPostService = {
         await api.delete(`/wordpress/posts/${postId}`, {
             params: { force },
         });
+    }
+};
+
+// Dynamic Pages Service
+export const adminDynamicService = {
+    // Signals
+    getSignals: async (type?: 'vip' | 'free', limit = 20, offset = 0) => {
+        const response = await api.get<DynamicSignal[]>('/signals', { params: { type, limit, offset } });
+        return response.data;
+    },
+    createSignal: async (data: DynamicSignalCreate) => {
+        const response = await api.post<DynamicSignal>('/admin/signals', data);
+        return response.data;
+    },
+    updateSignal: async (id: number, data: Partial<DynamicSignalCreate>) => {
+        const response = await api.put<DynamicSignal>(`/admin/signals/${id}`, data);
+        return response.data;
+    },
+    deleteSignal: async (id: number) => {
+        await api.delete(`/admin/signals/${id}`);
+    },
+
+    // Trading Tools (Bots & Indicators)
+    getTradingTools: async (type?: 'bot' | 'indicator', category?: 'vip' | 'free') => {
+        const response = await api.get<DynamicTradingTool[]>('/trading-tools', { params: { type, category } });
+        return response.data;
+    },
+    createTradingTool: async (data: DynamicTradingToolCreate) => {
+        const response = await api.post<DynamicTradingTool>('/admin/trading-tools', data);
+        return response.data;
+    },
+    updateTradingTool: async (id: number, data: Partial<DynamicTradingToolCreate>) => {
+        const response = await api.put<DynamicTradingTool>(`/admin/trading-tools/${id}`, data);
+        return response.data;
+    },
+    deleteTradingTool: async (id: number) => {
+        await api.delete(`/admin/trading-tools/${id}`);
+    },
+
+    // Forex Books
+    getBooks: async (is_free?: boolean) => {
+        const response = await api.get<DynamicBook[]>('/books', { params: { is_free } });
+        return response.data;
+    },
+    createBook: async (data: DynamicBookCreate) => {
+        const response = await api.post<DynamicBook>('/admin/books', data);
+        return response.data;
+    },
+    updateBook: async (id: number, data: Partial<DynamicBookCreate>) => {
+        const response = await api.put<DynamicBook>(`/admin/books/${id}`, data);
+        return response.data;
+    },
+    deleteBook: async (id: number) => {
+        await api.delete(`/admin/books/${id}`);
+    },
+
+    // Trading Videos
+    getVideos: async (limit = 10) => {
+        const response = await api.get<DynamicVideo[]>('/videos/trading', { params: { limit } });
+        return response.data;
+    },
+    createVideo: async (data: DynamicVideoCreate) => {
+        const response = await api.post<DynamicVideo>('/admin/videos', data);
+        return response.data;
+    },
+    updateVideo: async (id: string, data: Partial<DynamicVideoCreate>) => {
+        const response = await api.put<DynamicVideo>(`/admin/videos/${id}`, data);
+        return response.data;
+    },
+    deleteVideo: async (id: string) => {
+        await api.delete(`/admin/videos/${id}`);
     }
 };

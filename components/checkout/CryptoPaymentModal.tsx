@@ -14,6 +14,7 @@ import {
     ArrowLeft,
     RefreshCw
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import type { CryptoPaymentRead } from '@/lib/types';
 import { cryptoPaymentsService } from '@/lib/crypto-payments';
 import CurrencyIcon from '@/components/shared/CurrencyIcon';
@@ -125,7 +126,7 @@ export default function CryptoPaymentModal({ orderAmount, orderId, onClose, onSu
             setStep('PAYMENT_DETAILS');
         } catch (err) {
             console.error('Failed to create payment', err);
-            alert('Failed to initialize payment. Please try another currency.');
+            toast.error('Failed to initialize payment. Please try another currency.');
         } finally {
             setCreatingPayment(false);
         }

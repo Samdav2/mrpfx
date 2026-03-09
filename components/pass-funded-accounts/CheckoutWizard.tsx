@@ -2,9 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, ChevronDown, CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
+import { ArrowLeft, ChevronDown, CheckCircle2, ShieldCheck, Clock, Bitcoin, Landmark, CreditCard } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { propFirmService } from '@/services/prop-firm.service';
+import { propFirmService, PropFirmRegistrationResponse } from '@/services/prop-firm.service';
+import CryptoPaymentModal from '@/components/checkout/CryptoPaymentModal';
 
 function CheckoutWizardContent() {
     const router = useRouter();
@@ -13,11 +14,13 @@ function CheckoutWizardContent() {
     // URL Parameters
     const plan = searchParams.get('plan') || 'Standard';
     const type = searchParams.get('type') || '2-Step Challenge';
+    const sizeParam = searchParams.get('size');
+    const sizeVal = searchParams.get('sizeVal');
     const priceStr = searchParams.get('price');
     const price = priceStr ? `$${priceStr}` : 'Custom Pricing';
 
     const [currentStep, setCurrentStep] = useState(1);
-    const totalSteps = 5;
+    const totalSteps = 6;
 
     const [formData, setFormData] = useState({
         loginId: "",
@@ -28,20 +31,36 @@ function CheckoutWizardContent() {
         serverType: "",
         challengeSteps: "",
         accountCost: "",
-        accountSize: "",
-        accountPhases: "",
+        accountSize: sizeVal || (sizeParam ? sizeParam.replace(/[^\d.]/g, '') : ""),
+        accountPhases: type.includes('1-Step') ? "1 Step Challenge" : "2 Steps Challenge",
         tradingPlatform: "Metatrader 5 only",
         propFirmRules: "",
         whatsappNumber: "",
         telegramUsername: "",
     });
 
+    const [paymentMethod] = useState<'crypto'>('crypto');
+    const [registrationResult, setRegistrationResult] = useState<PropFirmRegistrationResponse | null>(null);
+    const [showCryptoModal, setShowCryptoModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    const propFirmWebsites: Record<string, string> = {
+        "FundedNext": "https://fundednext.com/",
+        "FTMO": "https://ftmo.com/",
+        "Fundingpips": "https://fundingpips.com/"
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => {
+            const newData = { ...prev, [name]: value };
+            // Auto-update website if firm name changes
+            if (name === 'propFirmName') {
+                newData.propFirmWebsite = propFirmWebsites[value] || "";
+            }
+            return newData;
+        });
     };
 
     const validateStep = (step: number) => {
@@ -61,8 +80,8 @@ function CheckoutWizardContent() {
                     toast.error("Please select a Prop Firm");
                     return false;
                 }
-                if (!formData.propFirmWebsite || formData.propFirmWebsite.length < 5) {
-                    toast.error("Website link must be valid (min 5 chars)");
+                if (!formData.propFirmWebsite) {
+                    toast.error("Please select a Prop Firm Website");
                     return false;
                 }
                 if (!formData.serverName || formData.serverName.length < 3) {
@@ -71,8 +90,8 @@ function CheckoutWizardContent() {
                 }
                 return true;
             case 3:
-                if (!formData.serverType || formData.serverType.length < 2) {
-                    toast.error("Server Type must be at least 2 characters");
+                if (!formData.serverType) {
+                    toast.error("Please select Server Type");
                     return false;
                 }
                 if (!formData.challengeSteps || parseInt(formData.challengeSteps) < 1) {
@@ -109,6 +128,8 @@ function CheckoutWizardContent() {
                     return false;
                 }
                 return true;
+            case 6:
+                return true;
             default:
                 return true;
         }
@@ -131,7 +152,7 @@ function CheckoutWizardContent() {
         setLoading(true);
         setError("");
         try {
-            await propFirmService.createRegistration({
+            const response = await propFirmService.createRegistration({
                 login_id: formData.loginId,
                 password: formData.password,
                 propfirm_name: formData.propFirmName,
@@ -147,17 +168,30 @@ function CheckoutWizardContent() {
                 whatsapp_no: formData.whatsappNumber,
                 telegram_username: formData.telegramUsername,
             });
-            toast.success("Registration successful! Redirecting...");
-            setTimeout(() => {
-                router.push("/dashboard");
-            }, 1500);
+
+            if (response.success) {
+                setRegistrationResult(response);
+                setShowCryptoModal(true);
+                toast.success("Registration successful! Proceeding to crypto payment.");
+            } else {
+                toast.error(response.message || "Failed to create registration");
+            }
         } catch (err: unknown) {
             console.error("Registration error:", err);
             const errorMessage = "Failed to create registration. Please check your inputs and try again.";
             setError(errorMessage);
             toast.error(errorMessage);
+        } finally {
             setLoading(false);
         }
+    };
+
+    const handlePaymentSuccess = () => {
+        setShowCryptoModal(false);
+        toast.success("Payment confirmed! Your registration is complete.");
+        setTimeout(() => {
+            router.push("/dashboard");
+        }, 2000);
     };
 
     const renderStepContent = () => {
@@ -213,15 +247,23 @@ function CheckoutWizardContent() {
                             </div>
                         </div>
                         <div>
-                            <label className={labelClass}>Link to Prop Firm Website</label>
-                            <input
-                                type="url"
-                                name="propFirmWebsite"
-                                value={formData.propFirmWebsite}
-                                onChange={handleInputChange}
-                                placeholder="https://"
-                                className={inputClass}
-                            />
+                            <label className={labelClass}>Prop Firm Website</label>
+                            <div className="relative">
+                                <select
+                                    name="propFirmWebsite"
+                                    value={formData.propFirmWebsite}
+                                    onChange={handleInputChange}
+                                    className={`${inputClass} appearance-none cursor-pointer`}
+                                >
+                                    <option value="" disabled>Select Website</option>
+                                    {formData.propFirmName && (
+                                        <option value={propFirmWebsites[formData.propFirmName]}>
+                                            {propFirmWebsites[formData.propFirmName]}
+                                        </option>
+                                    )}
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                            </div>
                         </div>
                         <div>
                             <label className={labelClass}>Server Name</label>
@@ -241,26 +283,35 @@ function CheckoutWizardContent() {
                     <div className="space-y-6 animate-fadeIn">
                         <div>
                             <label className={labelClass}>Server Type <span className="text-gray-400 font-normal ml-1">(MT5 required)</span></label>
-                            <input
-                                type="text"
-                                name="serverType"
-                                value={formData.serverType}
-                                onChange={handleInputChange}
-                                placeholder="e.g. Demo, Live"
-                                className={inputClass}
-                            />
+                            <div className="relative">
+                                <select
+                                    name="serverType"
+                                    value={formData.serverType}
+                                    onChange={handleInputChange}
+                                    className={`${inputClass} appearance-none cursor-pointer`}
+                                >
+                                    <option value="" disabled>Select Server Type</option>
+                                    <option value="Demo">Demo</option>
+                                    <option value="Live">Live</option>
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                            </div>
                         </div>
                         <div>
                             <label className={labelClass}>Challenge Steps</label>
-                            <input
-                                type="number"
-                                name="challengeSteps"
-                                value={formData.challengeSteps}
-                                onChange={handleInputChange}
-                                placeholder="e.g. 1 or 2"
-                                min="1"
-                                className={inputClass}
-                            />
+                            <div className="relative">
+                                <select
+                                    name="challengeSteps"
+                                    value={formData.challengeSteps}
+                                    onChange={handleInputChange}
+                                    className={`${inputClass} appearance-none cursor-pointer`}
+                                >
+                                    <option value="" disabled>Select Steps</option>
+                                    <option value="1">1 Step</option>
+                                    <option value="2">2 Steps</option>
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                            </div>
                         </div>
                         <div>
                             <label className={labelClass}>Cost of Prop Account</label>
@@ -374,6 +425,28 @@ function CheckoutWizardContent() {
                         </div>
                     </div>
                 );
+            case 6:
+                return (
+                    <div className="space-y-6 animate-fadeIn">
+                        <h3 className="text-lg font-bold text-slate-900 mb-4">Confirm Payment Method</h3>
+                        <div className="grid grid-cols-1 gap-4">
+                            <div
+                                className="w-full flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left bg-[#2563EB]/5 border-[#2563EB] shadow-md shadow-[#2563EB]/10"
+                            >
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#2563EB] text-white">
+                                    <Bitcoin className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-bold text-[#2563EB]">Pay with Crypto</p>
+                                    <p className="text-sm text-slate-500">Fast transaction verification</p>
+                                </div>
+                                <div className="w-6 h-6 rounded-full border-2 flex items-center justify-center border-[#2563EB] bg-[#2563EB]">
+                                    <CheckCircle2 className="w-4 h-4 text-white" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
             default:
                 return null;
         }
@@ -384,7 +457,8 @@ function CheckoutWizardContent() {
         "Firm Details",
         "Server Information",
         "Account Details",
-        "Rules & Contact"
+        "Rules & Contact",
+        "Payment Method"
     ];
 
     return (
@@ -421,12 +495,18 @@ function CheckoutWizardContent() {
                                     <p className="text-base font-bold text-slate-900">{type}</p>
                                 </div>
                             </div>
-                            {price !== 'Custom Pricing' && (
-                                <div className="flex justify-between items-end pt-2">
-                                    <p className="text-base font-bold text-slate-900">Total Price</p>
-                                    <p className="text-2xl font-black text-[#2563EB]">{price}</p>
+                            {sizeParam && (
+                                <div className="flex justify-between items-start pb-4 border-b border-gray-100">
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-500 mb-1">Account Size</p>
+                                        <p className="text-base font-bold text-slate-900">{sizeParam}</p>
+                                    </div>
                                 </div>
                             )}
+                            <div className="flex justify-between items-end pt-2">
+                                <p className="text-base font-bold text-slate-900">Total Price</p>
+                                <p className="text-2xl font-black text-[#2563EB]">{price}</p>
+                            </div>
                         </div>
 
                         <div className="bg-blue-50/50 rounded-xl p-4 flex gap-3">
@@ -509,6 +589,16 @@ function CheckoutWizardContent() {
                 </div>
 
             </div>
+
+            {/* Crypto Payment Modal */}
+            {showCryptoModal && registrationResult && (
+                <CryptoPaymentModal
+                    orderAmount={registrationResult.amount || parseFloat(formData.accountCost) || 0}
+                    orderId={registrationResult.order_id || `REG-${registrationResult.registration_id}`}
+                    onClose={() => setShowCryptoModal(false)}
+                    onSuccess={handlePaymentSuccess}
+                />
+            )}
         </div>
     );
 }

@@ -1,74 +1,28 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { adminDynamicService } from '@/lib/admin-api';
+import { DynamicVideo } from '@/lib/types';
 
 const VideosPage = () => {
-    const videos = [
-        {
-            id: "yPJSje5NzYg",
-            title: "My Trading Focus Moving Forward (2026)",
-            thumbnail: "https://i.ytimg.com/vi/yPJSje5NzYg/sddefault.jpg",
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "jpVgMjM0hWE",
-            title: "A Real Day in the Life of a 28-Year-Old Day Trader in Cape Town, South Africa",
-            thumbnail: "https://i.ytimg.com/vi/jpVgMjM0hWE/sddefault.jpg",
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "4XdpTQdOl0c",
-            title: "The Crazy 5 Minutes Strategy That Made Me Over $10K DAY TRADING",
-            thumbnail: "https://i.ytimg.com/vi/4XdpTQdOl0c/sddefault.jpg",
-            isLive: true, // Mocking these badges based on screenshot
-            isAi: false
-        },
-        {
-            id: "mock1",
-            title: "AI TRADED FOR ME $9558",
-            thumbnail: "https://i.ytimg.com/vi/yPJSje5NzYg/sddefault.jpg", // Reusing for now
-            isLive: false,
-            isAi: true
-        },
-        {
-            id: "mock2",
-            title: "Gold Market Outlook For The Week #forex #forextrading",
-            thumbnail: "https://i.ytimg.com/vi/jpVgMjM0hWE/sddefault.jpg", // Reusing
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "mock3",
-            title: "How I Passed 10 Prop Firm Challenges in 5 Weeks",
-            thumbnail: "https://i.ytimg.com/vi/4XdpTQdOl0c/sddefault.jpg", // Reusing
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "mock4",
-            title: "Gold doing it's thing again as usual #trading #forex",
-            thumbnail: "https://i.ytimg.com/vi/yPJSje5NzYg/sddefault.jpg", // Reusing
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "mock5",
-            title: "Don't Blink... GOLD Trade Full Entry To Exit",
-            thumbnail: "https://i.ytimg.com/vi/jpVgMjM0hWE/sddefault.jpg", // Reusing
-            isLive: false,
-            isAi: false
-        },
-        {
-            id: "mock6",
-            title: "Trading GOLD, NASDAQ, US30 all at the same time",
-            thumbnail: "https://i.ytimg.com/vi/4XdpTQdOl0c/sddefault.jpg", // Reusing
-            isLive: false,
-            isAi: false
-        }
-    ];
+    const [videos, setVideos] = useState<DynamicVideo[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchVideos = async () => {
+            try {
+                const data = await adminDynamicService.getVideos(12);
+                setVideos(data);
+            } catch (error) {
+                console.error("Failed to fetch trading videos:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchVideos();
+    }, []);
 
     return (
         <div className="min-h-screen bg-white">
@@ -95,55 +49,52 @@ const VideosPage = () => {
             </div>
 
             {/* Video Grid Section */}
-            <div className="max-w-[1140px] mx-auto px-5 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {videos.map((video, index) => (
-                        <a
-                            key={index}
-                            href={`https://www.youtube.com/watch?v=${video.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group block"
-                        >
-                            <div className="relative aspect-video bg-gray-100 mb-4 overflow-hidden rounded-lg">
-                                <Image
-                                    src={video.thumbnail}
-                                    alt={video.title}
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                    className="group-hover:scale-105 transition-transform duration-300"
-                                />
+            <div className="max-w-[1140px] mx-auto px-5 py-20 min-h-[400px]">
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[1, 2, 3, 4, 5, 6].map(i => (
+                            <div key={i} className="aspect-video bg-gray-100 rounded-lg animate-pulse" />
+                        ))}
+                    </div>
+                ) : videos.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-gray-500">No videos found. Subscribe to our YouTube channel for updates!</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {videos.map((video, index) => (
+                            <a
+                                key={index}
+                                href={`https://www.youtube.com/watch?v=${video.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group block"
+                            >
+                                <div className="relative aspect-video bg-gray-100 mb-4 overflow-hidden rounded-lg">
+                                    <Image
+                                        src={video.thumbnail}
+                                        alt={video.title}
+                                        fill
+                                        style={{ objectFit: 'cover' }}
+                                        className="group-hover:scale-105 transition-transform duration-300"
+                                    />
 
-                                {/* Live Badge */}
-                                {video.isLive && (
-                                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-white/90 px-2 py-1 rounded text-xs font-bold text-red-600">
-                                        <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-                                        LIVE TRADING
-                                    </div>
-                                )}
-
-                                {/* AI Badge (Mock) */}
-                                {video.isAi && (
-                                    <div className="absolute top-2 right-2 bg-black/80 px-2 py-1 rounded text-xs font-bold text-white border border-green-500">
-                                        DR. TRADE
-                                    </div>
-                                )}
-
-                                {/* Play Icon Overlay */}
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                                    <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center pl-1 group-hover:scale-110 transition-transform">
-                                        <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z" />
-                                        </svg>
+                                    {/* Play Icon Overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
+                                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center pl-1 group-hover:scale-110 transition-transform">
+                                            <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <h3 className="text-black font-bold text-sm md:text-base font-['DM_Sans'] line-clamp-2 group-hover:text-[#2563eb] transition-colors">
-                                {video.title}
-                            </h3>
-                        </a>
-                    ))}
-                </div>
+                                <h3 className="text-black font-bold text-sm md:text-base font-['DM_Sans'] line-clamp-2 group-hover:text-[#2563eb] transition-colors">
+                                    {video.title}
+                                </h3>
+                            </a>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Resources Banner */}

@@ -25,9 +25,14 @@ import {
     Layout,
     Image as ImageIcon,
     X,
-    LogOut
+    LogOut,
+    Bot,
+    Book,
+    Youtube,
+    Trophy
 } from 'lucide-react';
 import { authService, User } from '@/lib/auth';
+import { ConfirmModal } from '@/components/admin/Modals';
 
 interface AdminSidebarProps {
     isOpen?: boolean;
@@ -38,6 +43,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
     const pathname = usePathname();
 
     const [user, setUser] = useState<User | null>(null);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -54,9 +60,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
     }, []);
 
     const handleLogout = () => {
-        if (confirm('Are you sure you want to log out?')) {
-            authService.logout();
-        }
+        authService.logout();
     };
 
     const getInitials = (name: string | null) => {
@@ -71,6 +75,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
                 { name: 'Users', href: '/admin/users', icon: Users },
                 { name: 'Orders', href: '/admin/orders', icon: OrdersIcon },
+                { name: 'Prop Firm', href: '/admin/prop-firm', icon: Trophy },
                 { name: 'Reports', href: '/admin/reports', icon: BarChart2 },
                 { name: 'Courses', href: '/admin/courses', icon: BookOpen },
                 { name: 'Products', href: '/admin/products', icon: ShoppingBag },
@@ -83,6 +88,15 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Media', href: '/admin/media', icon: ImageIcon },
                 { name: 'Members', href: '/admin/members', icon: Users },
                 { name: 'Shortlinks', href: '/admin/links', icon: Zap },
+            ]
+        },
+        {
+            title: 'Dynamic Content',
+            items: [
+                { name: 'Signals', href: '/admin/signals', icon: Zap },
+                { name: 'Trading Tools', href: '/admin/trading-tools', icon: Bot },
+                { name: 'Forex Books', href: '/admin/books', icon: Book },
+                { name: 'Trading Videos', href: '/admin/videos', icon: Youtube },
             ]
         }
     ];
@@ -176,7 +190,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                         </div>
                     </div>
                     <button
-                        onClick={handleLogout}
+                        onClick={() => setShowLogoutConfirm(true)}
                         className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-500 transition-colors"
                         title="Logout"
                     >
@@ -184,6 +198,15 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                     </button>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={showLogoutConfirm}
+                onClose={() => setShowLogoutConfirm(false)}
+                onConfirm={handleLogout}
+                title="Logout"
+                message="Are you sure you want to log out? You will need to sign in again to access the admin panel."
+                isDestructive={true}
+            />
         </aside>
     );
 };

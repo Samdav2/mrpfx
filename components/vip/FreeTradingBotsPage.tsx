@@ -5,43 +5,35 @@ import { Check, Cpu, Zap, Activity, Globe, Download } from 'lucide-react';
 import FreeRobotCard from './FreeRobotCard';
 import NewsletterSection from '@/components/shared/NewsletterSection';
 
+import { useState, useEffect } from 'react';
+import { tradingToolsService } from '@/lib/trading-tools';
+import { TradingTool } from '@/lib/types';
+
 const FreeTradingBotsPage = () => {
-    const categories = [
-        {
-            title: "Synthetic Market Bots",
-            bots: [
-                {
-                    name: "Boom Crash Master",
-                    features: ["Optimized for High Volatility", "Automatic Entry & Exit", "Risk Correction Algorithm"],
-                    imageSrc: "/assets/free-robots/synthetic-bot.png",
-                    category: "Synthetic"
-                },
-                {
-                    name: "Volatility Scalper",
-                    features: ["Fast Execution Speed", "Small Account Friendly", "Multiple Indices Support"],
-                    imageSrc: "/assets/free-robots/synthetic-bot.png",
-                    category: "Synthetic"
-                }
-            ]
-        },
-        {
-            title: "Forex & AI Bots",
-            bots: [
-                {
-                    name: "Global Trend Bot",
-                    features: ["Multi-Pair Analysis", "Trend Following Logic", "Trailing Stop Loss"],
-                    imageSrc: "/assets/free-robots/forex-bot.png",
-                    category: "Forex"
-                },
-                {
-                    name: "Neural Neural X",
-                    features: ["AI Powered Pattern Recon", "Live Market Learning", "Smart Drawdown Protection"],
-                    imageSrc: "/assets/free-robots/ai-bot.png",
-                    category: "AI"
-                }
-            ]
-        }
-    ];
+    const [bots, setBots] = useState<TradingTool[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBots = async () => {
+            try {
+                const data = await tradingToolsService.getTools('bot', 'free');
+                setBots(data);
+            } catch (error) {
+                console.error("Failed to fetch free bots:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBots();
+    }, []);
+
+    // Helper to get image based on title or type
+    const getBotImage = (title: string) => {
+        const t = title.toLowerCase();
+        if (t.includes('synthetic') || t.includes('boom') || t.includes('crash')) return "/assets/free-robots/synthetic-bot.png";
+        if (t.includes('ai') || t.includes('neural')) return "/assets/free-robots/ai-bot.png";
+        return "/assets/free-robots/forex-bot.png";
+    };
 
     return (
         <div className="min-h-screen bg-white font-sans overflow-x-hidden">
@@ -110,29 +102,42 @@ const FreeTradingBotsPage = () => {
             </section>
 
             {/* Main Content Grid */}
-            <section className="py-24 bg-slate-50 relative">
+            <section className="py-24 bg-slate-50 relative min-h-[400px]">
                 <div className="max-w-[1280px] mx-auto px-6">
-                    {categories.map((category, catIndex) => (
-                        <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
-                            {/* Category Header */}
-                            <div className="flex items-center gap-6 mb-12">
-                                <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight uppercase">
-                                    {category.title}
-                                </h2>
-                                <div className="h-px w-full bg-slate-200 shadow-sm" />
-                            </div>
+                    {/* Category Header */}
+                    <div className="flex items-center gap-6 mb-12">
+                        <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight uppercase">
+                            Available Free Bots
+                        </h2>
+                        <div className="h-px w-full bg-slate-200 shadow-sm" />
+                    </div>
 
-                            {/* Robots Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
-                                {category.bots.map((bot, indIndex) => (
-                                    <FreeRobotCard
-                                        key={indIndex}
-                                        {...bot}
-                                    />
-                                ))}
-                            </div>
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {[1, 2, 3, 4].map(i => (
+                                <div key={i} className="bg-white rounded-[20px] h-[400px] animate-pulse" />
+                            ))}
                         </div>
-                    ))}
+                    ) : bots.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                            <p className="text-slate-500">No free bots available at the moment. Check back later!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                            {bots.map((bot) => (
+                                <FreeRobotCard
+                                    key={bot.id}
+                                    id={bot.id}
+                                    name={bot.title}
+                                    description={bot.description}
+                                    features={bot.description.split('\n').filter(l => l.trim().length > 0).slice(0, 3)}
+                                    imageSrc={getBotImage(bot.title)}
+                                    downloadUrl={bot.download_url}
+                                    category={bot.title.includes('Synthetic') ? 'Synthetic' : 'Forex'}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 

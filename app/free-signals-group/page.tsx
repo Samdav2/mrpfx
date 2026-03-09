@@ -2,8 +2,45 @@
 
 import Image from 'next/image';
 import NewsletterSection from '@/components/shared/NewsletterSection';
+import { signalsService } from '@/lib/signals';
+import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
+import { Signal } from '@/lib/types';
+import { CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react';
+
+const FALLBACK_FREE_SIGNALS: Signal[] = [
+    {
+        id: 1,
+        title: 'EUR/USD Buy',
+        status: 'active',
+        signal_type: 'free',
+        instrument: 'EUR/USD',
+        type: 'buy',
+        entry: '1.08500',
+        sl: '1.08000',
+        tp1: '1.09200',
+        date: new Date().toISOString(),
+    },
+    {
+        id: 2,
+        title: 'XAU/USD Sell',
+        status: 'active',
+        signal_type: 'free',
+        instrument: 'XAU/USD (GOLD)',
+        type: 'sell',
+        entry: '2350.00',
+        sl: '2365.00',
+        tp1: '2320.00',
+        date: new Date().toISOString(),
+    }
+];
 
 const FreeSignalsGroupPage = () => {
+    const { data: signals } = useDataWithFallback(
+        signalsService.getSignals,
+        FALLBACK_FREE_SIGNALS,
+        'free',
+        5
+    );
     return (
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
@@ -55,8 +92,50 @@ const FreeSignalsGroupPage = () => {
                 </div>
             </div>
 
+            {/* Dynamic Signals Section */}
+            <div className="bg-slate-50 py-20 border-t border-slate-100">
+                <div className="max-w-[1140px] mx-auto px-5">
+                    <div className="flex items-center justify-between mb-12">
+                        <h2 className="text-3xl font-bold text-slate-900 font-['DM_Sans']">Recent Free Signals</h2>
+                        <a href="https://t.me/mrpfxuniversity" target="_blank" className="text-blue-600 font-bold flex items-center gap-2 hover:underline">
+                            View All on Telegram <ArrowRight className="w-4 h-4" />
+                        </a>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {signals.map((signal: any) => (
+                            <div key={signal.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2 font-bold text-slate-800 text-lg">
+                                        <TrendingUp className={`w-5 h-5 ${signal.type === 'buy' ? 'text-green-500' : 'text-red-500'}`} />
+                                        {signal.instrument}
+                                    </div>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${signal.type === 'buy' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                        {signal.type}
+                                    </span>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-500 font-medium">Entry Price:</span>
+                                        <span className="text-slate-900 font-bold">{signal.entry}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-500 font-medium">Stop Loss:</span>
+                                        <span className="text-slate-900 font-bold">{signal.sl || 'TBA'}</span>
+                                    </div>
+                                    <div className="flex justify-between text-base border-t border-slate-100 pt-3">
+                                        <span className="text-slate-500 font-medium italic">Take Profit:</span>
+                                        <span className="text-blue-600 font-black">{signal.tp1}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
             {/* Newsletter Section */}
-            <div className="pb-20">
+            <div className="pb-20 bg-slate-50">
                 <NewsletterSection />
             </div>
         </div>

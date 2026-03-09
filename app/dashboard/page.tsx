@@ -21,13 +21,17 @@ import {
     ChevronRight,
     CalendarDays,
     TrendingUp,
-    Star
+    Star,
+    Eye,
+    X
 } from 'lucide-react';
 import { authService } from '@/lib/auth';
 import { learnpressService } from '@/lib/learnpress';
 import { ordersService } from '@/lib/orders';
 import { postsService } from '@/lib/content';
+import { propFirmService, type PropFirmRegistrationData } from '@/services/prop-firm.service';
 import type { UserResponse, LPUserItem, WCOrder, WCUserOrderSummary, WPPostRead } from '@/lib/types';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 // ─── Skeleton Loader ──────────────────────────────────────────
 const Skeleton = ({ className = '' }: { className?: string }) => (
@@ -54,6 +58,83 @@ const StatusBadge = ({ status }: { status: string }) => {
     );
 };
 
+// Modal for viewing registration details
+const RegistrationDetailsModal = ({ registration, onClose }: { registration: PropFirmRegistrationData; onClose: () => void }) => {
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-[#111827] border border-white/[0.08] rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                    <h3 className="text-white font-bold flex items-center gap-2">
+                        <Trophy className="w-5 h-5 text-emerald-400" />
+                        Registration Details
+                    </h3>
+                    <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                <div className="p-6 space-y-5">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Prop Firm</p>
+                            <p className="text-sm text-white font-semibold">{registration.propfirm_name}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Platform</p>
+                            <p className="text-sm text-white font-semibold">{registration.trading_platform}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Login ID</p>
+                            <p className="text-sm text-blue-400 font-mono font-bold leading-none">{registration.login_id}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Server</p>
+                            <p className="text-sm text-white font-semibold">{registration.server_name}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Server Type</p>
+                            <p className="text-sm text-white font-semibold">{registration.server_type}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Challenge Steps</p>
+                            <p className="text-sm text-white font-semibold">{registration.challenges_step} Step</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Account Size</p>
+                            <p className="text-sm text-white font-semibold">${registration.account_size.toLocaleString()}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Account Phases</p>
+                            <p className="text-sm text-white font-semibold">{registration.account_phases} Phase</p>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/[0.06] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Current Status</span>
+                            <StatusBadge status={registration.status} />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Payment</span>
+                            <span className={`text-[10px] font-bold uppercase ${registration.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                {registration.payment_status}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-4 bg-white/[0.02] border-t border-white/[0.06]">
+                    <button
+                        onClick={onClose}
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // ─── Main Dashboard ───────────────────────────────────────────
 export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
@@ -62,21 +143,25 @@ export default function DashboardPage() {
     const [orderSummary, setOrderSummary] = useState<WCUserOrderSummary | null>(null);
     const [recentOrders, setRecentOrders] = useState<WCOrder[]>([]);
     const [recentPosts, setRecentPosts] = useState<WPPostRead[]>([]);
+    const [registrations, setRegistrations] = useState<PropFirmRegistrationData[]>([]);
+    const [selectedRegistration, setSelectedRegistration] = useState<PropFirmRegistrationData | null>(null);
 
     const fetchAll = useCallback(async () => {
         setLoading(true);
-        const [userRes, coursesRes, summaryRes, ordersRes, postsRes] = await Promise.allSettled([
+        const [userRes, coursesRes, summaryRes, ordersRes, postsRes, propFirmRes] = await Promise.allSettled([
             authService.getCurrentUser(),
             learnpressService.getMyCourses(),
             ordersService.getMyOrderSummary(),
             ordersService.getMyOrders(0, 5),
             postsService.getPosts('publish', 4, 0),
+            propFirmService.getRegistrations(10, 0),
         ]);
         if (userRes.status === 'fulfilled') setUser(userRes.value);
         if (coursesRes.status === 'fulfilled') setCourses(Array.isArray(coursesRes.value) ? coursesRes.value : []);
         if (summaryRes.status === 'fulfilled') setOrderSummary(summaryRes.value);
         if (ordersRes.status === 'fulfilled') setRecentOrders(Array.isArray(ordersRes.value) ? ordersRes.value : []);
         if (postsRes.status === 'fulfilled') setRecentPosts(Array.isArray(postsRes.value) ? postsRes.value : []);
+        if (propFirmRes.status === 'fulfilled') setRegistrations(propFirmRes.value.data || []);
         setLoading(false);
     }, []);
 
@@ -331,6 +416,138 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
+                {/* ──── PROP FIRM ACCOUNTS SECTION ──── */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Status Chart */}
+                    <div className="lg:col-span-1 bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden flex flex-col">
+                        <div className="p-5 border-b border-white/[0.06]">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                                    <TrendingUp className="w-5 h-5 text-blue-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-bold text-sm">Account Status</h3>
+                                    <p className="text-xs text-gray-500">Distribution of your registrations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex-1 min-h-[280px] p-4 flex items-center justify-center">
+                            {loading ? (
+                                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+                            ) : registrations.length === 0 ? (
+                                <div className="text-center py-10">
+                                    <p className="text-xs text-gray-500 italic">No data to display</p>
+                                </div>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={[
+                                                { name: 'Pending', value: registrations.filter(r => r.status === 'pending').length, color: '#f59e0b' },
+                                                { name: 'Active', value: registrations.filter(r => r.status === 'active').length, color: '#10b981' },
+                                                { name: 'Completed', value: registrations.filter(r => r.status === 'completed').length, color: '#3b82f6' },
+                                                { name: 'Failed', value: registrations.filter(r => r.status === 'failed').length, color: '#ef4444' },
+                                            ].filter(d => d.value > 0)}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {registrations.length > 0 && [
+                                                { name: 'Pending', color: '#f59e0b' },
+                                                { name: 'Active', color: '#10b981' },
+                                                { name: 'Completed', color: '#3b82f6' },
+                                                { name: 'Failed', color: '#ef4444' },
+                                            ].map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', fontSize: '12px' }}
+                                            itemStyle={{ color: '#fff' }}
+                                        />
+                                        <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '11px', color: '#9ca3af' }} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Registrations List */}
+                    <div className="lg:col-span-2 bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden flex flex-col">
+                        <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                                    <Trophy className="w-5 h-5 text-emerald-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-bold text-sm">Prop Firm Registrations</h3>
+                                    <p className="text-xs text-gray-500">Your managed trading accounts</p>
+                                </div>
+                            </div>
+                            <Link href="/pass-funded-accounts" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors">
+                                New Registration <ArrowRight className="w-3 h-3" />
+                            </Link>
+                        </div>
+                        <div className="overflow-x-auto flex-1 h-[280px] custom-scrollbar">
+                            <table className="w-full text-left">
+                                <thead className="sticky top-0 bg-[#111827] z-10">
+                                    <tr className="text-[11px] text-gray-500 uppercase border-b border-white/[0.04]">
+                                        <th className="px-5 py-3 font-medium">Account/Firm</th>
+                                        <th className="px-5 py-3 font-medium">Status</th>
+                                        <th className="px-5 py-3 font-medium">Payment</th>
+                                        <th className="px-5 py-3 font-medium text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-sm">
+                                    {loading ? (
+                                        Array.from({ length: 3 }).map((_, i) => (
+                                            <tr key={i}><td colSpan={4} className="px-5 py-4"><Skeleton className="h-4 w-full" /></td></tr>
+                                        ))
+                                    ) : registrations.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={4} className="px-5 py-12 text-center">
+                                                <p className="text-sm text-gray-500">No prop firm registrations found.</p>
+                                                <Link href="/pass-funded-accounts" className="mt-3 text-xs text-purple-400 hover:text-purple-300 inline-flex items-center gap-1">
+                                                    Start a challenge <ArrowRight className="w-3 h-3" />
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        registrations.map((reg) => (
+                                            <tr key={reg.registration_id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                                                <td className="px-5 py-4">
+                                                    <p className="text-white font-bold text-xs">{reg.propfirm_name}</p>
+                                                    <p className="text-[10px] text-gray-500 mt-0.5">ID: {reg.login_id}</p>
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <StatusBadge status={reg.status} />
+                                                </td>
+                                                <td className="px-5 py-4">
+                                                    <span className={`text-[10px] font-bold uppercase ${reg.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                                        {reg.payment_status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-5 py-4 text-right">
+                                                    <button
+                                                        onClick={() => setSelectedRegistration(reg)}
+                                                        className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                                                        title="View Details"
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 {/* ──── RECENT BLOG POSTS ──── */}
                 <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
@@ -433,6 +650,14 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </div>
+
+            {/* Registration Details Modal */}
+            {selectedRegistration && (
+                <RegistrationDetailsModal
+                    registration={selectedRegistration}
+                    onClose={() => setSelectedRegistration(null)}
+                />
+            )}
         </div>
     );
 }

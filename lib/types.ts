@@ -1270,3 +1270,102 @@ export interface CryptoStatusResponse {
     status: string;
     message: string;
 }
+// ============================================================================
+// DYNAMIC PAGES API TYPES (Signals, Bots, Indicators, Books, Videos)
+// ============================================================================
+
+export interface DynamicSignal {
+    id: number;
+    title: string;
+    date: string;
+    status: string;
+    instrument: string;
+    signal_type: 'vip' | 'free';
+    entry: string;
+    sl: string;
+    tp1: string;
+    tp2?: string;
+    image_url?: string;
+    price?: string;
+    type?: string;
+}
+
+export interface DynamicSignalCreate {
+    title: string;
+    instrument: string;
+    signal_type: 'vip' | 'free';
+    entry: string;
+    sl: string;
+    tp1: string;
+    tp2?: string;
+    status?: string;
+    image_url?: string;
+    price?: string;
+    type?: string;
+}
+
+export interface DynamicTradingTool {
+    id: number;
+    title: string;
+    status: string;
+    tool_type: 'bot' | 'indicator';
+    category: 'vip' | 'free';
+    description: string;
+    download_url?: string;
+    purchase_url?: string;
+    price?: string;
+    image_url?: string;
+}
+
+export interface DynamicTradingToolCreate {
+    title: string;
+    tool_type: 'bot' | 'indicator';
+    category: 'vip' | 'free';
+    description: string;
+    download_url?: string;
+    purchase_url?: string;
+    price?: string;
+    status?: string;
+    image_url?: string;
+}
+
+export interface DynamicBook {
+    id: number;
+    title: string;
+    status: string;
+    is_free: boolean;
+    description: string;
+    download_url?: string;
+    purchase_url?: string;
+    image_url?: string;
+    price?: string;
+}
+
+export interface DynamicBookCreate {
+    title: string;
+    is_free: boolean;
+    description: string;
+    download_url?: string;
+    purchase_url?: string;
+    status?: string;
+    image_url?: string;
+    price?: string;
+}
+
+export interface DynamicVideo {
+    id: string; // youtube_id
+    title: string;
+    thumbnail: string;
+    image_url?: string;
+}
+
+export interface DynamicVideoCreate {
+    title: string;
+    youtube_id: string;
+    image_url?: string;
+}
+
+// Keep existing for compatibility if needed, but mark as deprecated or update
+export type Signal = DynamicSignal;
+export type TradingTool = DynamicTradingTool;
+export type TradingVideo = DynamicVideo;
