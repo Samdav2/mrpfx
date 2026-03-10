@@ -88,6 +88,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Media', href: '/admin/media', icon: ImageIcon },
                 { name: 'Members', href: '/admin/members', icon: Users },
                 { name: 'Shortlinks', href: '/admin/links', icon: Zap },
+                { name: 'Settings', href: '/admin/settings', icon: Settings },
             ]
         },
         {
