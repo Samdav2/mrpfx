@@ -141,7 +141,7 @@ const Footer = () => {
                 <div className="border-t border-gray-800">
                     <div className="px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-2">
                         <p className="text-gray-500 text-sm text-center md:text-left">
-                            © 2024 MrPFX Company Limited. All Rights Reserve
+                            © 2026 Mr P Worldwide Ventures LTD. All Rights Reserve
                         </p>
                         <p className="text-gray-500 text-sm text-center md:text-right">
                             Subsidiary of MR_P WORLDWIDE VENTURES

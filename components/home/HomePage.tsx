@@ -43,17 +43,17 @@ export default function HomePage() {
             <AccessSection
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
             />
-            <Services
+            {/* <Services
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
                 onVipClick={() => setShowVipPopup(true)}
                 onFreeClick={() => setShowFreePopup(true)}
-            />
-            <TradingTools
+            /> */}
+            {/* <TradingTools
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
                 onVipClick={() => setShowVipPopup(true)}
                 onFreeClick={() => setShowFreePopup(true)}
-            />
-            <MentorshipPreview />
+            /> */}
+            {/* <MentorshipPreview /> */}
             <Testimonials />
             <Community />
             <TradingStrategy />
