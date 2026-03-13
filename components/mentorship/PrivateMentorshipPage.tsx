@@ -20,11 +20,11 @@ const PrivateMentorshipPage = () => {
                             src="/assets/home/hero-car.jpg"
                             alt="Private Mentorship Background"
                             fill
-                            className="object-cover object-[center_top] lg:object-[center_30%] opacity-90 lg:opacity-100"
+                            className="object-cover object-[85%_20%] lg:object-[center_30%] opacity-90 lg:opacity-100"
                             priority
                         />
-                        {/* Subtle dark overlay for contrast */}
-                        <div className="absolute inset-0 bg-black/10"></div>
+                        {/* More intense dark overlay for mobile to make text pop */}
+                        <div className="absolute inset-0 bg-black/40 lg:bg-black/10"></div>
                     </div>
 
                     {/* Diagonal Blue Gradient Overlay (Left side) */}
@@ -41,39 +41,48 @@ const PrivateMentorshipPage = () => {
                     <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-[#000a1f] via-[#000a1f]/95 to-transparent lg:hidden"></div>
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pt-12 pb-[140px] md:pb-24 lg:py-32 flex flex-col items-start min-h-[550px] md:min-h-[500px] lg:min-h-[600px] justify-center">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pt-6 pb-[160px] md:pb-24 lg:py-32 flex flex-col items-start min-h-[600px] md:min-h-[500px] lg:min-h-[600px] justify-center">
 
-                    <h1 className="text-[34px] sm:text-4xl md:text-5xl lg:text-[64px] font-black text-white leading-[1.1] mb-4 max-w-2xl drop-shadow-lg font-sans">
+                    <h1 className="text-[42px] sm:text-4xl md:text-5xl lg:text-[64px] font-[900] text-white leading-[0.85] mb-6 max-w-2xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] font-sans tracking-tight uppercase">
                         <span className="text-[#3399ff]">PRIVATE</span> 1-ON-1<br />
                         MENTORSHIP<br />
                         <span className="text-[#3399ff]">WITH MR P</span>
                     </h1>
 
-                    <p className="text-white text-[16px] md:text-[20px] font-medium mb-8 lg:mb-12 max-w-[280px] sm:max-w-xl opacity-90 drop-shadow-md leading-snug">
-                        Learn the Deep Secrets of Trading<br className="hidden md:block" />
+                    <p className="text-white text-[17px] md:text-[20px] font-medium mb-10 lg:mb-12 max-w-[300px] sm:max-w-xl opacity-100 drop-shadow-md leading-tight">
+                        Learn the Deep Secrets of Trading<br />
                         Directly From a Professional Trader
                     </p>
 
-                    <div className="space-y-3 sm:space-y-4 w-full max-w-[320px] sm:max-w-[420px]">
-                        <div className="bg-[#0b245b]/80 border border-white/5 rounded-full px-5 py-3 sm:px-8 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-lg backdrop-blur-md">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                            <span className="text-white font-medium text-[13px] sm:text-[15px]">7-10 Days Video Sessions</span>
+                    <div className="space-y-3 sm:space-y-4 w-full max-w-[340px] sm:max-w-[420px]">
+                        <div className="bg-[#0a1c3e]/95 border border-[#2b88ff]/30 rounded-full px-5 py-3 flex items-center gap-4 shadow-xl backdrop-blur-lg">
+                            <div className="w-9 h-9 rounded-full bg-[#1b3d82] flex items-center justify-center shrink-0 border border-[#2b88ff]/20">
+                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                            </div>
+                            <span className="text-white font-bold text-[15px] sm:text-[16px] tracking-tight">7-10 Days Video Sessions</span>
                         </div>
-                        <div className="bg-[#0b245b]/80 border border-white/5 rounded-full px-5 py-3 sm:px-8 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-lg backdrop-blur-md">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                            <span className="text-white font-medium text-[13px] sm:text-[15px]">Forex & Synthetic Indices</span>
+                        <div className="bg-[#0a1c3e]/95 border border-[#2b88ff]/30 rounded-full px-5 py-3 flex items-center gap-4 shadow-xl backdrop-blur-lg">
+                            <div className="w-9 h-9 rounded-full bg-[#1b3d82] flex items-center justify-center shrink-0 border border-[#2b88ff]/20">
+                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                            </div>
+                            <span className="text-white font-bold text-[15px] sm:text-[16px] tracking-tight">Forex & Synthetic Indices</span>
                         </div>
-                        <div className="bg-[#0b245b]/80 border border-white/5 rounded-full px-5 py-3 sm:px-8 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-lg backdrop-blur-md">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                            <span className="text-white font-medium text-[13px] sm:text-[15px]">VIP Bot + VIP Indicator</span>
+                        <div className="bg-[#0a1c3e]/95 border border-[#2b88ff]/30 rounded-full px-5 py-3 flex items-center gap-4 shadow-xl backdrop-blur-lg">
+                            <div className="w-9 h-9 rounded-full bg-[#1b3d82] flex items-center justify-center shrink-0 border border-[#2b88ff]/20">
+                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2b88ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            </div>
+                            <span className="text-white font-bold text-[15px] sm:text-[16px] tracking-tight">VIP Bot + VIP Indicator</span>
                         </div>
                     </div>
 
                     {/* Floating Badge (Desktop Right) */}
-                    <div className="absolute right-4 md:right-12 bottom-6 md:bottom-8 lg:bottom-24 w-[110px] h-[110px] md:w-[150px] md:h-[150px] rounded-full border-2 border-[#2b88ff] bg-[#0c2f74]/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-3 md:p-4 shadow-[0_0_30px_rgba(43,136,255,0.4)] z-20 hover:scale-105 transition-transform cursor-default">
-                        <div className="text-[#3399ff] font-bold text-[9px] md:text-[11px] tracking-[0.2em] leading-none mb-1 md:mb-2 uppercase">LIMITED</div>
-                        <div className="text-white font-bold text-[15px] md:text-[22px] leading-tight font-sans">PRIVATE<br />SLOTS</div>
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full mt-1.5 md:mt-2 shadow-[0_0_5px_#fff]"></div>
+                    <div className="absolute right-4 md:right-12 bottom-[30px] md:bottom-8 lg:bottom-24 w-[115px] h-[115px] md:w-[150px] md:h-[150px] rounded-full border-2 border-[#2b88ff]/40 bg-[#0c2f74]/95 backdrop-blur-lg flex flex-col items-center justify-center text-center p-3 md:p-4 shadow-[0_0_40px_rgba(43,136,255,0.3)] z-20 hover:scale-105 transition-transform cursor-default">
+                        <div className="text-[#3399ff] font-bold text-[10px] md:text-[11px] tracking-[0.25em] leading-none mb-1 md:mb-2 uppercase">LIMITED</div>
+                        <div className="text-white font-[900] text-[16px] md:text-[22px] leading-tight font-sans">PRIVATE<br />SLOTS</div>
+                        <div className="flex gap-1.5 mt-2.5">
+                            <div className="w-1.5 h-1.5 bg-white/30 rounded-full"></div>
+                            <div className="w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff]"></div>
+                        </div>
                     </div>
                 </div>
             </section>

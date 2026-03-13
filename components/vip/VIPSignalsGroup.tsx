@@ -11,6 +11,9 @@ import { Signal, TradingVideo, WCProductRead } from '@/lib/types';
 import { productsService } from '@/lib/products';
 import { useState, useEffect } from 'react';
 import { getMediaUrl } from '@/lib/utils';
+import VIPPlanModal from './VIPPlanModal';
+import { getVIPSettings } from '@/app/actions/vip-settings';
+
 
 const FALLBACK_VIDEOS: TradingVideo[] = [
     {
@@ -85,6 +88,12 @@ const VIPSignalsGroup = () => {
     );
 
     const [vipProduct, setVipProduct] = useState<WCProductRead | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [paymentLinks, setPaymentLinks] = useState<{
+        oneMonth: string;
+        twelveMonths: string;
+        unlimited: string;
+    }>({ oneMonth: '', twelveMonths: '', unlimited: '' });
 
     useEffect(() => {
         const fetchVipProduct = async () => {
@@ -95,7 +104,20 @@ const VIPSignalsGroup = () => {
                 console.error('Failed to fetch VIP product:', error);
             }
         };
+        const fetchVipSettings = async () => {
+            try {
+                const settings = await getVIPSettings();
+                setPaymentLinks({
+                    oneMonth: settings.plans.oneMonth.paymentLink,
+                    twelveMonths: settings.plans.twelveMonths.paymentLink,
+                    unlimited: settings.plans.unlimited.paymentLink,
+                });
+            } catch (error) {
+                console.error('Failed to fetch VIP settings:', error);
+            }
+        };
         fetchVipProduct();
+        fetchVipSettings();
     }, []);
 
     const vipPrice = vipProduct?.price ? `$${vipProduct.price}` : '$39';
@@ -161,16 +183,17 @@ const VIPSignalsGroup = () => {
                                 </p>
 
                                 <div className="flex flex-col items-start">
-                                    <Link
-                                        href="/checkout?product=vip-membership"
+                                    <button
+                                        onClick={() => setIsModalOpen(true)}
                                         className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-[11px] sm:text-lg md:text-2xl uppercase tracking-tighter px-4 sm:px-10 py-3 sm:py-5 rounded shadow-[0_8px_20px_rgba(184,134,11,0.4)] hover:shadow-[0_12px_30px_rgba(184,134,11,0.6)] hover:-translate-y-0.5 transition-all duration-300 border border-[#b8860b]/30"
                                     >
                                         <span className="relative z-10 flex items-center gap-2 sm:gap-4">
                                             JOIN VIP SIGNALS NOW <span className="text-xl sm:text-4xl leading-none">&raquo;</span>
                                         </span>
-                                    </Link>
+                                    </button>
                                     <p className="text-[10px] sm:text-sm text-[#64748b] mt-3 font-bold tracking-wide">Instant access after payment.</p>
                                 </div>
+
                             </div>
 
                             {/* Right Column Phone Mockup */}
@@ -326,14 +349,15 @@ const VIPSignalsGroup = () => {
 
                     {/* Bottom CTA */}
                     <div className="mt-16 flex flex-col items-center text-center">
-                        <Link
-                            href="/checkout?product=vip-membership"
+                        <button
+                            onClick={() => setIsModalOpen(true)}
                             className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-lg md:text-2xl uppercase tracking-widest px-10 md:px-16 py-5 rounded-md shadow-[0_15px_40px_rgba(184,134,11,0.3)] hover:shadow-[0_20px_50px_rgba(184,134,11,0.5)] transition-all duration-300 border-2 border-[#b8860b]/30 mb-12"
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 JOIN VIP SIGNALS NOW <span className="text-3xl leading-none">&raquo;</span>
                             </span>
-                        </Link>
+                        </button>
+
 
                         <div className="max-w-4xl p-8 bg-white/40 border border-white/60 rounded-2xl backdrop-blur-sm">
                             <p className="text-[#334155] text-base md:text-lg font-bold leading-relaxed">
@@ -346,10 +370,13 @@ const VIPSignalsGroup = () => {
             </div >
 
             {/* Trading Strategy / Videos Section */}
-            {/* Newsletter Section */}
+            {/* NewsLetter Section */}
             {/* <NewsletterSection /> */}
+
+            <VIPPlanModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} paymentLinks={paymentLinks} />
         </div>
     );
 };
+
 
 export default VIPSignalsGroup;

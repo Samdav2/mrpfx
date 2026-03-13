@@ -1,0 +1,13 @@
+{
+    "plans": {
+        "oneMonth": {
+            "paymentLink": ""
+        },
+        "twelveMonths": {
+            "paymentLink": ""
+        },
+        "unlimited": {
+            "paymentLink": ""
+        }
+    }
+}
