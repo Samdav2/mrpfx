@@ -281,7 +281,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Access winning trades for free.",
         icon: <CustomIcons.FreeSignals />,
         iconBg: "bg-transparent",
-        href: "/free-signals-group",
+        href: "https://t.me/mrpfxuniversity",
         buttonStyle: "light"
     },
     {
@@ -367,11 +367,11 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         buttonStyle: "light"
     },
     {
-        title: "Dr. Trade AI Trading",
+        title: "Dr. Trade AI",
         description: "Level up with AI-boosted trading management.",
         icon: <CustomIcons.AITrading />,
         iconBg: "bg-transparent",
-        href: "/all-vip-resources",
+        href: "https://www.drtradepro.com",
         buttonStyle: "light"
     },
     {
@@ -379,7 +379,7 @@ const getAccessItems = (onMentorshipClick?: () => void): AccessItem[] => [
         description: "Trade with top-rated brokers and exclusive offers.",
         icon: <CustomIcons.Broker />,
         iconBg: "bg-transparent",
-        href: "https://one.exnesstrack.net/a/0z72b5esoc",
+        href: "https://one.exnessonelink.com/a/0z72b5esoc",
         buttonStyle: "light",
         buttonText: "Get Started"
     }

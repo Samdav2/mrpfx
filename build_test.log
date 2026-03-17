@@ -1,0 +1,31 @@
+
+> mrp_frontend@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/rehack/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/rehack/mrp_frontend/package-lock.json
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 19.6s
+  Running TypeScript ...
+Failed to compile.
+
+./components/pass-funded-accounts/steps/StepPackageSelection.tsx:110:26
+Type error: Cannot find name 'onBack'.
+
+[0m [90m 108 |[39m
+ [90m 109 |[39m             [33m<[39m[33mbutton[39m
+[31m[1m>[22m[39m[90m 110 |[39m                 onClick[33m=[39m{onBack}
+ [90m     |[39m                          [31m[1m^[22m[39m
+ [90m 111 |[39m                 className[33m=[39m[32m"w-full mt-4 py-3 text-slate-400 hover:text-slate-900 font-bold transition-colors text-xs tracking-wide uppercase relative z-10"[39m
+ [90m 112 |[39m             [33m>[39m
+ [90m 113 |[39m                 [33mBack[39m to [33mScope[39m[0m
+Next.js build worker exited with code: 1 and signal: null

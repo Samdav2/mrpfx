@@ -78,5 +78,13 @@ export const propFirmService = {
     deleteRegistration: async (id: string | number): Promise<any> => {
         const response = await api.delete(`/admin/prop-firm/registrations/${id}`);
         return response.data;
+    },
+
+    // Add the check out link function
+    createWhopCheckoutLink: async (registrationId: string | number): Promise<{ checkoutUrl: string }> => {
+        const response = await api.post<{ checkoutUrl: string }>(
+            `/prop-firm/payment/whop/${registrationId}`
+        );
+        return response.data;
     }
 };

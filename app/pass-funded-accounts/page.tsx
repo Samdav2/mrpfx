@@ -154,7 +154,7 @@ export default function PassFundedAccountsPage() {
                                         </ul>
 
                                         <Link
-                                            href={`/pass-funded-accounts/checkout?plan=${card.plan}&type=${encodeURIComponent(card.type)}&size=${encodeURIComponent(card.items[selections[cardIdx]].label)}&sizeVal=${card.items[selections[cardIdx]].numericSize}&price=${card.items[selections[cardIdx]].amount}`}
+                                            href={`/pass-funded-accounts/checkout?plan=${card.plan}&challenge=${encodeURIComponent(card.title)}&type=${encodeURIComponent(card.type)}&size=${encodeURIComponent(card.items[selections[cardIdx]].label)}&sizeVal=${card.items[selections[cardIdx]].numericSize}&price=${card.items[selections[cardIdx]].amount}`}
                                             className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px] mt-auto"
                                         >
                                             Select {card.items[selections[cardIdx]].label}
@@ -209,7 +209,7 @@ export default function PassFundedAccountsPage() {
                                             </ul>
 
                                             <Link
-                                                href={`/pass-funded-accounts/checkout?plan=${card.plan}&type=${encodeURIComponent(card.type)}&size=${encodeURIComponent(card.items[selections[cardIdx]].label)}&price=${card.items[selections[cardIdx]].amount}`}
+                                                href={`/pass-funded-accounts/checkout?plan=${card.plan}&challenge=${encodeURIComponent(card.title)}&type=${encodeURIComponent(card.type)}&size=${encodeURIComponent(card.items[selections[cardIdx]].label)}&sizeVal=${card.items[selections[cardIdx]].numericSize}&price=${card.items[selections[cardIdx]].amount}`}
                                                 className="w-full bg-[#5c6bc0] hover:bg-[#4f5baf] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 shadow-md text-center block text-[15px] mt-auto"
                                             >
                                                 Select {card.items[selections[cardIdx]].label}

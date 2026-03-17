@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import { User, Lock, Server, DollarSign, Users, Award, TrendingUp, AlertTriangle, Briefcase, ChevronRight, ArrowRight } from 'lucide-react';
+import { User, Lock, Server, DollarSign, Users, Award, TrendingUp, AlertTriangle, Briefcase, ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
 
 // Helper to generate last 12 months
 const getPastMonths = () => {
@@ -69,12 +69,21 @@ const managerProfiles: Record<string, {
 };
 
 export default function AccountManagementForm() {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [accountId, setAccountId] = useState('');
     const [password, setPassword] = useState('');
     const [server, setServer] = useState('');
     const [capital, setCapital] = useState('');
     const [manager, setManager] = useState('');
     const [agreed, setAgreed] = useState(false);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const container = scrollContainerRef.current;
+            const scrollAmount = container.clientWidth * 0.8;
+            container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -191,8 +200,17 @@ export default function AccountManagementForm() {
                                 </div>
                             </div>
 
-                            <div className="relative z-10 w-full mb-4">
-                                <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2 -mx-1 px-1 gap-3">
+                            <div className="relative z-10 w-full mb-4 group/carousel">
+                                {/* Left Arrow */}
+                                <button
+                                    type="button"
+                                    onClick={() => scroll('left')}
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full p-1.5 text-blue-600 hover:bg-blue-50 transition-colors opacity-100 flex items-center justify-center -ml-3 sm:-ml-4 focus:outline-none"
+                                >
+                                    <ChevronLeft className="w-5 h-5" />
+                                </button>
+
+                                <div ref={scrollContainerRef} className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2 -mx-1 px-1 gap-3 scroll-smooth">
                                     {selectedProfile.performanceHistory.map((history, idx) => (
                                         <div key={idx} className="flex-none w-full sm:w-[90%] snap-center snap-always bg-white p-4 rounded-xl border border-gray-100 shadow-sm transition-opacity duration-300">
                                             {/* Header Tag for the Month */}
@@ -227,6 +245,15 @@ export default function AccountManagementForm() {
                                         </div>
                                     ))}
                                 </div>
+
+                                {/* Right Arrow */}
+                                <button
+                                    type="button"
+                                    onClick={() => scroll('right')}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full p-1.5 text-blue-600 hover:bg-blue-50 transition-colors opacity-100 flex items-center justify-center -mr-3 sm:-mr-4 focus:outline-none"
+                                >
+                                    <ChevronRight className="w-5 h-5" />
+                                </button>
                                 {/* Scroll hint for desktop users */}
                                 <div className="text-center mt-1">
                                     <span className="text-[10px] text-gray-400 italic">Swipe or scroll horizontally to view past months</span>

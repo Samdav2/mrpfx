@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Lock, Server } from 'lucide-react';
+import { User, Lock, Server, Building2 } from 'lucide-react';
 
 export default function CopyTradingForm() {
+    const [broker, setBroker] = useState('');
     const [accountId, setAccountId] = useState('');
     const [password, setPassword] = useState('');
     const [server, setServer] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Submit details:', { accountId, password, server });
+        console.log('Submit details:', { broker, accountId, password, server });
     };
 
     return (
@@ -20,6 +21,21 @@ export default function CopyTradingForm() {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Broker */}
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Building2 className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                        type="text"
+                        value={broker}
+                        onChange={(e) => setBroker(e.target.value)}
+                        placeholder="Broker"
+                        className="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        required
+                    />
+                </div>
+
                 {/* MT5 Account ID */}
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -67,22 +83,14 @@ export default function CopyTradingForm() {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                         <Server className="h-5 w-5 text-gray-500" />
                     </div>
-                    <select
+                    <input
+                        type="text"
                         value={server}
                         onChange={(e) => setServer(e.target.value)}
-                        className="block w-full pl-11 pr-10 py-3 border border-gray-200 rounded-lg text-gray-500 appearance-none focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        placeholder="MT5 Server"
+                        className="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
                         required
-                    >
-                        <option value="" disabled className="text-gray-400">MT5 Server</option>
-                        <option value="server1">Server 1 (Live)</option>
-                        <option value="server2">Server 2 (Live)</option>
-                        <option value="server3">Server 3 (Demo)</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        <svg className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                    />
                 </div>
 
                 {/* Submit Button */}
@@ -90,7 +98,7 @@ export default function CopyTradingForm() {
                     type="submit"
                     className="w-full mt-2 bg-[#2E3B8F] hover:bg-[#20296b] text-white font-medium py-3.5 px-4 rounded-lg transition-colors shadow-lg shadow-blue-900/20"
                 >
-                    Submit Details
+                    Connect Now
                 </button>
             </form>
         </div>
