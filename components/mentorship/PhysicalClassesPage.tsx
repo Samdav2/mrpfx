@@ -171,52 +171,42 @@ export default function PhysicalClassesPage() {
 
             </div>
 
-            {/* Bottom Info Section with Curved Background */}
-            <div className="relative z-20 w-full max-w-6xl mx-auto px-3 md:px-6 lg:px-8 pb-16 md:pb-32">
+            {/* Bottom Info Section */}
+            <div className="relative z-20 w-full max-w-6xl mx-auto px-4 md:px-8 pb-16 md:pb-24">
 
-                {/* Curved Background Mask under the right section */}
-                <div className="absolute top-0 right-0 w-[55%] md:w-[45%] h-[110%] md:h-[130%] z-0 rounded-tl-[40px] md:rounded-tl-[80px] overflow-hidden shadow-xl border-l-[3px] border-t-[3px] border-white/40 hidden md:block">
-                    <Image src="https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1200&auto=format&fit=crop" alt="Cityscape" fill className="object-cover opacity-90 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#EFF3F9]/60 via-[#E4EAF5]/80 to-[#D4DCF1]/90 mix-blend-normal"></div>
-                </div>
+                {/* TOP ROW: Locations & Certificate */}
+                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1.1fr] gap-8 md:gap-12 items-stretch mb-12 md:mb-20">
 
-                {/* 2-Column layout enforced on all sizes */}
-                <div className="relative z-10 grid grid-cols-[1.2fr_1fr] md:grid-cols-[1fr_400px] gap-3 md:gap-16 items-start min-h-[300px]">
+                    {/* Left Column: Locations */}
+                    <div className="flex flex-col justify-center py-4 md:py-8">
+                        <h3 className="text-[#1A255C] text-2xl md:text-3xl font-bold mb-3 tracking-tight leading-tight">Select Your Trading Floor</h3>
+                        <p className="text-[#4B5563] text-[15px] md:text-[17px] mb-8 font-medium">Select the location closest to you:</p>
 
-                    {/* Left Column (Locations & Info) */}
-                    <div className="flex flex-col gap-4 md:gap-6 pt-0 md:pt-8 relative drop-shadow-sm">
-                        {/* Locations */}
-                        <div className="mb-2 md:mb-4">
-                            <h3 className="text-[#1A255C] text-[15px] md:text-2xl font-bold mb-1 md:mb-2 tracking-tight leading-tight">Select Your Trading Floor</h3>
-                            <p className="text-[#4B5563] text-[11px] md:text-[15px] mb-3 md:mb-6 font-medium">Select the location closest to you:</p>
-
-                            <div className="flex flex-row gap-2 md:gap-4 shrink-0">
-                                {/* Abuja */}
-                                <div className="relative w-20 h-14 md:w-48 md:h-32 rounded-lg md:rounded-2xl overflow-hidden group cursor-pointer shadow-md border md:border-2 border-transparent hover:border-[#1A255C] transition-colors shrink-0">
-                                    <Image src="https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?q=80&w=600&auto=format&fit=crop" alt="Abuja" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
-                                    <div className="absolute bottom-1.5 md:bottom-3 left-1.5 md:left-4 text-white font-bold text-[10px] md:text-lg flex items-center gap-1 md:gap-2">
-                                        <MapPin className="w-2.5 h-2.5 md:w-4 md:h-4 text-[#D4AF37]" /> Abuja
-                                    </div>
+                        <div className="flex flex-row gap-4 md:gap-6 mb-10">
+                            {/* Abuja */}
+                            <div className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300">
+                                <Image src="/images/mentorship/abuja_physical.jpg" alt="Abuja" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
+                                <div className="absolute bottom-4 left-5 text-white font-bold text-lg md:text-xl flex items-center gap-2">
+                                    <MapPin className="w-5 h-5 text-[#D4AF37]" /> Abuja
                                 </div>
-                                {/* Lagos */}
-                                <div className="relative w-20 h-14 md:w-48 md:h-32 rounded-lg md:rounded-2xl overflow-hidden group cursor-pointer shadow-md border md:border-2 border-transparent hover:border-[#1A255C] transition-colors shrink-0">
-                                    <Image src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=600&auto=format&fit=crop" alt="Lagos" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
-                                    <div className="absolute bottom-1.5 md:bottom-3 left-1.5 md:left-4 text-white font-bold text-[10px] md:text-lg flex items-center gap-1 md:gap-2">
-                                        <MapPin className="w-2.5 h-2.5 md:w-4 md:h-4 text-[#D4AF37]" /> Lagos
-                                    </div>
+                            </div>
+                            {/* Lagos */}
+                            <div className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300">
+                                <Image src="/images/mentorship/lagos_physical.jpg" alt="Lagos" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
+                                <div className="absolute bottom-4 left-5 text-white font-bold text-lg md:text-xl flex items-center gap-2">
+                                    <MapPin className="w-5 h-5 text-[#D4AF37]" /> Lagos
                                 </div>
                             </div>
                         </div>
 
-                        {/* Important Info */}
-                        <div className="bg-white/40 backdrop-blur-sm border border-[#A8B4E5]/30 rounded-xl md:rounded-2xl p-3 md:p-8 max-w-xl">
-                            <h4 className="text-[#1A255C] text-[13px] md:text-xl font-bold mb-2 md:mb-4 tracking-tight">Important Information</h4>
-                            <p className="text-[#4B5563] text-[9px] md:text-[15px] leading-tight md:leading-relaxed mb-2 md:mb-4">
+                        <div className="bg-white/50 backdrop-blur-sm border border-[#A8B4E5]/30 rounded-2xl p-6 md:p-8">
+                            <h4 className="text-[#1A255C] text-lg md:text-xl font-bold mb-3 tracking-tight">Important Information</h4>
+                            <p className="text-[#4B5563] text-[14px] md:text-[16px] leading-relaxed mb-4">
                                 Please choose a Trading Floor closest to your location for better learning experience.
                             </p>
-                            <p className="text-[#4B5563] text-[9px] md:text-[15px] leading-tight md:leading-relaxed">
+                            <p className="text-[#4B5563] text-[14px] md:text-[16px] leading-relaxed">
                                 If you cannot attend physically, you may enroll in the{' '}
                                 <Link href="/mentorship-course" className="text-[#10B981] font-bold hover:text-[#059669] hover:underline decoration-2 underline-offset-4 transition-colors">
                                     Online Mentorship Program
@@ -226,33 +216,79 @@ export default function PhysicalClassesPage() {
                         </div>
                     </div>
 
-                    {/* Right Column (Certificate & Enroll) */}
-                    <div className="flex flex-col items-center justify-end gap-3 md:gap-6 pt-2 md:pt-16 px-1 md:px-0 h-full">
-                        {/* Certificate Decorator */}
-                        <div className="relative w-[160px] md:w-full max-w-[380px] aspect-[1.35/1] rounded-md md:rounded-xl shadow-[0_10px_20px_-5px_rgba(0,0,0,0.2)] bg-white border-4 md:border-8 border-white p-1 md:p-2 transform rotate-2 hover:rotate-0 transition-transform duration-500 overflow-hidden mx-auto">
-                            <div className="absolute inset-0 border-[1px] md:border-[1.5px] border-[#D4AF37] opacity-60 m-1 md:m-3 pointer-events-none"></div>
-                            <div className="w-full h-full flex flex-col items-center justify-center text-center px-1 md:px-6">
-                                <div className="w-5 h-5 md:w-12 md:h-12 rounded-full border border-gray-200 shadow-inner flex items-center justify-center mb-1 md:mb-3 bg-gray-50">
-                                    <ShieldCheck className="w-2.5 h-2.5 md:w-6 md:h-6 text-[#1A255C]" />
+                    {/* Right Column: Certificate with Cityscape Background */}
+                    <div className="relative rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl border-4 border-white min-h-[400px] flex items-center justify-center p-6 md:p-12">
+                        {/* Cityscape Background inside this container only */}
+                        <Image
+                            src="/images/mentorship/cityscape_night_bg.png"
+                            alt="Cityscape Night"
+                            fill
+                            className="object-cover opacity-100"
+                        />
+                        <div className="absolute inset-0 bg-blue-900/30 mix-blend-overlay"></div>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-transparent"></div>
+
+                        {/* Redesigned Certificate */}
+                        <div className="relative w-full max-w-[420px] aspect-[1.414/1] bg-white rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-1 transform rotate-1 hover:rotate-0 transition-transform duration-500 overflow-hidden">
+                            {/* Certificate Border */}
+                            <div className="absolute inset-2 border-[1px] border-[#D4AF37]/60 pointer-events-none"></div>
+
+                            <div className="w-full h-full flex flex-col items-center justify-between py-6 px-4 text-center">
+                                {/* Logo Corner */}
+                                <div className="absolute top-4 right-6 w-16 h-16 opacity-10 pointer-events-none grayscale">
+                                    <Image src="/assets/home/mrpfxlogo.png" alt="Logo Watermark" fill className="object-contain" />
                                 </div>
-                                <h5 className="font-serif text-[#1A255C] text-[8px] md:text-lg font-extrabold tracking-widest uppercase mb-0.5 md:mb-2">Masterclass Trading</h5>
-                                <p className="text-[#B9812A] text-[4.5px] md:text-[10px] font-medium tracking-[0.2em] uppercase mb-1 md:mb-4">Certificate of Completion</p>
-                                <div className="w-4/5 border-b-[0.5px] md:border-b border-gray-400 mb-1 md:mb-3"></div>
-                                <p className="text-gray-500 text-[5px] md:text-xs italic font-medium">[Student Name]</p>
+
+                                <div className="flex flex-col items-center">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="relative w-8 h-8">
+                                            <Image src="/assets/home/mrpfxlogo.png" alt="Logo" fill className="object-contain" />
+                                        </div>
+                                        <span className="text-[#1A255C] font-black text-sm tracking-tighter">MRPFX</span>
+                                    </div>
+                                    <div className="h-px w-12 bg-[#D4AF37] mb-3"></div>
+                                </div>
+
+                                <div className="flex-1 flex flex-col items-center justify-center py-2">
+                                    <h5 className="font-serif text-[#1A255C] text-xl md:text-2xl font-bold tracking-widest uppercase mb-1">Masterclass Trading</h5>
+                                    <p className="text-[#B9812A] text-[10px] md:text-[11px] font-bold tracking-[0.2em] uppercase mb-4">Certificate of Completion</p>
+
+                                    <div className="w-4/5 border-b border-gray-300 mb-1"></div>
+                                    <p className="text-gray-400 text-[10px] md:text-[13px] italic font-medium mb-4">[Student Name]</p>
+
+                                    <p className="text-[#4B5563] text-[9px] leading-tight max-w-[200px] opacity-80">For successfully completing the one-month intensive physical training on Forex & Synthetic Indices.</p>
+                                </div>
+
+                                <div className="w-full flex justify-between items-end px-6 md:px-10 pb-2">
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-16 border-b border-gray-400 mb-1"></div>
+                                        <p className="text-[7px] uppercase font-bold text-gray-500">Instructor</p>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center bg-gray-50/50">
+                                        <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
+                                    </div>
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-16 border-b border-gray-400 mb-1 text-[10px] font-serif italic text-gray-800">MRPFX</div>
+                                        <p className="text-[7px] uppercase font-bold text-gray-500">Seal of Excellence</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div className="w-full text-center mt-2 md:mt-4">
-                            <h3 className="text-[#1A255C] text-[11px] md:text-2xl font-bold mb-2 md:mb-4 tracking-tight drop-shadow-sm leading-tight">
-                                Enroll Now <span className="font-medium opacity-80 block md:inline text-[9px] md:text-[22px]">To Reserve Your Seat</span>
-                            </h3>
-                            <button className="w-full relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-bold py-2 md:py-4 rounded-lg md:rounded-xl shadow-[0_10px_20px_-3px_rgba(185,129,42,0.4)] transform hover:scale-[1.02] active:scale-95 transition-all duration-300">
-                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 ease-in-out" />
-                                <span className="relative z-10 tracking-[0.08em] md:tracking-widest text-[7.5px] md:text-[14px] uppercase drop-shadow-sm block truncate px-1">Enroll Now To Reserve Your Seat</span>
-                            </button>
-                        </div>
                     </div>
+                </div>
 
+                {/* BOTTOM ROW: Enrollment CTA (Centered) */}
+                <div className="flex flex-col items-center text-center max-w-2xl mx-auto pt-8 border-t border-gray-200/50">
+                    <h3 className="text-[#1A255C] text-2xl md:text-4xl font-bold mb-6 tracking-tight drop-shadow-sm leading-tight flex flex-col md:block">
+                        Enroll Now <span className="text-[#1A255C]/70 font-medium md:ml-2">To Reserve Your Seat</span>
+                    </h3>
+
+                    <Link href="/mentorship-course" className="w-full max-w-md">
+                        <button className="w-full relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-extrabold py-4 md:py-5 rounded-xl md:rounded-2xl shadow-[0_15px_40px_-10px_rgba(185,129,42,0.5)] transform hover:scale-[1.03] active:scale-95 transition-all duration-300">
+                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                            <span className="relative z-10 tracking-[0.1em] text-[13px] md:text-[16px] uppercase drop-shadow-sm">Enroll Now To Reserve Your Seat</span>
+                        </button>
+                    </Link>
                 </div>
 
             </div>
