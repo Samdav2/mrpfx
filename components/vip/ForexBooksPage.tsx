@@ -92,7 +92,7 @@ const ForexBooksPage = () => {
             (typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : `$${item.price.toString().replace('$', '')}`) :
             (item.is_free ? "FREE" : "$39"),
         isFree: item.is_free ?? true,
-        imageSrc: getMediaUrl(item.image_url) || item.thumbnail || `/assets/forex-books/book-cover-${(index % 6) + 1}.png`,
+        imageSrc: (item.image_url?.startsWith('/assets/') ? item.image_url : getMediaUrl(item.image_url)) || item.thumbnail || `/assets/forex-books/book-cover-${(index % 6) + 1}.png`,
         buyUrl: item.purchase_url,
         downloadUrl: item.download_url
     });
@@ -101,60 +101,33 @@ const ForexBooksPage = () => {
     const freeBooks = freeBooksSource.map((book: any, i: number) => mapToBookProps(book, i + 3));
 
     return (
-        <div className="min-h-screen bg-[#0a0f1e] font-sans text-white overflow-x-hidden selection:bg-blue-500/30">
-            {/* High-Fidelity Nebula/Starry Background */}
+        <div className="min-h-screen bg-[#070b14] font-sans text-white overflow-x-hidden selection:bg-blue-500/30">
+            {/* Global Vibrant Trading Background */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#0a0f1e]" />
-                <div
-                    className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-screen"
+                <Image
+                    src="/assets/forex-books/hero-bg-trading.png"
+                    alt="Trading Background"
+                    fill
+                    className="object-cover opacity-80"
+                    priority
                 />
-
-                {/* Advanced Nebula Glows */}
-                <div className="absolute top-[-10%] right-[-10%] w-[1000px] h-[1000px] bg-blue-600/10 blur-[180px] rounded-full" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[800px] h-[800px] bg-purple-600/5 blur-[150px] rounded-full" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070b14]/50 to-[#070b14]" />
             </div>
 
             <div className="relative z-10">
                 {/* Hero Section */}
-                <section className="relative pt-24 pb-12 md:pt-40 md:pb-24 overflow-hidden border-b border-white/5">
-                    {/* Cityscape Background Overlay */}
-                    <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1e] via-transparent to-[#0a0f1e]" />
-                        <Image
-                            src="/assets/forex-books/hero-bg-city.png"
-                            alt="City Background"
-                            fill
-                            className="object-cover"
-                            style={{
-                                maskImage: 'radial-gradient(circle at center, black 20%, transparent 80%)',
-                                WebkitMaskImage: 'radial-gradient(circle at center, black 20%, transparent 80%)'
-                            }}
-                        />
-                    </div>
-
+                <section className="relative pt-24 md:pt-32 pb-8">
                     <div className="max-w-[1280px] mx-auto px-6 text-center relative z-10">
-                        <h1 className="text-3xl md:text-7xl font-[1000] text-white mb-8 md:mb-12 tracking-tight drop-shadow-2xl uppercase">
+                        <h1 className="text-4xl md:text-6xl font-[1000] text-white tracking-tight drop-shadow-2xl mb-8">
                             Forex Trading Books
                         </h1>
 
-                        {/* Improved Responsive Hero Image Area */}
-                        <div className="relative w-full max-w-[1000px] mx-auto mb-16 px-0 md:px-0">
-                            <div className="relative aspect-[16/12] md:aspect-[16/8] w-full transform hover:scale-[1.01] transition-transform duration-1000">
-                                <Image
-                                    src="/assets/forex-books/hero-forex-books.png"
-                                    alt="Forex Trading Books Hero"
-                                    fill
-                                    className="object-contain"
-                                    style={{
-                                        maskImage: 'radial-gradient(circle at center, black 60%, transparent 95%)',
-                                        WebkitMaskImage: 'radial-gradient(circle at center, black 60%, transparent 95%)'
-                                    }}
-                                    priority
-                                />
-
-                                {/* Deep Blending Overlays */}
-                                <div className="absolute inset-x-0 bottom-[-10%] h-1/2 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent z-10 pointer-events-none" />
-                            </div>
+                        <div className="w-full max-w-[900px] mx-auto relative z-10">
+                            <img
+                                src="/assets/forex-books/hero-forex-books-transparent.png"
+                                alt="Forex Trading Books Hero"
+                                className="w-full h-auto object-contain transform hover:scale-[1.02] transition-transform duration-700 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                            />
                         </div>
                     </div>
                 </section>
@@ -162,10 +135,11 @@ const ForexBooksPage = () => {
                 {/* PAID Section */}
                 <section className="py-12 md:py-16 relative">
                     <div className="max-w-[1280px] mx-auto px-6">
-                        <div className="mb-8 md:mb-12">
-                            <div className="inline-block bg-[#8b6d31] text-white px-8 md:px-10 py-1.5 md:py-2 rounded-full font-[1000] uppercase tracking-widest text-base md:text-lg shadow-[0_10px_30px_rgba(139,109,49,0.3)]">
+                        <div className="flex items-center gap-4 mb-8 md:mb-12">
+                            <div className="inline-block bg-gradient-to-r from-[#8b6d31] to-[#b39556] text-white px-8 md:px-10 py-1.5 md:py-2 rounded-full font-[1000] uppercase tracking-widest text-base md:text-lg shadow-[0_10px_30px_rgba(139,109,49,0.3)]">
                                 PAID
                             </div>
+                            <div className="h-[2px] w-full bg-gradient-to-r from-white/30 to-transparent" />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

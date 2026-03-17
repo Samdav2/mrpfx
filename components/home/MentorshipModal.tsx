@@ -146,7 +146,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
                                     </p>
                                 </div>
                             </div>
-                            <Link href="/contact" onClick={onClose} className="block mt-3 sm:mt-6 md:mt-auto">
+                            <Link href="/physical-classes" onClick={onClose} className="block mt-3 sm:mt-6 md:mt-auto">
                                 <button className="w-full py-1.5 sm:py-3 bg-gradient-to-r from-[#7B61FF] to-[#9B88ED] text-white font-semibold text-[12px] sm:text-base rounded-lg sm:rounded-xl hover:opacity-90 transition-opacity shadow-sm sm:shadow-md shadow-purple-200">
                                     Get Started
                                 </button>

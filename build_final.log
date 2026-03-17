@@ -1,0 +1,140 @@
+
+> mrp_frontend@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/rehack/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/rehack/mrp_frontend/package-lock.json
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 18.3s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/74) ...
+  Generating static pages using 3 workers (18/74) 
+  Generating static pages using 3 workers (36/74) 
+  Generating static pages using 3 workers (55/74) 
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+✓ Generating static pages using 3 workers (74/74) in 1487.9ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /[slug]
+├ ○ /account-management
+├ ƒ /account-management/trader/[id]
+├ ○ /admin
+├ ○ /admin/books
+├ ƒ /admin/books/[bookId]
+├ ○ /admin/books/add
+├ ○ /admin/categories
+├ ○ /admin/comments
+├ ○ /admin/courses
+├ ƒ /admin/courses/[courseId]
+├ ƒ /admin/courses/[courseId]/submissions
+├ ○ /admin/courses/add
+├ ○ /admin/forms
+├ ƒ /admin/forms/[formId]
+├ ƒ /admin/forms/[formId]/entries
+├ ○ /admin/forms/new
+├ ○ /admin/links
+├ ○ /admin/login
+├ ○ /admin/media
+├ ○ /admin/members
+├ ○ /admin/orders
+├ ƒ /admin/orders/[orderId]
+├ ○ /admin/orders/add
+├ ○ /admin/pages
+├ ƒ /admin/pages/[pageId]
+├ ○ /admin/pages/add
+├ ○ /admin/posts
+├ ƒ /admin/posts/[postId]
+├ ○ /admin/posts/add
+├ ○ /admin/products
+├ ƒ /admin/products/[productId]
+├ ○ /admin/products/add
+├ ○ /admin/prop-firm
+├ ○ /admin/reports
+├ ○ /admin/settings
+├ ○ /admin/signals
+├ ƒ /admin/signals/[signalId]
+├ ○ /admin/signals/add
+├ ƒ /admin/submissions/[submissionId]
+├ ○ /admin/tags
+├ ○ /admin/trading-tools
+├ ƒ /admin/trading-tools/[toolId]
+├ ○ /admin/trading-tools/add
+├ ○ /admin/users
+├ ƒ /admin/users/[userId]
+├ ○ /admin/users/add
+├ ○ /admin/videos
+├ ƒ /admin/videos/[videoId]
+├ ○ /admin/videos/add
+├ ○ /all-vip-resources
+├ ○ /blog
+├ ƒ /blog/[slug]
+├ ○ /cart
+├ ○ /checkout
+├ ○ /copy-trading
+├ ○ /courses
+├ ƒ /courses/[slug]
+├ ƒ /courses/[slug]/lesson/[lessonId]
+├ ƒ /courses/[slug]/quiz/[quizId]
+├ ○ /dashboard
+├ ○ /forex-books
+├ ○ /forgot-password
+├ ○ /free-robots
+├ ○ /free-signals-group
+├ ○ /free-trading-indicators
+├ ○ /login
+├ ○ /mentorship-course
+├ ○ /mentorship-course-100
+├ ○ /my-courses
+├ ○ /my-orders
+├ ƒ /my-orders/[orderId]
+├ ○ /pass-funded-accounts
+├ ○ /pass-funded-accounts/checkout
+├ ○ /physical-classes
+├ ○ /privacy-policy
+├ ○ /private-mentorship
+├ ƒ /product/[slug]
+├ ○ /rent-vps-hosting
+├ ○ /reset-password
+├ ○ /resource_category/free-robots-indicators-seminars
+├ ○ /resource_category/indicator
+├ ○ /resource_category/robot
+├ ○ /risk-calculator
+├ ○ /shop
+├ ○ /sign-up
+├ ○ /support
+├ ○ /terms-and-conditions
+├ ○ /videos
+├ ○ /vip-signals-group
+├ ○ /vip-trading-bots
+└ ○ /vip-trading-indicators
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

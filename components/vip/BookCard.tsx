@@ -47,7 +47,7 @@ const BookCard = ({
     return (
         <div className="bg-[#1e293b]/40 backdrop-blur-md rounded-xl overflow-hidden border border-white/10 flex flex-col h-full shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] group hover:border-white/20 transition-all duration-500 max-w-[400px] mx-auto w-full">
             {/* Image Section */}
-            <div className="relative aspect-square overflow-hidden bg-[#0f172a]">
+            <div className="relative aspect-[4/5] overflow-hidden bg-[#0f172a]">
                 {imageSrc ? (
                     <Image
                         src={imageSrc}
