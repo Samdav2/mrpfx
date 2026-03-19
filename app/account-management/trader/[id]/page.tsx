@@ -92,19 +92,9 @@ const managerProfiles: Record<string, any> = {
 export default function TraderProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id: managerId } = use(params);
     const profile = managerProfiles[managerId];
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-
     if (!profile) {
         notFound();
     }
-
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollContainerRef.current) {
-            const container = scrollContainerRef.current;
-            const scrollAmount = container.clientWidth * 0.8;
-            container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-        }
-    };
 
     return (
         <div className="bg-[#f8fafc] min-h-screen pt-[120px] pb-24 font-sans font-dm-sans selection:bg-blue-200">
@@ -223,37 +213,19 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                     </div>
                 </div>
 
-                {/* 12-Month Performance Carousel */}
                 <div className="mb-12">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-8">
                         <h2 className="text-2xl font-bold text-[#0A1128] font-palanquin-dark flex items-center">
                             <Calendar className="h-6 w-6 mr-2 text-blue-600" />
                             12-Month Performance History
                         </h2>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => scroll('left')}
-                                className="p-2 rounded-full bg-white border border-gray-200 shadow-sm text-blue-600 hover:bg-blue-50 transition-colors"
-                            >
-                                <ChevronLeft className="h-5 w-5" />
-                            </button>
-                            <button
-                                onClick={() => scroll('right')}
-                                className="p-2 rounded-full bg-white border border-gray-200 shadow-sm text-blue-600 hover:bg-blue-50 transition-colors"
-                            >
-                                <ChevronRight className="h-5 w-5" />
-                            </button>
-                        </div>
                     </div>
 
-                    <div
-                        ref={scrollContainerRef}
-                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 hide-scrollbar scroll-smooth"
-                    >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {profile.performanceHistory.map((history: any, idx: number) => (
                             <div
                                 key={idx}
-                                className="flex-none w-full md:w-[45%] lg:w-[31%] snap-center"
+                                className="w-full"
                             >
                                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow h-full">
                                     <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-50">
@@ -288,8 +260,8 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                         ))}
                     </div>
 
-                    <p className="text-center text-xs text-gray-400 mt-2 italic">
-                        Swipe or use arrows to view past performance data
+                    <p className="text-center text-xs text-gray-400 mt-8 italic">
+                        Detailed monthly breakdown provided for transparency and performance verification.
                     </p>
                 </div>
 

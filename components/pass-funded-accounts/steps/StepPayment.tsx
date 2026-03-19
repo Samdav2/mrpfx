@@ -1,5 +1,5 @@
 import { CheckoutData } from "../CheckoutWizard";
-import { Wallet, QrCode, Copy, Check, Info, RefreshCw, Bitcoin } from "lucide-react";
+import { Wallet, QrCode, Copy, Check, Info, RefreshCw, Bitcoin, CreditCard, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cryptoPaymentService } from "@/services/crypto-payment.service";
 import { toast } from "react-hot-toast";
@@ -15,6 +15,7 @@ interface Props {
 export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Props) {
     const [currencies, setCurrencies] = useState<string[]>([]);
     const [selectedCurrency, setSelectedCurrency] = useState("btc");
+    const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">(data.paymentMethod || "crypto");
     const [estimatedAmount, setEstimatedAmount] = useState<number | null>(null);
     const [loadingEstimate, setLoadingEstimate] = useState(false);
     const [loadingCurrencies, setLoadingCurrencies] = useState(true);
@@ -74,12 +75,30 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
 
             <div className="text-center mb-10 relative z-10">
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-900 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
-                    <QrCode className="w-7 h-7" />
+                    <Wallet className="w-7 h-7" />
                 </div>
-                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Crypto Checkout</h2>
+                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Choose Payment Method</h2>
                 <p className="text-sm font-semibold text-slate-500 max-w-sm mx-auto">
-                    Fast, secure, and decentralized. Select your preferred asset to proceed.
+                    Select how you would like to pay for your prop firm challenge.
                 </p>
+            </div>
+
+            {/* Payment Method Toggle */}
+            <div className="flex bg-slate-100 p-1 rounded-2xl mb-8 relative z-10">
+                <button
+                    onClick={() => { setPaymentMethod("card"); updateData({ paymentMethod: "card" }); }}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${paymentMethod === "card" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                >
+                    <CreditCard className="w-4 h-4" />
+                    Card / Sellar
+                </button>
+                <button
+                    onClick={() => { setPaymentMethod("crypto"); updateData({ paymentMethod: "crypto" }); }}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${paymentMethod === "crypto" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                >
+                    <Bitcoin className="w-4 h-4" />
+                    Crypto
+                </button>
             </div>
 
             {/* Price Card */}
@@ -117,36 +136,55 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
                 </div>
             </div>
 
-            <div className="mb-8 relative z-10">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 ml-1">Select Asset</label>
-                <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
-                    {loadingCurrencies ? (
-                        <div className="col-span-full py-10 text-center text-slate-400 font-semibold text-sm flex flex-col items-center justify-center gap-3">
-                            <RefreshCw className="w-6 h-6 animate-spin text-slate-300" />
-                            Fetching live rates...
-                        </div>
-                    ) : (
-                        currencies.slice(0, 8).map((currency) => {
-                            const isSelected = selectedCurrency === currency;
-                            return (
-                                <button
-                                    key={currency}
-                                    onClick={() => handleCurrencyChange(currency)}
-                                    className={`relative p-4 rounded-2xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-2.5 group ${isSelected
-                                        ? "border-slate-900 bg-slate-900 shadow-md transform -translate-y-0.5"
-                                        : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
-                                        }`}
-                                >
-                                    <Bitcoin className={`w-6 h-6 transition-colors ${isSelected ? "text-white" : "text-slate-400 group-hover:text-slate-600"}`} />
-                                    <span className={`text-[10px] font-black tracking-widest uppercase transition-colors ${isSelected ? "text-white" : "text-slate-500 group-hover:text-slate-900"}`}>
-                                        {currency}
-                                    </span>
-                                </button>
-                            );
-                        })
-                    )}
+            {paymentMethod === "crypto" ? (
+                <div className="mb-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 ml-1">Select Asset</label>
+                    <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
+                        {loadingCurrencies ? (
+                            <div className="col-span-full py-10 text-center text-slate-400 font-semibold text-sm flex flex-col items-center justify-center gap-3">
+                                <RefreshCw className="w-6 h-6 animate-spin text-slate-300" />
+                                Fetching live rates...
+                            </div>
+                        ) : (
+                            currencies.slice(0, 8).map((currency) => {
+                                const isSelected = selectedCurrency === currency;
+                                return (
+                                    <button
+                                        key={currency}
+                                        onClick={() => handleCurrencyChange(currency)}
+                                        className={`relative p-4 rounded-2xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-2.5 group ${isSelected
+                                            ? "border-slate-900 bg-slate-900 shadow-md transform -translate-y-0.5"
+                                            : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
+                                            }`}
+                                    >
+                                        <Bitcoin className={`w-6 h-6 transition-colors ${isSelected ? "text-white" : "text-slate-400 group-hover:text-slate-600"}`} />
+                                        <span className={`text-[10px] font-black tracking-widest uppercase transition-colors ${isSelected ? "text-white" : "text-slate-500 group-hover:text-slate-900"}`}>
+                                            {currency}
+                                        </span>
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="mb-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+                                <CreditCard className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-tight">External Payment</h4>
+                                <p className="text-[10px] text-slate-500 font-medium">Card, Apple Pay, Google Pay</p>
+                            </div>
+                        </div>
+                        <p className="text-xs text-slate-600 leading-relaxed mb-6 font-medium">
+                            Complete your payment through our verified external partner (Sellar / Whop). After payment, your credentials will be processed automatically.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <div className="bg-blue-50/50 border border-blue-100/50 rounded-2xl p-4 mb-8 flex gap-4 items-start relative z-10">
                 <div className="mt-0.5 flex-shrink-0">
@@ -157,23 +195,35 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
                 </div>
             </div>
 
-            <button
-                onClick={() => onSubmit("direct")}
-                disabled={!selectedCurrency || loading}
-                className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-5 rounded-[1.25rem] transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center gap-3 group relative z-10"
-            >
-                {loading ? (
-                    <>
-                        <RefreshCw className="w-5 h-5 animate-spin" />
-                        Generating Payment Details...
-                    </>
-                ) : (
-                    <>
-                        <QrCode className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                        <span className="tracking-wide">Generate Address</span>
-                    </>
-                )}
-            </button>
+            {paymentMethod === "crypto" ? (
+                <button
+                    onClick={() => onSubmit("direct")}
+                    disabled={!selectedCurrency || loading}
+                    className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-5 rounded-[1.25rem] transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center justify-center gap-3 group relative z-10"
+                >
+                    {loading ? (
+                        <>
+                            <RefreshCw className="w-5 h-5 animate-spin" />
+                            Generating Payment Details...
+                        </>
+                    ) : (
+                        <>
+                            <QrCode className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                            <span className="tracking-wide">Generate Crypto Address</span>
+                        </>
+                    )}
+                </button>
+            ) : (
+                <a
+                    href="https://sellar.co/your-product-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-5 rounded-[1.25rem] transition-all duration-300 shadow-[0_8px_30px_rgba(37,99,235,0.2)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 group relative z-10"
+                >
+                    <ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span className="tracking-wide">Complete Payment on Sellar</span>
+                </a>
+            )}
 
             <button
                 onClick={onBack}

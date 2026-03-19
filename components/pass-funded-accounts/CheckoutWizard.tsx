@@ -35,6 +35,7 @@ export interface CheckoutData {
     discountPercentage?: number;
 
     // Login Details
+    propFirmCompany: string;
     loginId: string;
     password: string;
     serverName: string;
@@ -47,6 +48,8 @@ export interface CheckoutData {
     agreedToRefundPolicy: boolean;
 
     // Payment Selection
+    paymentMethod: "card" | "crypto";
+    cardPaymentUrl?: string;
     cryptoCurrency?: string;
 }
 
@@ -59,6 +62,7 @@ const INITIAL_DATA: CheckoutData = {
     price: 0,
     vatPercentage: 0,
 
+    propFirmCompany: "",
     loginId: "",
     password: "",
     serverName: "",
@@ -66,6 +70,7 @@ const INITIAL_DATA: CheckoutData = {
     whatsapp: "",
     telegram: "",
     notes: "",
+    paymentMethod: "crypto",
     agreedToTerms: false,
     agreedToRefundPolicy: false,
 };
@@ -169,7 +174,7 @@ function CheckoutWizardContent() {
             const payload = {
                 login_id: data.loginId,
                 password: data.password,
-                propfirm_name: data.propFirm || "Selected via Pass Funded",
+                propfirm_name: data.propFirmCompany || data.propFirm || "Selected via Pass Funded",
                 propfirm_website_link: "N/A",
                 server_name: data.serverName,
                 server_type: "Metatrader 5 only",

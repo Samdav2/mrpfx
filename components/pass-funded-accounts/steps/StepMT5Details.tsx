@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function StepMT5Details({ data, updateData, onNext, onBack }: Props) {
-    const isValid = data.loginId.length > 3 && data.password.length > 3 && data.serverName.length > 3;
+    const isValid = data.propFirmCompany && data.loginId.length > 3 && data.password.length > 3 && data.serverName.length > 3;
 
     return (
         <div className="bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 max-w-2xl mx-auto relative overflow-hidden">
@@ -44,6 +44,19 @@ export function StepMT5Details({ data, updateData, onNext, onBack }: Props) {
             </div>
 
             <div className="space-y-5 relative z-10">
+                <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Prop Firm Company</label>
+                    <select
+                        value={data.propFirmCompany}
+                        onChange={(e) => updateData({ propFirmCompany: e.target.value })}
+                        className="w-full bg-slate-50/50 hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-semibold text-slate-900 focus:border-slate-900 focus:bg-white focus:outline-none transition-all duration-300 appearance-none"
+                    >
+                        <option value="">Select Prop Firm</option>
+                        <option value="FundedNext">FundedNext</option>
+                        <option value="FTMO">FTMO</option>
+                        <option value="Fundingpips">Fundingpips</option>
+                    </select>
+                </div>
                 <div>
                     <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">MT5 Login ID</label>
                     <input

@@ -28,8 +28,8 @@ export default function PhysicalClassesPage() {
     };
 
     const packageDetails = {
-        standard: { name: 'Standard Mentorship', price: '₦200,000' },
-        private: { name: 'Private Mentorship', price: '₦300,000' }
+        standard: { name: 'Physical Class Mentorship', price: '₦200,000' },
+        private: { name: 'Private Physical Class Mentorship', price: '₦300,000' }
     };
 
     const floorDetails = {
