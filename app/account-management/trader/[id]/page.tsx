@@ -1,13 +1,28 @@
-import React from 'react';
+'use client';
+
+import React, { useRef, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
     ArrowLeft, Award, TrendingUp, AlertTriangle, Briefcase,
     DollarSign, Activity, CheckCircle2, Shield, Calendar,
-    BarChart3, Target, Crosshair
+    BarChart3, Target, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
-// Reusing the mock data structure but with extended dashboard statistics
+// Helper to generate last 12 months
+const getPastMonths = () => {
+    const months = [];
+    const date = new Date(2026, 1, 1);
+    for (let i = 0; i < 12; i++) {
+        const monthName = date.toLocaleString('default', { month: 'long' });
+        months.push(`${monthName} ${date.getFullYear()}`);
+        date.setMonth(date.getMonth() - 1);
+    }
+    return months;
+};
+
+const pastMonths = getPastMonths();
+
 const managerProfiles: Record<string, any> = {
     'managerA': {
         name: 'Master Trader A',
@@ -22,13 +37,13 @@ const managerProfiles: Record<string, any> = {
         worstTrade: '-$320',
         strategy: 'Low-risk algorithmic hedging with strict stop losses.',
         description: 'Master Trader A employs a highly conservative strategy focused on wealth preservation. Utilizing proprietary algorithmic hedging techniques, this manager aims for consistent, low-volatility returns. Every position is strictly protected by hard stop losses, ensuring drawdowns remain minimal. Ideal for capital preservation.',
-        history: [
-            { id: 1, pair: 'EUR/USD', type: 'BUY', size: '2.00', openPrice: '1.08450', closePrice: '1.08750', profit: '+$600', date: 'Oct 24, 2024', status: 'Win' },
-            { id: 2, pair: 'GBP/USD', type: 'SELL', size: '1.50', openPrice: '1.26500', closePrice: '1.26200', profit: '+$450', date: 'Oct 23, 2024', status: 'Win' },
-            { id: 3, pair: 'USD/JPY', type: 'BUY', size: '2.00', openPrice: '149.500', closePrice: '149.400', profit: '-$133', date: 'Oct 21, 2024', status: 'Loss' },
-            { id: 4, pair: 'AUD/USD', type: 'BUY', size: '3.00', openPrice: '0.65200', closePrice: '0.65500', profit: '+$900', date: 'Oct 19, 2024', status: 'Win' },
-            { id: 5, pair: 'EUR/GBP', type: 'SELL', size: '4.00', openPrice: '0.86500', closePrice: '0.86400', profit: '+$400', date: 'Oct 18, 2024', status: 'Win' },
-        ]
+        performanceHistory: pastMonths.map((m, i) => ({
+            month: m,
+            winRate: `${85 - i}%`,
+            monthlyRoi: `4-6%`,
+            maxDrawdown: `${3 + Math.floor(i / 3)}%`,
+            totalTrades: `${1240 - (i * 20)}`,
+        }))
     },
     'managerB': {
         name: 'Pro Trader B',
@@ -43,13 +58,13 @@ const managerProfiles: Record<string, any> = {
         worstTrade: '-$950',
         strategy: 'Intraday trend following with dynamic position sizing.',
         description: 'Pro Trader B utilizes a balanced approach, capturing medium-term trends while managing risk dynamically. This strategy involves intraday trading, capitalizing on market momentum during peak volume hours. It offers a solid middle ground between steady growth and calculated risk-taking.',
-        history: [
-            { id: 1, pair: 'XAU/USD', type: 'BUY', size: '1.00', openPrice: '2024.50', closePrice: '2030.00', profit: '+$550', date: 'Oct 24, 2024', status: 'Win' },
-            { id: 2, pair: 'GBP/JPY', type: 'SELL', size: '2.50', openPrice: '188.500', closePrice: '187.900', profit: '+$1,500', date: 'Oct 23, 2024', status: 'Win' },
-            { id: 3, pair: 'EUR/USD', type: 'BUY', size: '3.00', openPrice: '1.08200', closePrice: '1.08050', profit: '-$450', date: 'Oct 22, 2024', status: 'Loss' },
-            { id: 4, pair: 'US30', type: 'BUY', size: '0.50', openPrice: '38150', closePrice: '38250', profit: '+$500', date: 'Oct 20, 2024', status: 'Win' },
-            { id: 5, pair: 'USD/CAD', type: 'SELL', size: '2.00', openPrice: '1.35500', closePrice: '1.35100', profit: '+$800', date: 'Oct 18, 2024', status: 'Win' },
-        ]
+        performanceHistory: pastMonths.map((m, i) => ({
+            month: m,
+            winRate: `${78 - Math.floor(i / 2)}%`,
+            monthlyRoi: `8-12%`,
+            maxDrawdown: `${7 + Math.floor(i / 4)}%`,
+            totalTrades: `${3100 - (i * 50)}`,
+        }))
     },
     'managerC': {
         name: 'Elite Trader C',
@@ -64,23 +79,32 @@ const managerProfiles: Record<string, any> = {
         worstTrade: '-$1,800',
         strategy: 'High-frequency scalping during volatile market sessions.',
         description: 'Elite Trader C is designed for investors seeking maximum growth. Employing aggressive, high-frequency scalping techniques, this manager targets short-term volatility bursts across major pairs and indices. While drawdowns are naturally higher, the potential for rapid portfolio expansion is significant.',
-        history: [
-            { id: 1, pair: 'NAS100', type: 'BUY', size: '2.00', openPrice: '17550', closePrice: '17600', profit: '+$1,000', date: 'Oct 24, 2024', status: 'Win' },
-            { id: 2, pair: 'US30', type: 'SELL', size: '1.50', openPrice: '38400', closePrice: '38250', profit: '+$2,250', date: 'Oct 24, 2024', status: 'Win' },
-            { id: 3, pair: 'XAU/USD', type: 'BUY', size: '3.00', openPrice: '2015.00', closePrice: '2010.00', profit: '-$1,500', date: 'Oct 23, 2024', status: 'Loss' },
-            { id: 4, pair: 'GBP/JPY', type: 'BUY', size: '4.00', openPrice: '187.200', closePrice: '187.800', profit: '+$2,400', date: 'Oct 23, 2024', status: 'Win' },
-            { id: 5, pair: 'EUR/JPY', type: 'SELL', size: '5.00', openPrice: '160.500', closePrice: '160.800', profit: '-$1,500', date: 'Oct 22, 2024', status: 'Loss' },
-        ]
+        performanceHistory: pastMonths.map((m, i) => ({
+            month: m,
+            winRate: `${72 - i}%`,
+            monthlyRoi: '15-25%',
+            maxDrawdown: `${15 + Math.floor(i / 3)}%`,
+            totalTrades: `${4850 - (i * 100)}`,
+        }))
     }
 };
 
-export default async function TraderProfilePage({ params }: { params: Promise<{ id: string }> }) {
-    const { id: managerId } = await params;
+export default function TraderProfilePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id: managerId } = use(params);
     const profile = managerProfiles[managerId];
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     if (!profile) {
         notFound();
     }
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const container = scrollContainerRef.current;
+            const scrollAmount = container.clientWidth * 0.8;
+            container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
 
     return (
         <div className="bg-[#f8fafc] min-h-screen pt-[120px] pb-24 font-sans font-dm-sans selection:bg-blue-200">
@@ -144,7 +168,6 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                 {/* Statistics Grid */}
                 <h2 className="text-2xl font-bold text-[#0A1128] mb-6 font-palanquin-dark">Performance Metrics</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-                    {/* Stat Card 1 */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center mb-4 text-green-600">
                             <TrendingUp className="h-6 w-6" />
@@ -152,7 +175,6 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Win Rate</p>
                         <p className="text-2xl font-bold text-[#1a1a1a]">{profile.winRate}</p>
                     </div>
-                    {/* Stat Card 2 */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600">
                             <AlertTriangle className="h-6 w-6" />
@@ -160,7 +182,6 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Max Drawdown</p>
                         <p className="text-2xl font-bold text-[#1a1a1a]">{profile.maxDrawdown}</p>
                     </div>
-                    {/* Stat Card 3 */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-4 text-blue-600">
                             <BarChart3 className="h-6 w-6" />
@@ -168,7 +189,6 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Profit Factor</p>
                         <p className="text-2xl font-bold text-[#1a1a1a]">{profile.profitFactor}</p>
                     </div>
-                    {/* Stat Card 4 */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-purple-50 flex items-center justify-center mb-4 text-purple-600">
                             <Briefcase className="h-6 w-6" />
@@ -203,56 +223,86 @@ export default async function TraderProfilePage({ params }: { params: Promise<{ 
                     </div>
                 </div>
 
-                {/* Trading History Table */}
-                <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 overflow-hidden mb-12">
-                    <div className="px-6 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                        <h2 className="text-xl font-bold text-[#0A1128] font-palanquin-dark flex items-center">
-                            <Crosshair className="h-5 w-5 mr-2 text-indigo-600" />
-                            Recent Trading History
+                {/* 12-Month Performance Carousel */}
+                <div className="mb-12">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-[#0A1128] font-palanquin-dark flex items-center">
+                            <Calendar className="h-6 w-6 mr-2 text-blue-600" />
+                            12-Month Performance History
                         </h2>
-                        <span className="text-sm text-gray-500 font-medium">Last 5 Closed Positions</span>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => scroll('left')}
+                                className="p-2 rounded-full bg-white border border-gray-200 shadow-sm text-blue-600 hover:bg-blue-50 transition-colors"
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </button>
+                            <button
+                                onClick={() => scroll('right')}
+                                className="p-2 rounded-full bg-white border border-gray-200 shadow-sm text-blue-600 hover:bg-blue-50 transition-colors"
+                            >
+                                <ChevronRight className="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-white border-b border-gray-100">
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Date</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Symbol</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Type</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Size (Lots)</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Open Price</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest">Close Price</th>
-                                    <th className="py-4 px-6 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Profit/Loss</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {profile.history.map((t: any) => (
-                                    <tr key={t.id} className="hover:bg-blue-50/30 transition-colors">
-                                        <td className="py-4 px-6 text-sm font-medium text-gray-600 whitespace-nowrap">{t.date}</td>
-                                        <td className="py-4 px-6 text-sm font-bold text-[#1a1a1a] whitespace-nowrap">{t.pair}</td>
-                                        <td className="py-4 px-6 whitespace-nowrap">
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${t.type === 'BUY' ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700'
-                                                }`}>
-                                                {t.type}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 px-6 text-sm font-medium text-gray-600 whitespace-nowrap">{t.size}</td>
-                                        <td className="py-4 px-6 text-sm font-medium text-gray-600 whitespace-nowrap">{t.openPrice}</td>
-                                        <td className="py-4 px-6 text-sm font-medium text-gray-600 whitespace-nowrap">{t.closePrice}</td>
-                                        <td className={`py-4 px-6 text-sm font-bold text-right whitespace-nowrap ${t.status === 'Win' ? 'text-green-600' : 'text-red-500'
-                                            }`}>
-                                            {t.profit}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div
+                        ref={scrollContainerRef}
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 hide-scrollbar scroll-smooth"
+                    >
+                        {profile.performanceHistory.map((history: any, idx: number) => (
+                            <div
+                                key={idx}
+                                className="flex-none w-full md:w-[45%] lg:w-[31%] snap-center"
+                            >
+                                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow h-full">
+                                    <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-50">
+                                        <span className="text-sm font-bold text-[#1E3A8A] uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-lg">
+                                            {history.month}
+                                        </span>
+                                        <span className="text-xs text-gray-400 font-medium">
+                                            {idx + 1} / 12
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Win Rate</p>
+                                            <p className="text-lg font-bold text-[#1a1a1a]">{history.winRate}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Monthly ROI</p>
+                                            <p className="text-lg font-bold text-[#1E3A8A]">{history.monthlyRoi}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Max DD</p>
+                                            <p className="text-lg font-bold text-[#1a1a1a]">{history.maxDrawdown}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Trades</p>
+                                            <p className="text-lg font-bold text-[#1a1a1a]">{history.totalTrades}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <div className="px-6 py-4 bg-gray-50 text-center border-t border-gray-100">
-                        <p className="text-xs text-gray-500">End of recent history sample. Full historical breakdown is available to active managed accounts.</p>
-                    </div>
+
+                    <p className="text-center text-xs text-gray-400 mt-2 italic">
+                        Swipe or use arrows to view past performance data
+                    </p>
                 </div>
+
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    .hide-scrollbar::-webkit-scrollbar {
+                        display: none;
+                    }
+                    .hide-scrollbar {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
+                `}} />
 
                 {/* Return CTA */}
                 <div className="flex justify-center mb-12">

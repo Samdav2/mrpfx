@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Hero() {
+interface HeroProps {
+    onMentorshipClick?: () => void;
+}
+
+export default function Hero({ onMentorshipClick }: HeroProps) {
     return (
         <section className="bg-white py-6 lg:py-20 overflow-hidden">
             <div className="container mx-auto px-4 lg:px-8 flex flex-col-reverse min-[375px]:flex-row items-center justify-between gap-8 min-[375px]:gap-1 lg:gap-12 w-full">
@@ -31,12 +35,12 @@ export default function Hero() {
                     </div>
 
                     <div className="flex flex-col min-[375px]:flex-row gap-3 min-[375px]:gap-1 lg:gap-4 justify-start pt-2 lg:pt-4">
-                        <Link
-                            href="/mentorship-course"
+                        <button
+                            onClick={onMentorshipClick}
                             className="px-6 py-3 min-[375px]:px-1 min-[375px]:py-2 lg:px-8 lg:py-4 bg-[#312E81] text-white font-bold rounded-lg hover:bg-indigo-900 transition-colors text-[14px] min-[375px]:text-[9px] min-[400px]:text-[10px] md:text-sm lg:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200 text-center whitespace-nowrap"
                         >
                             Enroll For Mentorship
-                        </Link>
+                        </button>
                         <Link
                             href="https://one.exnesstrack.net/a/0z72b5esoc"
                             target="_blank"

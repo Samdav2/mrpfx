@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Lock, Server, Building2 } from 'lucide-react';
+import { User, Lock, Server, Building2, CheckCircle2, PlayCircle } from 'lucide-react';
 
 export default function CopyTradingForm() {
     const [broker, setBroker] = useState('');
@@ -15,80 +15,74 @@ export default function CopyTradingForm() {
     };
 
     return (
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-100 shadow-xl p-8 w-full max-w-md transform translate-x-4 translate-y-8 relative z-10">
-            <h3 className="text-[#1a1a1a] font-dm-sans font-semibold text-lg mb-6">
-                Enter your MT5 account details
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-4 md:p-8 w-full max-w-[420px] relative z-10 transition-all">
+            <h3 className="text-[#1a1a1a] font-outfit font-bold text-lg md:text-2xl leading-tight mb-4 md:mb-6">
+                Connect Your MT5 Account <span className="text-gray-400">&</span> Start Earning
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Broker */}
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Building2 className="h-5 w-5 text-gray-500" />
+            <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+                {/* Broker Name */}
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none">
+                        <Building2 className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
                     </div>
                     <input
                         type="text"
                         value={broker}
                         onChange={(e) => setBroker(e.target.value)}
-                        placeholder="Broker"
-                        className="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        placeholder="Broker Name"
+                        className="block w-full pl-9 md:pl-11 pr-3 md:pr-4 py-2.5 md:py-3.5 border border-gray-100 rounded-xl text-gray-800 text-sm md:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 bg-[#F9FBFF] transition-all"
                         required
                     />
                 </div>
 
-                {/* MT5 Account ID */}
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-gray-500" />
+                {/* MT5 Login ID */}
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none">
+                        <User className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
                     </div>
                     <input
                         type="text"
                         value={accountId}
                         onChange={(e) => setAccountId(e.target.value)}
-                        placeholder="MT5 Account ID"
-                        className="block w-full pl-11 pr-10 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        placeholder="MT5 Login ID"
+                        className="block w-full pl-9 md:pl-11 pr-10 md:pr-12 py-2.5 md:py-3.5 border border-gray-100 rounded-xl text-gray-800 text-sm md:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 bg-[#F9FBFF] transition-all"
                         required
                     />
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        {/* A generic icon indicating it's an ID field */}
-                        <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 0H4C1.79086 0 0 1.79086 0 4V14C0 16.2091 1.79086 18 4 18H10C12.2091 18 14 16.2091 14 14V4C14 1.79086 12.2091 0 10 0ZM7 4C8.65685 4 10 5.34315 10 7C10 8.65685 8.65685 10 7 10C5.34315 10 4 8.65685 4 7C4 5.34315 5.34315 4 7 4ZM4 15V14C4 12.3431 5.34315 11 7 11C8.65685 11 10 12.3431 10 14V15H4Z" fill="#9CA3AF" />
-                        </svg>
+                    <div className="absolute inset-y-0 right-0 pr-3 md:pr-4 flex items-center">
+                        <PlayCircle className="h-4 w-4 text-gray-300" />
                     </div>
                 </div>
 
                 {/* MT5 Password */}
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-[#374151]" />
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none">
+                        <Lock className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
                     </div>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="MT5 Password"
-                        className="block w-full pl-11 pr-10 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        className="block w-full pl-9 md:pl-11 pr-10 md:pr-12 py-2.5 md:py-3.5 border border-gray-100 rounded-xl text-gray-800 text-sm md:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 bg-[#F9FBFF] transition-all"
                         required
                     />
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                        <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="18" height="16" rx="2" fill="#9CA3AF" />
-                            <path d="M12 7H6C5.44772 7 5 7.44772 5 8V12C5 12.5523 5.44772 13 6 13H12C12.5523 13 13 12.5523 13 12V8C13 7.44772 12.5523 7 12 7Z" fill="white" />
-                        </svg>
+                    <div className="absolute inset-y-0 right-0 pr-3 md:pr-4 flex items-center">
+                        <PlayCircle className="h-4 w-4 text-gray-300" />
                     </div>
                 </div>
 
-                {/* MT5 Server */}
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                        <Server className="h-5 w-5 text-gray-500" />
+                {/* Server */}
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none z-10">
+                        <Server className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
                     </div>
                     <input
                         type="text"
                         value={server}
                         onChange={(e) => setServer(e.target.value)}
-                        placeholder="MT5 Server"
-                        className="block w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#374151] focus:border-transparent bg-[#FAFAFA]"
+                        placeholder="Server"
+                        className="block w-full pl-9 md:pl-11 pr-3 md:pr-4 py-2.5 md:py-3.5 border border-gray-100 rounded-xl text-gray-800 text-sm md:text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 bg-[#F9FBFF] transition-all"
                         required
                     />
                 </div>
@@ -96,9 +90,10 @@ export default function CopyTradingForm() {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="w-full mt-2 bg-[#2E3B8F] hover:bg-[#20296b] text-white font-medium py-3.5 px-4 rounded-lg transition-colors shadow-lg shadow-blue-900/20"
+                    className="w-full mt-2 bg-gradient-to-r from-[#00A859] to-[#00C853] hover:from-[#00914d] hover:to-[#00b249] text-white font-bold py-3 md:py-4 px-4 rounded-xl transition-all shadow-lg shadow-[#00A859]/20 flex items-center justify-center gap-2 group"
                 >
-                    Connect Now
+                    <span className="text-xs md:text-lg">Activate Auto Copy Trading</span>
+                    <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 opacity-80 group-hover:scale-110 transition-transform flex-shrink-0" />
                 </button>
             </form>
         </div>

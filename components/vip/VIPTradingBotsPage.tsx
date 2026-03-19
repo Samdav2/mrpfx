@@ -200,7 +200,7 @@ const VIPTradingBotsPage = () => {
                             </div>
 
                             {/* Robots Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-10">
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
                                 {category.robots.map((robot: any, robIndex: number) => (
                                     <RobotCard
                                         key={robIndex}

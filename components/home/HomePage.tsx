@@ -39,7 +39,7 @@ export default function HomePage() {
 
     return (
         <main className="min-h-screen bg-white">
-            <Hero />
+            <Hero onMentorshipClick={() => setShowMentorshipPopup(true)} />
             <AccessSection
                 onMentorshipClick={() => setShowMentorshipPopup(true)}
             />

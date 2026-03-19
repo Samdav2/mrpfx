@@ -70,6 +70,7 @@ const managerProfiles: Record<string, {
 
 export default function AccountManagementForm() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [broker, setBroker] = useState('');
     const [accountId, setAccountId] = useState('');
     const [password, setPassword] = useState('');
     const [server, setServer] = useState('');
@@ -87,7 +88,7 @@ export default function AccountManagementForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Submit account management details:', { accountId, password, server, capital, manager, agreed });
+        console.log('Submit account management details:', { broker, accountId, password, server, capital, manager, agreed });
     };
 
     const selectedProfile = manager ? managerProfiles[manager as keyof typeof managerProfiles] : null;
@@ -99,6 +100,21 @@ export default function AccountManagementForm() {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Broker Name */}
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Briefcase className="h-5 w-5 text-[#1E3A8A]" />
+                    </div>
+                    <input
+                        type="text"
+                        value={broker}
+                        onChange={(e) => setBroker(e.target.value)}
+                        placeholder="Broker Name"
+                        className="block w-full pl-11 pr-4 py-[14px] border border-gray-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] bg-white text-[15px]"
+                        required
+                    />
+                </div>
+
                 {/* MT5 Account ID */}
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -134,17 +150,14 @@ export default function AccountManagementForm() {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                         <Server className="h-5 w-5 text-[#1E3A8A]" />
                     </div>
-                    <select
+                    <input
+                        type="text"
                         value={server}
                         onChange={(e) => setServer(e.target.value)}
-                        className="block w-full pl-11 pr-10 py-[14px] border border-gray-200 rounded-lg text-gray-800 appearance-none focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] bg-white text-[15px] bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%232563EB%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px_20px] bg-no-repeat bg-[position:right_16px_center]"
+                        placeholder="MT5 Server"
+                        className="block w-full pl-11 pr-4 py-[14px] border border-gray-200 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] bg-white text-[15px]"
                         required
-                    >
-                        <option value="" disabled className="text-gray-500">MT5 Server</option>
-                        <option value="server1">Server 1 (Live)</option>
-                        <option value="server2">Server 2 (Live)</option>
-                        <option value="server3">Server 3 (Demo)</option>
-                    </select>
+                    />
                 </div>
 
                 {/* Capital Amount */}

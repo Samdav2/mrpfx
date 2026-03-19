@@ -97,83 +97,67 @@ const ForexBooksPage = () => {
         downloadUrl: item.download_url
     });
 
-    const paidBooks = paidBooksSource.map((book: any, i: number) => mapToBookProps(book, i));
-    const freeBooks = freeBooksSource.map((book: any, i: number) => mapToBookProps(book, i + 3));
+    const allBooks = [
+        ...paidBooksSource.map((book: any, i: number) => mapToBookProps(book, i)),
+        ...freeBooksSource.map((book: any, i: number) => mapToBookProps(book, i + 3))
+    ];
 
     return (
-        <div className="min-h-screen bg-[#070b14] font-sans text-white overflow-x-hidden selection:bg-blue-500/30">
-            {/* Global Vibrant Trading Background */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <Image
-                    src="/assets/forex-books/hero-bg-trading.png"
-                    alt="Trading Background"
-                    fill
-                    className="object-cover opacity-80"
-                    priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070b14]/50 to-[#070b14]" />
-            </div>
-
+        <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden selection:bg-blue-500/30">
             <div className="relative z-10">
-                {/* Hero Section */}
-                <section className="relative pt-24 md:pt-32 pb-8">
+                {/* New Hero Section */}
+                <section className="relative pt-24 md:pt-32 pb-16 bg-white">
                     <div className="max-w-[1280px] mx-auto px-6 text-center relative z-10">
-                        <h1 className="text-4xl md:text-6xl font-[1000] text-white tracking-tight drop-shadow-2xl mb-8">
-                            Forex Trading Books
+                        <h1 className="text-4xl md:text-7xl font-black text-[#0f172a] tracking-tight mb-4 leading-[1.1]">
+                            Master Forex Trading — <br className="hidden md:block" />
+                            Even If You're Starting From Zero
                         </h1>
+                        <p className="text-lg md:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 font-medium">
+                            Learn the exact strategies, risk management, and psychology I use to trade profitably.
+                        </p>
 
-                        <div className="w-full max-w-[900px] mx-auto relative z-10">
+                        <div className="w-full max-w-[850px] mx-auto relative z-10 mb-12">
                             <img
                                 src="/assets/forex-books/hero-forex-books-transparent.png"
                                 alt="Forex Trading Books Hero"
-                                className="w-full h-auto object-contain transform hover:scale-[1.02] transition-transform duration-700 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                                className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
                             />
                         </div>
-                    </div>
-                </section>
 
-                {/* PAID Section */}
-                <section className="py-12 md:py-16 relative">
-                    <div className="max-w-[1280px] mx-auto px-6">
-                        <div className="flex items-center gap-4 mb-8 md:mb-12">
-                            <div className="inline-block bg-gradient-to-r from-[#8b6d31] to-[#b39556] text-white px-8 md:px-10 py-1.5 md:py-2 rounded-full font-[1000] uppercase tracking-widest text-base md:text-lg shadow-[0_10px_30px_rgba(139,109,49,0.3)]">
-                                PAID
+                        {/* Feature Bar */}
+                        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 bg-slate-50 border border-slate-200 p-2 md:p-3 rounded-2xl w-fit mx-auto shadow-sm">
+                            <div className="px-6 py-2 rounded-xl bg-[#1e293b] text-white font-bold text-sm md:text-base whitespace-nowrap">
+                                Beginner — Advanced
                             </div>
-                            <div className="h-[2px] w-full bg-gradient-to-r from-white/30 to-transparent" />
+                            <div className="h-6 w-px bg-slate-300 hidden md:block" />
+                            <div className="px-4 py-2 text-slate-700 font-bold text-sm md:text-base whitespace-nowrap flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                Proven Strategies Inside
+                            </div>
+                            <div className="h-6 w-px bg-slate-300 hidden md:block" />
+                            <div className="px-4 py-2 text-[#1e293b] font-black text-sm md:text-base whitespace-nowrap bg-blue-50/50 border border-blue-100/50 rounded-xl">
+                                Step-by-Step System
+                            </div>
                         </div>
+                    </div>
+                </section>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                            {paidBooks.map((book, i) => (
+                {/* All Books Grid - Unified Section */}
+                <section className="py-20 md:py-24 relative bg-white border-t border-slate-100">
+                    <div className="max-w-[1280px] mx-auto px-4 md:px-6">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-10">
+                            {allBooks.map((book, i) => (
                                 <BookCard key={i} {...book} />
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* FREE Section (Matching mockup text divider) */}
-                <section className="py-16 md:py-32 relative">
-                    <div className="max-w-[1280px] mx-auto px-6">
-                        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-12 md:mb-20">
-                            <h2 className="text-2xl md:text-5xl font-[1000] uppercase tracking-tighter drop-shadow-lg text-center md:text-left">
-                                <span className="text-emerald-400 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-300">FREE</span> FOREX TRADING BOOKS
-                            </h2>
-                            <div className="h-[2px] md:h-[3px] w-full bg-gradient-to-r from-emerald-500/60 via-emerald-500/10 to-transparent hidden md:block" />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
-                            {freeBooks.map((book, i) => (
-                                <BookCard key={i} {...book} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Newsletter Wrapper (Clean end section) */}
-                <div className="pb-40 pt-20 bg-gradient-to-t from-black to-transparent border-t border-white/5">
+                {/* Newsletter Wrapper (Clean light end section) */}
+                <div className="pb-40 pt-20 bg-slate-50 border-t border-slate-200">
                     <NewsletterSection />
                 </div>
             </div>
-
         </div>
     );
 };

@@ -117,7 +117,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
                                 <div className="min-w-0">
                                     <h3 className="text-[#312E81] text-[14px] sm:text-2xl font-semibold mb-0.5 sm:mb-2 leading-tight" style={{ fontFamily: '"Outfit", sans-serif' }}>One-On-One Mentorship</h3>
                                     <p className="text-gray-600 text-[10px] sm:text-base leading-[1.3] sm:leading-relaxed">
-                                        Get direct access to be mentored personally by Mr P, with one-on-one sessions focused solely your growth.
+                                        Get direct access to be mentored personally by Mr P, with one-on-one sessions focused solely on your growth.
                                     </p>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
                                 <div className="min-w-0">
                                     <h3 className="text-[#312E81] text-[14px] sm:text-2xl font-semibold mb-0.5 sm:mb-2 leading-tight" style={{ fontFamily: '"Outfit", sans-serif' }}>Physical Classes</h3>
                                     <p className="text-gray-600 text-[10px] sm:text-base leading-[1.3] sm:leading-relaxed">
-                                        Visit any of our branches to be mentored in person by our expert traders for hands-on learing.
+                                        Visit any of our branches to be mentored in person by our expert traders for hands-on learning.
                                     </p>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
                                 <div className="min-w-0">
                                     <h3 className="text-[#312E81] text-[14px] sm:text-2xl font-semibold mb-0.5 sm:mb-2 leading-tight" style={{ fontFamily: '"Outfit", sans-serif' }}>Mentorship Course 100</h3>
                                     <p className="text-gray-600 text-[10px] sm:text-base leading-[1.3] sm:leading-relaxed">
-                                        Book a spot among 100 max spots available where Mr P will be teaching one-on-one through Zoom.
+                                        One of only 100 spots available where Mr P will be teaching personally through Zoom.
                                     </p>
                                 </div>
                             </div>

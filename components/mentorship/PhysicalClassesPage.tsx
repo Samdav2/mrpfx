@@ -1,11 +1,16 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Check, ShieldCheck, PlayCircle, MapPin } from 'lucide-react';
+import { Check, ShieldCheck, PlayCircle, MapPin, X, ArrowRight } from 'lucide-react';
 
 export default function PhysicalClassesPage() {
+    const [selectedPackage, setSelectedPackage] = useState<'standard' | 'private' | null>(null);
+    const [showFloorPopup, setShowFloorPopup] = useState<'Abuja' | 'Lagos' | null>(null);
+    const [showGuideText, setShowGuideText] = useState(false);
+    const floorsRef = useRef<HTMLDivElement>(null);
+
     const features = [
         "Beginner \u2192 Advanced Curriculum",
         "Intensive One Month Program",
@@ -15,6 +20,28 @@ export default function PhysicalClassesPage() {
         "Prop Firm Challenge Preparation",
         "Earn a professional trading certificate"
     ];
+
+    const scrollToFloors = (pkg: 'standard' | 'private') => {
+        setSelectedPackage(pkg);
+        setShowGuideText(true);
+        floorsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const packageDetails = {
+        standard: { name: 'Standard Mentorship', price: '₦200,000' },
+        private: { name: 'Private Mentorship', price: '₦300,000' }
+    };
+
+    const floorDetails = {
+        Abuja: {
+            address: "Suite 305, Plot 1083, Garki District, Abuja, Nigeria",
+            map: "https://maps.google.com/?q=Abuja+Trading+Floor"
+        },
+        Lagos: {
+            address: "2nd Floor, 15 Admiralty Way, Lekki Phase 1, Lagos, Nigeria",
+            map: "https://maps.google.com/?q=Lagos+Trading+Floor"
+        }
+    };
 
     return (
         <div className="min-h-screen font-sans font-dm-sans bg-[#EFF3F9] relative overflow-hidden flex flex-col items-left">
@@ -31,20 +58,17 @@ export default function PhysicalClassesPage() {
             <div className="relative w-full overflow-hidden pt-28 pb-4 md:pt-36 md:pb-12 z-10 flex flex-col justify-left min-h-[500px] md:min-h-[650px]">
                 {/* Hero Top Texture / Image */}
                 <div className="absolute top-0 inset-x-0 h-full z-0 overflow-hidden">
-                    {/* Mobile optimized positioning: moves the mentor to the right/bottom */}
                     <Image
                         src="/images/home/physical_class_mentorship_hero.png"
                         alt="Real Trading Floor"
                         fill
                         className="object-cover object-[80%_top] md:object-right"
                     />
-                    {/* Gradient mask for text readability on left */}
                     <div className="absolute inset-0 bg-gradient-to-r from-[#EFF3F9]/95 via-[#EFF3F9]/60 to-transparent w-full md:w-[70%]" />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#EFF3F9]/30 to-[#EFF3F9]" />
                 </div>
 
                 <div className="relative z-10 w-full max-w-6xl mx-auto px-6 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8 md:gap-16 items-start mt-[-60px] md:mt-0">
-                    {/* Hero Text */}
                     <div className="flex-1 max-w-2xl text-left">
                         <h1 className="text-[32px] md:text-[52px] lg:text-[64px] font-bold text-[#141E46] leading-[1.1] tracking-tight mb-4 md:mb-6 font-palanquin-dark drop-shadow-sm">
                             <span className="opacity-90">Trade Like a Professional</span><br />
@@ -60,18 +84,20 @@ export default function PhysicalClassesPage() {
                             with real market execution.
                         </p>
 
-                        <button className="relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-white font-bold py-3 md:py-4 px-8 md:px-10 rounded-xl shadow-[0_10px_30px_rgba(185,129,42,0.4)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 w-fit">
+                        <button
+                            onClick={() => floorsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                            className="relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-white font-bold py-3 md:py-4 px-8 md:px-10 rounded-xl shadow-[0_10px_30px_rgba(185,129,42,0.4)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 w-fit"
+                        >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
                             <span className="relative z-10 tracking-widest uppercase text-[13px] md:text-[15px] drop-shadow-md">Reserve Your Seat Now</span>
                         </button>
                     </div>
 
-                    {/* Spacer block pushes layout around on mobile so background mentor is visible below text */}
                     <div className="h-[280px] md:h-[400px] w-full flex-1"></div>
                 </div>
             </div>
 
-            {/* Pricing / Packages Section (Forced Side-by-Side Mobile) */}
+            {/* Pricing / Packages Section */}
             <div className="relative z-20 w-full max-w-6xl mx-auto px-2 md:px-6 lg:px-8 mt-[-20px] md:-mt-12 mb-6 md:mb-16 flex flex-row gap-2 md:gap-8 items-stretch justify-center">
 
                 {/* Regular Physical Mentorship (Left Card) */}
@@ -118,11 +144,12 @@ export default function PhysicalClassesPage() {
                         </div>
 
                         <div className="mt-auto pt-3 md:pt-6 border-t border-gray-100">
-                            <Link href="/mentorship-course" className="block w-full">
-                                <button className="w-full relative group overflow-hidden bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-gray-200 text-[#475569] hover:text-[#1E293B] font-bold py-2 md:py-4 rounded-lg md:rounded-xl shadow-sm transition-all duration-300">
-                                    <span className="relative z-10 tracking-wider text-[8px] md:text-[14px] uppercase block truncate">Standard Mentorship</span>
-                                </button>
-                            </Link>
+                            <button
+                                onClick={() => scrollToFloors('standard')}
+                                className="w-full relative group overflow-hidden bg-[#1E3A8A] hover:bg-[#1A255C] text-white font-bold py-2 md:py-4 rounded-lg md:rounded-xl shadow-md transition-all duration-300"
+                            >
+                                <span className="relative z-10 tracking-wider text-[8px] md:text-[14px] uppercase block truncate">ENROLL NOW</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -161,9 +188,12 @@ export default function PhysicalClassesPage() {
                         </ul>
 
                         <div className="mt-auto">
-                            <button className="w-full relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-bold py-2 md:py-4 rounded-lg md:rounded-xl shadow-[0_10px_25px_rgba(185,129,42,0.3)] transform hover:scale-[1.02] transition-all duration-300">
+                            <button
+                                onClick={() => scrollToFloors('private')}
+                                className="w-full relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-bold py-2 md:py-4 rounded-lg md:rounded-xl shadow-[0_10px_25px_rgba(185,129,42,0.3)] transform hover:scale-[1.02] transition-all duration-300"
+                            >
                                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-                                <span className="relative z-10 tracking-wider text-[8px] md:text-[14px] uppercase drop-shadow-sm block truncate px-1">Enroll Now To Reserve Your Seat</span>
+                                <span className="relative z-10 tracking-wider text-[8px] md:text-[14px] uppercase drop-shadow-sm block truncate px-1">ENROLL NOW</span>
                             </button>
                         </div>
                     </div>
@@ -172,19 +202,30 @@ export default function PhysicalClassesPage() {
             </div>
 
             {/* Bottom Info Section */}
-            <div className="relative z-20 w-full max-w-6xl mx-auto px-4 md:px-8 pb-16 md:pb-24">
+            <div ref={floorsRef} className="relative z-20 w-full max-w-6xl mx-auto px-4 md:px-8 pb-16 md:pb-24">
 
                 {/* TOP ROW: Locations & Certificate */}
                 <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1.1fr] gap-8 md:gap-12 items-stretch mb-12 md:mb-20">
 
                     {/* Left Column: Locations */}
                     <div className="flex flex-col justify-center py-4 md:py-8">
+                        {showGuideText && (
+                            <div className="mb-6 animate-bounce">
+                                <div className="bg-[#1A255C] text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 w-fit">
+                                    <ArrowRight className="w-5 h-5 text-[#B9812A] rotate-90" />
+                                    <span className="font-bold text-sm md:text-base">Please select one of the two locations below to continue</span>
+                                </div>
+                            </div>
+                        )}
                         <h3 className="text-[#1A255C] text-2xl md:text-3xl font-bold mb-3 tracking-tight leading-tight">Select Your Trading Floor</h3>
                         <p className="text-[#4B5563] text-[15px] md:text-[17px] mb-8 font-medium">Select the location closest to you:</p>
 
                         <div className="flex flex-row gap-4 md:gap-6 mb-10">
                             {/* Abuja */}
-                            <div className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300">
+                            <div
+                                onClick={() => setShowFloorPopup('Abuja')}
+                                className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300"
+                            >
                                 <Image src="/images/mentorship/abuja_physical.jpg" alt="Abuja" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
                                 <div className="absolute bottom-4 left-5 text-white font-bold text-lg md:text-xl flex items-center gap-2">
@@ -192,7 +233,10 @@ export default function PhysicalClassesPage() {
                                 </div>
                             </div>
                             {/* Lagos */}
-                            <div className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300">
+                            <div
+                                onClick={() => setShowFloorPopup('Lagos')}
+                                className="relative flex-1 aspect-[1.6/1] rounded-2xl md:rounded-3xl overflow-hidden group cursor-pointer shadow-lg border-2 border-transparent hover:border-[#1A255C] transition-all duration-300"
+                            >
                                 <Image src="/images/mentorship/lagos_physical.jpg" alt="Lagos" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#141E46]/90 via-[#141E46]/40 to-transparent"></div>
                                 <div className="absolute bottom-4 left-5 text-white font-bold text-lg md:text-xl flex items-center gap-2">
@@ -216,9 +260,8 @@ export default function PhysicalClassesPage() {
                         </div>
                     </div>
 
-                    {/* Right Column: Certificate with Cityscape Background */}
+                    {/* Right Column: Certificate */}
                     <div className="relative rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl border-4 border-white min-h-[400px] flex items-center justify-center p-6 md:p-12">
-                        {/* Cityscape Background inside this container only */}
                         <Image
                             src="/images/mentorship/cityscape_night_bg.png"
                             alt="Cityscape Night"
@@ -228,13 +271,10 @@ export default function PhysicalClassesPage() {
                         <div className="absolute inset-0 bg-blue-900/30 mix-blend-overlay"></div>
                         <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-transparent"></div>
 
-                        {/* Redesigned Certificate */}
                         <div className="relative w-full max-w-[420px] aspect-[1.414/1] bg-white rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-1 transform rotate-1 hover:rotate-0 transition-transform duration-500 overflow-hidden">
-                            {/* Certificate Border */}
                             <div className="absolute inset-2 border-[1px] border-[#D4AF37]/60 pointer-events-none"></div>
 
                             <div className="w-full h-full flex flex-col items-center justify-between py-6 px-4 text-center">
-                                {/* Logo Corner */}
                                 <div className="absolute top-4 right-6 w-16 h-16 opacity-10 pointer-events-none grayscale">
                                     <Image src="/assets/home/mrpfxlogo.png" alt="Logo Watermark" fill className="object-contain" />
                                 </div>
@@ -283,15 +323,115 @@ export default function PhysicalClassesPage() {
                         Enroll Now <span className="text-[#1A255C]/70 font-medium md:ml-2">To Reserve Your Seat</span>
                     </h3>
 
-                    <Link href="/mentorship-course" className="w-full max-w-md">
-                        <button className="w-full relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-extrabold py-4 md:py-5 rounded-xl md:rounded-2xl shadow-[0_15px_40px_-10px_rgba(185,129,42,0.5)] transform hover:scale-[1.03] active:scale-95 transition-all duration-300">
-                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-                            <span className="relative z-10 tracking-[0.1em] text-[13px] md:text-[16px] uppercase drop-shadow-sm">Enroll Now To Reserve Your Seat</span>
-                        </button>
-                    </Link>
+                    <button
+                        onClick={() => floorsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                        className="w-full max-w-md relative group overflow-hidden bg-gradient-to-r from-[#B9812A] via-[#E2B75A] to-[#B9812A] text-[#111] font-extrabold py-4 md:py-5 rounded-xl md:rounded-2xl shadow-[0_15px_40px_-10px_rgba(185,129,42,0.5)] transform hover:scale-[1.03] active:scale-95 transition-all duration-300"
+                    >
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                        <span className="relative z-10 tracking-[0.1em] text-[13px] md:text-[16px] uppercase drop-shadow-sm">Enroll Now To Reserve Your Seat</span>
+                    </button>
                 </div>
 
             </div>
+
+            {/* Trading Floor Popup Modal */}
+            {showFloorPopup && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+                    <div
+                        className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300"
+                        onClick={() => setShowFloorPopup(null)}
+                    />
+
+                    <div className="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+                        {/* Modal Header */}
+                        <div className="bg-[#1A255C] p-6 md:p-8 text-white relative">
+                            <button
+                                onClick={() => setShowFloorPopup(null)}
+                                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 bg-blue-500/20 rounded-lg">
+                                    <MapPin className="w-6 h-6 text-blue-400" />
+                                </div>
+                                <h3 className="text-2xl font-bold tracking-tight">{showFloorPopup} Trading Floor</h3>
+                            </div>
+                            <p className="text-blue-100/80 text-sm font-medium">Physical Study Center</p>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="p-6 md:p-8 space-y-6">
+                            <div>
+                                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Address</h4>
+                                <p className="text-lg font-bold text-[#1A255C] leading-snug">
+                                    {floorDetails[showFloorPopup].address}
+                                </p>
+                            </div>
+
+                            <a
+                                href={floorDetails[showFloorPopup].map}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                            >
+                                View on Google Maps <ArrowRight className="ml-1.5 w-4 h-4" />
+                            </a>
+
+                            <div className="h-px bg-gray-100" />
+
+                            {selectedPackage ? (
+                                <div className="space-y-4">
+                                    <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Selected Package</p>
+                                                <p className="text-lg font-bold text-[#1A255C]">{packageDetails[selectedPackage].name}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Price</p>
+                                                <p className="text-xl font-bold text-[#B9812A]">{packageDetails[selectedPackage].price}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <Link
+                                        href={`/checkout?product=${selectedPackage}&location=${showFloorPopup}`}
+                                        className="w-full flex items-center justify-center gap-2 bg-[#2546A8] hover:bg-[#1A255C] text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5"
+                                    >
+                                        Complete Checkout <ArrowRight className="w-5 h-5" />
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            setShowFloorPopup(null);
+                                            window.scrollTo({ top: 400, behavior: 'smooth' });
+                                        }}
+                                        className="w-full text-sm font-bold text-gray-400 hover:text-[#1A255C] transition-colors"
+                                    >
+                                        Change Mentorship Package
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="space-y-4 text-center">
+                                    <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100">
+                                        <p className="text-[#92400E] font-bold text-sm leading-relaxed">
+                                            Please select a mentorship package first to proceed with your enrollment at the {showFloorPopup} center.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setShowFloorPopup(null);
+                                            window.scrollTo({ top: 400, behavior: 'smooth' });
+                                        }}
+                                        className="w-full flex items-center justify-center gap-2 bg-white border-2 border-gray-200 hover:border-[#1A255C] text-[#1A255C] font-bold py-4 rounded-xl transition-all"
+                                    >
+                                        Select Package First <ArrowRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

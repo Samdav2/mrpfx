@@ -104,7 +104,7 @@ const VIPTradingIndicatorsPage = () => {
                     </div>
 
                     {loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
                             {[1, 2, 3, 4].map(i => (
                                 <div key={i} className="bg-white rounded-[20px] h-[300px] animate-pulse" />
                             ))}
@@ -114,7 +114,7 @@ const VIPTradingIndicatorsPage = () => {
                             <p className="text-slate-500">New VIP indicators coming soon!</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
                             {indicators.map((indicator) => (
                                 <IndicatorCard
                                     key={indicator.id}
