@@ -14,7 +14,7 @@ interface Props {
 
 export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Props) {
     const [currencies, setCurrencies] = useState<string[]>([]);
-    const [selectedCurrency, setSelectedCurrency] = useState("btc");
+    const [selectedCurrency, setSelectedCurrency] = useState("usdttrc20");
     const [paymentMethod, setPaymentMethod] = useState<"card" | "crypto">(data.paymentMethod || "crypto");
     const [estimatedAmount, setEstimatedAmount] = useState<number | null>(null);
     const [loadingEstimate, setLoadingEstimate] = useState(false);
@@ -138,36 +138,18 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
 
             {paymentMethod === "crypto" ? (
                 <div className="mb-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 ml-1">Select Asset</label>
-                    <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
-                        {loadingCurrencies ? (
-                            <div className="col-span-full py-10 text-center text-slate-400 font-semibold text-sm flex flex-col items-center justify-center gap-3">
-                                <RefreshCw className="w-6 h-6 animate-spin text-slate-300" />
-                                Fetching live rates...
-                            </div>
-                        ) : (
-                            currencies.slice(0, 8).map((currency) => {
-                                const isSelected = selectedCurrency === currency;
-                                return (
-                                    <button
-                                        key={currency}
-                                        onClick={() => handleCurrencyChange(currency)}
-                                        className={`relative p-4 rounded-2xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-2.5 group ${isSelected
-                                            ? "border-slate-900 bg-slate-900 shadow-md transform -translate-y-0.5"
-                                            : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
-                                            }`}
-                                    >
-                                        <Bitcoin className={`w-6 h-6 transition-colors ${isSelected ? "text-white" : "text-slate-400 group-hover:text-slate-600"}`} />
-                                        <span className={`text-[10px] font-black tracking-widest uppercase transition-colors ${isSelected ? "text-white" : "text-slate-500 group-hover:text-slate-900"}`}>
-                                            {currency}
-                                        </span>
-                                    </button>
-                                );
-                            })
-                        )}
+                    <div className="bg-emerald-50/50 border border-emerald-100 p-6 rounded-2xl flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-100">
+                            <Bitcoin className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-tight">Payment via USDT (TRC20)</h4>
+                            <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest">Fastest & Preferred Method</p>
+                        </div>
                     </div>
                 </div>
             ) : (
+
                 <div className="mb-8 relative z-10 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-2xl">
                         <div className="flex items-center gap-3 mb-4">
@@ -204,14 +186,15 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
                     {loading ? (
                         <>
                             <RefreshCw className="w-5 h-5 animate-spin" />
-                            Generating Payment Details...
+                            Initializing Secure Payment...
                         </>
                     ) : (
                         <>
                             <QrCode className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                            <span className="tracking-wide">Generate Crypto Address</span>
+                            <span className="tracking-wide">Continue to Payment</span>
                         </>
                     )}
+
                 </button>
             ) : (
                 <a

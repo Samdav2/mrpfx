@@ -142,6 +142,10 @@ export default function CryptoPaymentModal({ orderAmount, orderId, onClose, onSu
         setTimeout(() => setCopied(null), 2000);
     };
 
+    const handleContinueToPayment = () => {
+        handleSelectCurrency('usdttrc20');
+    };
+
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
             <div className="absolute inset-0 bg-[#0a0e17]/90 backdrop-blur-md" onClick={onClose} />
@@ -170,59 +174,42 @@ export default function CryptoPaymentModal({ orderAmount, orderId, onClose, onSu
                 </div>
 
                 <div className="p-8">
-                    {/* --- STEP 1: SELECT CURRENCY --- */}
+                    {/* --- STEP 1: SELECT CURRENCY (Simplified) --- */}
                     {step === 'SELECT_CURRENCY' && (
-                        <div className="space-y-6">
-                            <div className="relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                <input
-                                    value={search}
-                                    onChange={e => setSearch(e.target.value)}
-                                    placeholder="Search coins (BTC, ETH, USDT...)"
-                                    className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-gray-600"
-                                />
+                        <div className="space-y-8 py-4">
+                            <div className="flex flex-col items-center text-center space-y-4">
+                                <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20">
+                                    <CurrencyIcon ticker="usdttrc20" className="w-12 h-12" />
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="text-xl font-bold text-white">Pay with USDT</h4>
+                                    <p className="text-sm text-gray-500 max-w-[240px] mx-auto leading-relaxed">
+                                        USDT (TRC20) is the fastest and most secure way to complete your payment.
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="max-h-[350px] overflow-y-auto pr-2 custom-scrollbar space-y-2">
-                                {loadingCurrencies ? (
-                                    <div className="py-12 flex flex-col items-center gap-3">
-                                        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
-                                        <p className="text-xs text-gray-500 font-medium">Loading supported networks...</p>
-                                    </div>
-                                ) : filteredCurrencies.length === 0 ? (
-                                    <div className="py-12 text-center text-gray-600 text-sm italic">
-                                        No currencies found matching &quot;{search}&quot;
-                                    </div>
+                            <button
+                                onClick={handleContinueToPayment}
+                                disabled={creatingPayment}
+                                className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-bold py-5 rounded-[1.5rem] shadow-xl shadow-purple-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 group"
+                            >
+                                {creatingPayment ? (
+                                    <Loader2 className="w-5 h-5 animate-spin" />
                                 ) : (
-                                    filteredCurrencies.map(ticker => (
-                                        <button
-                                            key={ticker}
-                                            onClick={() => handleSelectCurrency(ticker)}
-                                            disabled={creatingPayment}
-                                            className="w-full flex items-center justify-between p-4 rounded-3xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.06] hover:border-white/[0.1] transition-all group disabled:opacity-50"
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <CurrencyIcon ticker={ticker} className="w-10 h-10" />
-                                                <div className="text-left">
-                                                    <p className="text-sm font-bold text-white uppercase group-hover:text-purple-400 transition-colors">
-                                                        {ticker}
-                                                    </p>
-                                                    <p className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">
-                                                        Network: {ticker}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            {creatingPayment && selectedCurrency === ticker ? (
-                                                <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />
-                                            ) : (
-                                                <ChevronRight className="w-4 h-4 text-gray-700 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                                            )}
-                                        </button>
-                                    ))
+                                    <>
+                                        <span className="tracking-wide">Continue to Payment</span>
+                                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </>
                                 )}
-                            </div>
+                            </button>
+
+                            <p className="text-[10px] text-gray-600 text-center uppercase tracking-widest font-bold">
+                                Low Fees • Instant Confirmation
+                            </p>
                         </div>
                     )}
+
 
                     {/* --- STEP 2: PAYMENT DETAILS --- */}
                     {step === 'PAYMENT_DETAILS' && payment && (
