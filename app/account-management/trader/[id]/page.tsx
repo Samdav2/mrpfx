@@ -1,100 +1,57 @@
 'use client';
 
-import React, { useRef, use } from 'react';
+import React, { useRef, use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
     ArrowLeft, Award, TrendingUp, AlertTriangle, Briefcase,
     DollarSign, Activity, CheckCircle2, Shield, Calendar,
-    BarChart3, Target, ChevronLeft, ChevronRight
+    BarChart3, Target, ChevronLeft, ChevronRight, Loader2
 } from 'lucide-react';
+import { tradersService } from '@/lib/traders';
+import { TraderPerformanceResponse, TraderPerformanceRecord } from '@/lib/types';
 
-// Helper to generate last 12 months
-const getPastMonths = () => {
-    const months = [];
-    const date = new Date(2026, 1, 1);
-    for (let i = 0; i < 12; i++) {
-        const monthName = date.toLocaleString('default', { month: 'long' });
-        months.push(`${monthName} ${date.getFullYear()}`);
-        date.setMonth(date.getMonth() - 1);
-    }
-    return months;
-};
-
-const pastMonths = getPastMonths();
-
-const managerProfiles: Record<string, any> = {
-    'managerA': {
-        name: 'Master Trader A',
-        type: 'Conservative',
-        winRate: '85%',
-        monthlyRoi: '4-6%',
-        maxDrawdown: '3%',
-        totalTrades: '1,240',
-        profitFactor: '2.14',
-        avgTradeDuration: '4.2 Days',
-        bestTrade: '+$1,450',
-        worstTrade: '-$320',
-        strategy: 'Low-risk algorithmic hedging with strict stop losses.',
-        description: 'Master Trader A employs a highly conservative strategy focused on wealth preservation. Utilizing proprietary algorithmic hedging techniques, this manager aims for consistent, low-volatility returns. Every position is strictly protected by hard stop losses, ensuring drawdowns remain minimal. Ideal for capital preservation.',
-        performanceHistory: pastMonths.map((m, i) => ({
-            month: m,
-            winRate: `${85 - i}%`,
-            monthlyRoi: `4-6%`,
-            maxDrawdown: `${3 + Math.floor(i / 3)}%`,
-            totalTrades: `${1240 - (i * 20)}`,
-        }))
-    },
-    'managerB': {
-        name: 'Pro Trader B',
-        type: 'Balanced',
-        winRate: '78%',
-        monthlyRoi: '8-12%',
-        maxDrawdown: '7%',
-        totalTrades: '3,100',
-        profitFactor: '1.85',
-        avgTradeDuration: '1.5 Days',
-        bestTrade: '+$2,800',
-        worstTrade: '-$950',
-        strategy: 'Intraday trend following with dynamic position sizing.',
-        description: 'Pro Trader B utilizes a balanced approach, capturing medium-term trends while managing risk dynamically. This strategy involves intraday trading, capitalizing on market momentum during peak volume hours. It offers a solid middle ground between steady growth and calculated risk-taking.',
-        performanceHistory: pastMonths.map((m, i) => ({
-            month: m,
-            winRate: `${78 - Math.floor(i / 2)}%`,
-            monthlyRoi: `8-12%`,
-            maxDrawdown: `${7 + Math.floor(i / 4)}%`,
-            totalTrades: `${3100 - (i * 50)}`,
-        }))
-    },
-    'managerC': {
-        name: 'Elite Trader C',
-        type: 'Aggressive',
-        winRate: '72%',
-        monthlyRoi: '15-25%',
-        maxDrawdown: '15%',
-        totalTrades: '4,850',
-        profitFactor: '1.65',
-        avgTradeDuration: '4 Hours',
-        bestTrade: '+$5,200',
-        worstTrade: '-$1,800',
-        strategy: 'High-frequency scalping during volatile market sessions.',
-        description: 'Elite Trader C is designed for investors seeking maximum growth. Employing aggressive, high-frequency scalping techniques, this manager targets short-term volatility bursts across major pairs and indices. While drawdowns are naturally higher, the potential for rapid portfolio expansion is significant.',
-        performanceHistory: pastMonths.map((m, i) => ({
-            month: m,
-            winRate: `${72 - i}%`,
-            monthlyRoi: '15-25%',
-            maxDrawdown: `${15 + Math.floor(i / 3)}%`,
-            totalTrades: `${4850 - (i * 100)}`,
-        }))
-    }
-};
+// managerProfiles removed as we use tradersService
 
 export default function TraderProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id: managerId } = use(params);
-    const profile = managerProfiles[managerId];
-    if (!profile) {
+    const [profile, setProfile] = useState<TraderPerformanceResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            setLoading(true);
+            const data = await tradersService.getTraderPerformance(managerId);
+            if (data) {
+                setProfile(data);
+            } else {
+                setError(true);
+            }
+            setLoading(false);
+        };
+        fetchProfile();
+    }, [managerId]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
+                <Loader2 className="w-12 h-12 animate-spin text-[#1E3A8A]" />
+            </div>
+        );
+    }
+
+    if (error || !profile) {
         notFound();
     }
+
+    // Latest performance stats for the grid
+    const latestStats = profile.performance[0] || {
+        winRate: '0%',
+        monthlyRoi: '0%',
+        maxDrawdown: '0%',
+        totalTrades: '0'
+    };
 
     return (
         <div className="bg-[#f8fafc] min-h-screen pt-[120px] pb-24 font-sans font-dm-sans selection:bg-blue-200">
@@ -140,7 +97,7 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
 
                         <div className="text-left md:text-right bg-blue-50/50 p-4 rounded-xl border border-blue-100 min-w-[200px]">
                             <p className="text-sm font-medium text-gray-500 mb-1">Estimated Monthly ROI</p>
-                            <p className="text-3xl font-bold text-[#1E3A8A]">{profile.monthlyRoi}</p>
+                            <p className="text-3xl font-bold text-[#1E3A8A]">{latestStats.monthlyRoi}</p>
                         </div>
                     </div>
 
@@ -163,14 +120,14 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                             <TrendingUp className="h-6 w-6" />
                         </div>
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Win Rate</p>
-                        <p className="text-2xl font-bold text-[#1a1a1a]">{profile.winRate}</p>
+                        <p className="text-2xl font-bold text-[#1a1a1a]">{latestStats.winRate}</p>
                     </div>
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600">
                             <AlertTriangle className="h-6 w-6" />
                         </div>
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Max Drawdown</p>
-                        <p className="text-2xl font-bold text-[#1a1a1a]">{profile.maxDrawdown}</p>
+                        <p className="text-2xl font-bold text-[#1a1a1a]">{latestStats.maxDrawdown}</p>
                     </div>
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
                         <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-4 text-blue-600">
@@ -184,7 +141,7 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                             <Briefcase className="h-6 w-6" />
                         </div>
                         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Total Trades</p>
-                        <p className="text-2xl font-bold text-[#1a1a1a]">{profile.totalTrades}</p>
+                        <p className="text-2xl font-bold text-[#1a1a1a]">{latestStats.totalTrades}</p>
                     </div>
                 </div>
 
@@ -222,7 +179,7 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {profile.performanceHistory.map((history: any, idx: number) => (
+                        {profile.performance.map((history: TraderPerformanceRecord, idx: number) => (
                             <div
                                 key={idx}
                                 className="w-full"
@@ -233,7 +190,7 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                                             {history.month}
                                         </span>
                                         <span className="text-xs text-gray-400 font-medium">
-                                            {idx + 1} / 12
+                                            {idx + 1} / {profile.performance.length}
                                         </span>
                                     </div>
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Save, Package, Image, Trash2, ExternalLink, Plus, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Save, Package, Trash2, Image, ExternalLink, Plus, Send, User, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { productsService } from '@/lib/products';
 import { adminProductService, WPMediaItem, adminTermService } from '@/lib/admin-api';
 import type { WCProductVariationCreate } from '@/lib/types';
@@ -62,7 +62,13 @@ export default function AddProductPage() {
         downloadable: false,
         seller_payment_link: '',
         whop_payment_link: '',
+        signal_link: '',
+        telegram_link: '',
+        vip_group: '',
     });
+
+    // Addons State
+    const [addons, setAddons] = useState<{ name: string; type: string; required: boolean }[]>([]);
 
     // Terms State
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
@@ -137,8 +143,19 @@ export default function AddProductPage() {
                 status: formData.status,
                 virtual: formData.virtual,
                 downloadable: formData.downloadable,
-                seller_payment_link: formData.seller_payment_link || undefined,
                 whop_payment_link: formData.whop_payment_link || undefined,
+                seller_payment_link: formData.seller_payment_link || undefined,
+                telegram_link: formData.telegram_link || undefined,
+                signal_link: formData.signal_link || undefined,
+                vip_group: formData.vip_group || undefined,
+                addons: addons.length > 0 ? addons.map((a, i) => ({
+                    name: a.name,
+                    type: a.type,
+                    required: a.required,
+                    description: '',
+                    position: i,
+                    options: []
+                })) : undefined,
             });
 
             setCreatedProductId(product.id);
@@ -468,22 +485,72 @@ export default function AddProductPage() {
                         </div>
                     )}
 
-                    {/* External Payment Links */}
+                    {/* Product Access Links — only shown for virtual/downloadable products */}
+                    {(formData.virtual || formData.downloadable) && (
+                        <div className="bg-[#111827] border border-blue-500/20 rounded-xl p-6 space-y-4">
+                            <div className="flex items-center gap-3 pb-4 border-b border-white/[0.06]">
+                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center ring-1 ring-blue-500/20">
+                                    <Send className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-semibold">Product Access Links</h3>
+                                    <p className="text-xs text-gray-500">Shown to the customer after their order is completed</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-400">Telegram Invite Link</label>
+                                    <input
+                                        type="url"
+                                        className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-blue-500 border border-transparent"
+                                        placeholder="https://t.me/joinchat/..."
+                                        value={formData.telegram_link}
+                                        onChange={(e) => handleChange('telegram_link', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-400">Signal Access Link</label>
+                                    <input
+                                        type="url"
+                                        className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-blue-500 border border-transparent"
+                                        placeholder="https://signal.group/..."
+                                        value={formData.signal_link}
+                                        onChange={(e) => handleChange('signal_link', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <label className="text-sm font-medium text-gray-400">VIP Group Name / Info</label>
+                                    <input
+                                        type="text"
+                                        className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-blue-500 border border-transparent"
+                                        placeholder="e.g. Diamond VIP Signal Group"
+                                        value={formData.vip_group}
+                                        onChange={(e) => handleChange('vip_group', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Payment Links — always visible */}
                     <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
                         <div className="flex items-center gap-3 pb-4 border-b border-gray-800">
-                            <div className="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-500 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center">
                                 <ExternalLink className="w-5 h-5" />
                             </div>
-                            <h3 className="text-white font-semibold">External Payment Links</h3>
+                            <div>
+                                <h3 className="text-white font-semibold">Payment Links</h3>
+                                <p className="text-xs text-gray-500">External checkout links for this product</p>
+                            </div>
                         </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-400">Seller Payment Link</label>
+                                <label className="text-sm font-medium text-gray-400">Seller Payment Link (Selar)</label>
                                 <input
                                     type="url"
                                     className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
-                                    placeholder="https://seller.example.com/pay/..."
+                                    placeholder="https://selar.co/..."
                                     value={formData.seller_payment_link}
                                     onChange={(e) => handleChange('seller_payment_link', e.target.value)}
                                 />
@@ -493,13 +560,94 @@ export default function AddProductPage() {
                                 <input
                                     type="url"
                                     className="w-full bg-[#1F2937] text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
-                                    placeholder="https://whop.example.com/checkout/..."
+                                    placeholder="https://whop.com/checkout/..."
                                     value={formData.whop_payment_link}
                                     onChange={(e) => handleChange('whop_payment_link', e.target.value)}
                                 />
                             </div>
                         </div>
-                        <p className="text-xs text-gray-500">Enable alternative checkout options for this product by providing direct payment URLs.</p>
+                    </div>
+
+                    {/* Custom Input Fields (Addons) */}
+                    <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-4">
+                        <div className="flex items-center justify-between pb-4 border-b border-gray-800">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-pink-500/20 text-pink-500 flex items-center justify-center">
+                                    <User className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-white font-semibold">Custom Input Fields (Addons)</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setAddons([...addons, { name: 'Telegram Username', type: 'text', required: true }])}
+                                className="flex items-center gap-1 text-xs text-pink-500 hover:text-pink-400 font-medium"
+                            >
+                                <Plus className="w-3.5 h-3.5" />
+                                Add Field
+                            </button>
+                        </div>
+
+                        {addons.length === 0 ? (
+                            <div className="text-center py-6 border border-dashed border-gray-800 rounded-lg">
+                                <p className="text-gray-500 text-xs text-center px-4 italic">No custom fields defined. Use this to collect extra info like Telegram usernames during checkout.</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {addons.map((addon, idx) => (
+                                    <div key={idx} className="flex flex-wrap md:flex-nowrap items-center gap-3 p-3 bg-[#1F2937]/30 rounded-lg border border-gray-800">
+                                        <div className="flex-1 min-w-[150px]">
+                                            <input
+                                                type="text"
+                                                className="w-full bg-[#0D1117] text-white text-xs rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-pink-500 border border-gray-700"
+                                                placeholder="Field Label (e.g. Telegram Username)"
+                                                value={addon.name}
+                                                onChange={(e) => {
+                                                    const newAddons = [...addons];
+                                                    newAddons[idx].name = e.target.value;
+                                                    setAddons(newAddons);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="w-full md:w-32">
+                                            <select
+                                                className="w-full bg-[#0D1117] text-white text-xs rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-pink-500 border border-gray-700"
+                                                value={addon.type}
+                                                onChange={(e) => {
+                                                    const newAddons = [...addons];
+                                                    newAddons[idx].type = e.target.value;
+                                                    setAddons(newAddons);
+                                                }}
+                                            >
+                                                <option value="text">Text Entry</option>
+                                                <option value="email">Email</option>
+                                                <option value="textarea">Multi-line</option>
+                                            </select>
+                                        </div>
+                                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                className="rounded bg-gray-700 border-gray-600 accent-pink-600 w-3.5 h-3.5"
+                                                checked={addon.required}
+                                                onChange={(e) => {
+                                                    const newAddons = [...addons];
+                                                    newAddons[idx].required = e.target.checked;
+                                                    setAddons(newAddons);
+                                                }}
+                                            />
+                                            <span className="text-xs text-gray-400">Required</span>
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => setAddons(addons.filter((_, i) => i !== idx))}
+                                            className="p-1.5 text-gray-500 hover:text-red-400 transition-colors"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <p className="text-xs text-gray-500">Collect additional information from the customer at checkout for this specific product.</p>
                     </div>
 
                     {/* Inventory */}

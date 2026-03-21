@@ -54,6 +54,7 @@ export default function PropFirmRegistrationsPage() {
     const limit = 50;
     const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean, id: string | number | null }>({ isOpen: false, id: null });
     const [editingStatus, setEditingStatus] = useState<PropFirmRegistrationData | null>(null);
+    const [viewingRegistration, setViewingRegistration] = useState<PropFirmRegistrationData | null>(null);
     const [successModal, setSuccessModal] = useState({ isOpen: false, message: '' });
     const [errorModal, setErrorModal] = useState({ isOpen: false, message: '' });
 
@@ -253,10 +254,7 @@ export default function PropFirmRegistrationsPage() {
                                                     <span>{new Date(reg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                                 <button
-                                                    onClick={() => {
-                                                        // For now just show a toast with details if no view page exists
-                                                        toast(`Order: ${reg.order_id}\nLogin: ${reg.login_id}\nFirm: ${reg.propfirm_name}`, { icon: 'ℹ️', duration: 4000 });
-                                                    }}
+                                                    onClick={() => setViewingRegistration(reg)}
                                                     className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-all border border-transparent hover:border-gray-600"
                                                     title="Quick View"
                                                 >
@@ -351,6 +349,150 @@ export default function PropFirmRegistrationsPage() {
                                 className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-bold transition-all active:scale-95"
                             >
                                 Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* View Details Modal */}
+            {viewingRegistration && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-[#0B0F19] border border-white/[0.08] rounded-3xl w-full max-w-lg shadow-2xl relative overflow-hidden ring-1 ring-white/10">
+                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400"></div>
+
+                        <div className="p-6 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.02]">
+                            <div className="flex items-center gap-3 text-left">
+                                <div className="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center border border-purple-500/20">
+                                    <Eye className="w-5 h-5 text-purple-400" />
+                                </div>
+                                <div className="flex flex-col text-left">
+                                    <h3 className="text-white font-bold text-lg tracking-tight text-left">Registration Details</h3>
+                                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest text-left">Prop Firm Management</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setViewingRegistration(null)}
+                                className="text-gray-500 hover:text-white transition-all p-2 hover:bg-white/5 rounded-full border border-transparent hover:border-white/10"
+                            >
+                                <AlertCircle className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="p-8 space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar text-left">
+                            {/* Order Section */}
+                            <div className="space-y-4 text-left">
+                                <h4 className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] border-l-2 border-purple-500 pl-3 text-left">Order Information</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.03] p-5 rounded-2xl border border-white/[0.05]">
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Order ID</p>
+                                        <p className="text-sm text-white font-black tracking-wider text-left">{viewingRegistration.order_id}</p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Firm Name</p>
+                                        <p className="text-sm text-purple-400 font-bold text-left">{viewingRegistration.propfirm_name}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Credentials Section */}
+                            <div className="space-y-4 text-left">
+                                <h4 className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] border-l-2 border-pink-500 pl-3 text-left">MT5 Credentials</h4>
+                                <div className="grid grid-cols-2 gap-x-6 gap-y-6 bg-white/[0.03] p-5 rounded-2xl border border-white/[0.05]">
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Login ID</p>
+                                        <p className="text-sm text-white font-mono font-black tracking-wider bg-white/5 w-fit px-2 py-0.5 rounded border border-white/5 uppercase select-all text-left">
+                                            {viewingRegistration.login_id}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Password</p>
+                                        <p className="text-sm text-amber-400 font-mono font-bold tracking-wider bg-amber-500/5 px-2 py-0.5 rounded border border-amber-500/10 select-all text-left">
+                                            {viewingRegistration.password || '••••••••'}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Server Name</p>
+                                        <p className="text-xs text-gray-300 font-medium bg-white/5 px-2 py-1 rounded w-fit text-left">
+                                            {viewingRegistration.server_name}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Server Type</p>
+                                        <p className="text-xs text-gray-300 font-medium bg-white/5 px-2 py-1 rounded w-fit text-left">
+                                            {viewingRegistration.server_type}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Plan Section */}
+                            <div className="space-y-4 text-left">
+                                <h4 className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] border-l-2 border-emerald-500 pl-3 text-left">Registration Plan</h4>
+                                <div className="grid grid-cols-2 gap-6 bg-white/[0.03] p-5 rounded-2xl border border-white/[0.05]">
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Account Size</p>
+                                        <p className="text-lg text-emerald-400 font-black tracking-tight text-left">
+                                            ${viewingRegistration.account_size.toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Phases / Steps</p>
+                                        <p className="text-sm text-gray-200 font-bold text-left">{viewingRegistration.account_phases} Phases / Step {viewingRegistration.challenges_step}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Contact Section */}
+                            <div className="space-y-4 text-left">
+                                <h4 className="text-[11px] text-gray-500 font-black uppercase tracking-[0.2em] border-l-2 border-blue-500 pl-3 text-left">User Contact</h4>
+                                <div className="grid grid-cols-2 gap-6 bg-white/[0.03] p-5 rounded-2xl border border-white/[0.05]">
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">WhatsApp</p>
+                                        <p className="text-sm text-white font-bold text-left">{viewingRegistration.whatsapp_no}</p>
+                                    </div>
+                                    <div className="space-y-1 text-left">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Telegram</p>
+                                        <p className="text-sm text-blue-400 font-bold text-left">@{viewingRegistration.telegram_username}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Status Section */}
+                            <div className="grid grid-cols-2 gap-6 text-left">
+                                <div className="bg-white/[0.02] border border-white/[0.05] p-4 rounded-2xl space-y-2 text-left">
+                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Current Status</p>
+                                    <div className="w-fit scale-110 origin-left">
+                                        <StatusBadge status={viewingRegistration.status} />
+                                    </div>
+                                </div>
+                                <div className="bg-white/[0.02] border border-white/[0.05] p-4 rounded-2xl space-y-2 text-left">
+                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-left">Payment Status</p>
+                                    <div className="w-fit scale-110 origin-left">
+                                        <span className={`text-[10px] font-bold uppercase border px-2 py-0.5 rounded ${viewingRegistration.payment_status === 'paid' ? 'text-emerald-400 border-emerald-500/30' : 'text-amber-400 border-amber-500/30'}`}>
+                                            {viewingRegistration.payment_status}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-6 bg-white/[0.03] border-t border-white/[0.06] flex items-center gap-4">
+                            <button
+                                onClick={() => {
+                                    setViewingRegistration(null);
+                                    setEditingStatus(viewingRegistration);
+                                }}
+                                className="flex-1 py-3.5 bg-[#1F2937] hover:bg-[#374151] border border-gray-700 text-gray-300 rounded-xl text-sm font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+                            >
+                                <Edit className="w-4 h-4" />
+                                Update Status
+                            </button>
+                            <button
+                                onClick={() => setViewingRegistration(null)}
+                                className="flex-1 py-3.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-purple-500/20"
+                            >
+                                Close View
                             </button>
                         </div>
                     </div>

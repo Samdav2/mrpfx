@@ -152,6 +152,7 @@ export interface WCOrderItemRead {
     quantity?: number;
     total?: string;
     line_total?: string;
+    meta?: Record<string, string> | null;
 }
 
 export interface WCOrderFull extends WCOrder {
@@ -252,6 +253,31 @@ export interface WCProductVariationCreate {
     status?: string | null;
 }
 
+// --- Traders ---
+export interface TraderPerformanceRecord {
+    month: string;
+    winRate: string;
+    monthlyRoi: string;
+    maxDrawdown: string;
+    totalTrades: string;
+}
+
+export interface TraderInfo {
+    trader_id: string;
+    name: string;
+    type: string;
+    strategy: string;
+    description?: string;
+    profitFactor: string;
+    avgTradeDuration: string;
+    bestTrade: string;
+    worstTrade: string;
+}
+
+export interface TraderPerformanceResponse extends TraderInfo {
+    performance: TraderPerformanceRecord[];
+}
+
 export interface WCProductVariationUpdate {
     sku?: string | null;
     regular_price?: string | null;
@@ -292,6 +318,10 @@ export interface WCProductRead {
     total_sales?: number | null;
     seller_payment_link?: string | null;
     whop_payment_link?: string | null;
+    signal_link?: string | null;
+    telegram_link?: string | null;
+    vip_group?: string | null;
+    addons?: WCProductAddonField[] | null;
 }
 
 export interface WCProductFullRead extends WCProductRead {
@@ -325,6 +355,9 @@ export interface WCProductCreate {
     addons?: WCProductAddonField[];
     seller_payment_link?: string | null;
     whop_payment_link?: string | null;
+    signal_link?: string | null;
+    telegram_link?: string | null;
+    vip_group?: string | null;
 }
 
 export interface WCProductUpdate {
@@ -345,6 +378,10 @@ export interface WCProductUpdate {
     slug?: string;
     seller_payment_link?: string | null;
     whop_payment_link?: string | null;
+    signal_link?: string | null;
+    telegram_link?: string | null;
+    vip_group?: string | null;
+    addons?: WCProductAddonField[];
 }
 
 export interface WCProductMeta {
@@ -1369,3 +1406,90 @@ export interface DynamicVideoCreate {
 export type Signal = DynamicSignal;
 export type TradingTool = DynamicTradingTool;
 export type TradingVideo = DynamicVideo;
+
+// ============================================================================
+// ACCOUNT MANAGEMENT TYPES
+// ============================================================================
+
+export interface AccountManagementData {
+    id: string;
+    account_id: string;
+    broker: string;
+    server: string;
+    capital: number;
+    manager: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AccountManagementListResponse {
+    success: boolean;
+    count: number;
+    data: AccountManagementData[];
+}
+
+export interface AccountManagementAdminRead extends AccountManagementData {
+    user_name: string;
+    user_email: string;
+    password?: string;
+}
+
+export interface AccountManagementAdminListResponse {
+    success: boolean;
+    count: number;
+    data: AccountManagementAdminRead[];
+}
+
+export interface AccountManagementResponse {
+    success: boolean;
+    message: string;
+    data: AccountManagementData;
+}
+
+// ============================================================================
+// COPY TRADING TYPES
+// ============================================================================
+
+export interface CopyTradingData {
+    id: string;
+    account_id: string;
+    server: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CopyTradingResponse {
+    success: boolean;
+    message: string;
+    data: CopyTradingData;
+}
+
+export interface CopyTradingListResponse {
+    success: boolean;
+    count: number;
+    data: CopyTradingData[];
+}
+
+export interface CopyTradingAdminRead extends CopyTradingData {
+    user_name: string;
+    user_email: string;
+    password?: string;
+}
+
+export interface CopyTradingAdminListResponse {
+    success: boolean;
+    count: number;
+    data: CopyTradingAdminRead[];
+}
+
+export interface CopyTradingConnectRequest {
+    accountId: string;
+    password: string;
+    server: string;
+}
+
+export interface CopyTradingUpdateStatusRequest {
+    status: string;
+}

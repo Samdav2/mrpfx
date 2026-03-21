@@ -22,11 +22,17 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
 
     const preferredCurrencies = ["btc", "usdttrc20", "eth", "ltc", "bnb", "trx", "usdc"];
 
-    const vatAmount = data.price * (data.vatPercentage || 0) / 100;
-    const finalTotal = data.price + vatAmount;
+    const discountPercentage = data.discountPercentage || 0;
+    const discountedPrice = data.price * (1 - discountPercentage / 100);
+    const vatAmount = discountedPrice * (data.vatPercentage || 0) / 100;
+    const finalTotal = discountedPrice + vatAmount;
 
     useEffect(() => {
         loadCurrencies();
+        // Ensure parent has the default selected currency
+        if (!data.cryptoCurrency) {
+            updateData({ cryptoCurrency: selectedCurrency });
+        }
     }, []);
 
     useEffect(() => {
@@ -105,8 +111,19 @@ export function StepPayment({ data, updateData, onSubmit, onBack, loading }: Pro
             <div className="bg-gradient-to-b from-slate-50 to-white border border-slate-200/80 rounded-[1.5rem] p-6 sm:p-8 mb-8 relative z-10 shadow-sm">
                 <div className="flex justify-between items-center mb-4 text-slate-600 font-semibold text-sm">
                     <span>{data.accountSize} {data.packageType}</span>
-                    <span className="text-slate-900">${data.price.toFixed(2)}</span>
+                    <div className="text-right">
+                        {discountPercentage > 0 && (
+                            <span className="line-through text-slate-400 text-xs mr-2">${data.price.toFixed(2)}</span>
+                        )}
+                        <span className="text-slate-900">${discountedPrice.toFixed(2)}</span>
+                    </div>
                 </div>
+                {discountPercentage > 0 && (
+                    <div className="flex justify-between items-center mb-5 text-emerald-600 font-medium text-sm bg-emerald-50/50 p-2 -mx-2 rounded-lg">
+                        <span>Discount ({discountPercentage}%)</span>
+                        <span>-${(data.price * (discountPercentage / 100)).toFixed(2)}</span>
+                    </div>
+                )}
                 {data.vatPercentage ? (
                     <div className="flex justify-between items-center mb-5 text-slate-500 font-medium text-sm">
                         <span>VAT ({data.vatPercentage}%)</span>

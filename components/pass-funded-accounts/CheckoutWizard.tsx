@@ -71,6 +71,7 @@ const INITIAL_DATA: CheckoutData = {
     telegram: "",
     notes: "",
     paymentMethod: "crypto",
+    cryptoCurrency: "usdttrc20",
     agreedToTerms: false,
     agreedToRefundPolicy: false,
 };
@@ -121,10 +122,30 @@ function CheckoutWizardContent() {
             setCurrentStep(6);
         }
 
+        // Fetch discount settings dynamically
+        import('@/app/actions/prop-firm-settings').then(module => {
+            module.getPropFirmSettings().then(settings => {
+                if (settings && settings.discountActive) {
+                    setData(prev => ({
+                        ...prev,
+                        discountPercentage: settings.discountPercentage || 0,
+                    }));
+                }
+            });
+        });
+
         // We can fetch VAT configuration dynamically if available, otherwise default to 0
         setData(prev => ({ ...prev, vatPercentage: 0 }));
 
-    }, [searchParams]);
+        // Authentication Check
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            toast.error("Please login to continue with checkout");
+            const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+            router.push(`/login?redirect=${currentUrl}`);
+        }
+
+    }, [searchParams, router]);
 
     // Recalculate price dynamically if user modifies package options in wizard
     useEffect(() => {
@@ -179,33 +200,52 @@ function CheckoutWizardContent() {
                 server_name: data.serverName,
                 server_type: "Metatrader 5 only",
                 challenges_step: data.challengeType === "1-Step Challenge" ? 1 : 2,
-                propfirm_account_cost: data.price,
+                propfirm_account_cost: discountedPrice,
                 account_size: data.accountSize,
                 account_phases: data.scope === "Step 1 Only" ? 1 : (data.challengeType === "1-Step Challenge" ? 1 : 2),
                 trading_platform: "Metatrader 5 only",
                 propfirm_rules: `Package: ${data.packageType}\nNotes: ${data.notes}`,
                 whatsapp_no: data.whatsapp,
-                telegram_username: data.telegram
+                telegram_username: data.telegram,
+                payment_method: data.paymentMethod // Added field
             };
 
             // 3. Register with backend
             const registration = await propFirmService.createRegistration(payload as PropFirmRegistration);
             const regId = registration.registration_id || (registration as any).id;
 
-            // 4. Handle Direct Crypto Payment Only
-            const paymentResponse = await cryptoPaymentService.createDirectPayment({
-                price_amount: finalTotal,
-                price_currency: "usd",
-                pay_currency: data.cryptoCurrency || "btc",
-                order_id: `PROP-${regId}`,
-                order_description: `Prop Firm Challenge - ${data.propFirm} ${data.accountSize}`
-            });
-            setCryptoPayment(paymentResponse);
-            setOrderId(`PROP-${regId}`);
-            setCurrentStep(12); // Move to Crypto Pending screen
+            // 4. Handle Payment Flow
+            if (data.paymentMethod === "crypto") {
+                const paymentResponse = await cryptoPaymentService.createDirectPayment({
+                    price_amount: finalTotal,
+                    price_currency: "usd",
+                    pay_currency: data.cryptoCurrency || "usdttrc20",
+                    order_id: `PROP-${regId}`,
+                    order_description: `Prop Firm Challenge - ${data.propFirm} ${data.accountSize}`
+                });
+                setCryptoPayment(paymentResponse);
+                setOrderId(`PROP-${regId}`);
+                setCurrentStep(12); // Move to Crypto Pending screen
+            } else {
+                // For Card/Sellar, the link is currently handled by StepPayment or we could generate it here
+                // If the backend had a dedicated Sellar link generator, we'd call it here.
+                // For now, we'll mark as registration created and show success or move to a summary
+                setOrderId(`PROP-${regId}`);
+                toast.success("Registration created! Redirecting to payment...");
+
+                // If we have a dynamic link from backend in the future, we'd use it here.
+                // Registration is done, UI can now show the success or the Sellar link if not already clicked.
+                setCurrentStep(13); // Final success
+            }
 
         } catch (error: any) {
             console.error("Checkout failed:", error);
+            if (error?.response?.status === 401) {
+                toast.error("Session expired. Please login again.");
+                localStorage.removeItem('access_token');
+                router.push('/login');
+                return;
+            }
             toast.error(error?.response?.data?.detail || error.message || "An error occurred during checkout");
         } finally {
             setLoading(false);

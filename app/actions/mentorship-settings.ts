@@ -11,11 +11,11 @@ export async function getMentorshipSettings() {
         return JSON.parse(data);
     } catch (e) {
         // Return default if file doesn't exist
-        return { registrationOpenDate: null };
+        return { registrationOpenDate: null, productSlug: 'standard-mentorship' };
     }
 }
 
-export async function updateMentorshipSettings(data: { registrationOpenDate: string | null }) {
+export async function updateMentorshipSettings(data: { registrationOpenDate: string | null, productSlug: string }) {
     await fs.writeFile(SETTINGS_FILE, JSON.stringify(data, null, 2), 'utf-8');
     return { success: true };
 }

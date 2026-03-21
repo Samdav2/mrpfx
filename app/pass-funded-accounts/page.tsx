@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 
@@ -8,6 +8,18 @@ export default function PassFundedAccountsPage() {
     const [selections, setSelections] = useState<Record<number, number>>({
         0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0
     });
+
+    const [discountActive, setDiscountActive] = useState(false);
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+
+    useEffect(() => {
+        import('@/app/actions/prop-firm-settings').then(module => {
+            module.getPropFirmSettings().then(data => {
+                setDiscountActive(data.discountActive || false);
+                setDiscountPercentage(data.discountPercentage || 0);
+            });
+        });
+    }, []);
 
     const handleSelect = (cardIndex: number, itemIndex: number) => {
         setSelections(prev => ({ ...prev, [cardIndex]: itemIndex }));
@@ -107,9 +119,18 @@ export default function PassFundedAccountsPage() {
                     Pass Funded Accounts
                 </h1>
 
-                <p className="text-[17px] md:text-[18px] text-[#4b5563] max-w-[800px] leading-relaxed mb-12">
+                <p className="text-[17px] md:text-[18px] text-[#4b5563] max-w-[800px] leading-relaxed mb-8">
                     With a direct partnership with <span className="font-semibold text-[#2563EB]">PROPFIRMSOL.COM</span>, you can now pass your prop firm challenges and get fully funded within a few days. PropSol also grants you full access to their automated system after account is passed.
                 </p>
+
+                {discountActive && discountPercentage > 0 && (
+                    <div className="mb-12 inline-flex items-center gap-2 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 px-6 py-3 rounded-2xl">
+                        <span className="text-xl">🎉</span>
+                        <span className="text-red-600 font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-orange-600">
+                            SPECIAL OFFER: {discountPercentage}% OFF ALL CHALLENGES!
+                        </span>
+                    </div>
+                )}
 
                 <div className="w-full max-w-6xl mx-auto flex flex-col gap-24">
                     {/* Guaranteed Pass Section */}
@@ -135,22 +156,36 @@ export default function PassFundedAccountsPage() {
                                             <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
                                         </div>
                                         <ul className="space-y-3 mb-10">
-                                            {card.items.map((item, i) => (
-                                                <li
-                                                    key={i}
-                                                    onClick={() => handleSelect(cardIdx, i)}
-                                                    className={`flex items-center justify-between cursor-pointer p-2 rounded-lg transition-all ${selections[cardIdx] === i
-                                                        ? (card.mostChosen ? 'bg-white/10 ring-1 ring-white/20' : 'bg-white shadow-sm ring-1 ring-[#5c6bc0]/30')
-                                                        : 'hover:bg-black/5'
-                                                        }`}
-                                                >
-                                                    <span className={`${card.mostChosen ? 'text-[#e2e8f0]' : 'text-[#334155]'} text-[15px] font-medium`}>{item.label}</span>
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`${card.mostChosen ? 'bg-white text-[#2a2b53]' : 'bg-[#5c6bc0] text-white'} font-bold text-sm px-2.5 py-1 rounded shadow-sm`}>{item.price}</span>
-                                                        {selections[cardIdx] === i && <Check className={`w-4 h-4 ${card.mostChosen ? 'text-[#a5b4fc]' : 'text-[#5c6bc0]'}`} />}
-                                                    </div>
-                                                </li>
-                                            ))}
+                                            {card.items.map((item, i) => {
+                                                const originalAmount = parseInt(item.amount);
+                                                const isDiscounted = discountActive && discountPercentage > 0;
+                                                const discountedAmount = isDiscounted ? Math.floor(originalAmount * (1 - discountPercentage / 100)) : originalAmount;
+                                                const displayDiscountedPrice = `$${discountedAmount}`;
+
+                                                return (
+                                                    <li
+                                                        key={i}
+                                                        onClick={() => handleSelect(cardIdx, i)}
+                                                        className={`flex items-center justify-between cursor-pointer p-2 rounded-lg transition-all ${selections[cardIdx] === i
+                                                            ? (card.mostChosen ? 'bg-white/10 ring-1 ring-white/20' : 'bg-white shadow-sm ring-1 ring-[#5c6bc0]/30')
+                                                            : 'hover:bg-black/5'
+                                                            }`}
+                                                    >
+                                                        <span className={`${card.mostChosen ? 'text-[#e2e8f0]' : 'text-[#334155]'} text-[15px] font-medium`}>{item.label}</span>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={`${card.mostChosen ? 'bg-white text-[#2a2b53]' : 'bg-[#5c6bc0] text-white'} font-bold text-sm px-2.5 py-1 rounded shadow-sm flex items-center gap-1.5`}>
+                                                                {isDiscounted && (
+                                                                    <span className="line-through text-[11px] opacity-70">
+                                                                        {item.price}
+                                                                    </span>
+                                                                )}
+                                                                <span>{isDiscounted ? displayDiscountedPrice : item.price}</span>
+                                                            </span>
+                                                            {selections[cardIdx] === i && <Check className={`w-4 h-4 ${card.mostChosen ? 'text-[#a5b4fc]' : 'text-[#5c6bc0]'}`} />}
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
                                         </ul>
 
                                         <Link
@@ -190,22 +225,36 @@ export default function PassFundedAccountsPage() {
                                                 <span className="text-[#64748b] font-bold text-[11px] uppercase tracking-wider">Pricing</span>
                                             </div>
                                             <ul className="space-y-3 mb-10">
-                                                {card.items.map((item, i) => (
-                                                    <li
-                                                        key={i}
-                                                        onClick={() => handleSelect(cardIdx, i)}
-                                                        className={`flex items-center justify-between cursor-pointer p-2 rounded-lg transition-all ${selections[cardIdx] === i
-                                                            ? (card.mostChosen ? 'bg-white/10 ring-1 ring-white/20' : 'bg-white shadow-sm ring-1 ring-[#5c6bc0]/30')
-                                                            : 'hover:bg-black/5'
-                                                            }`}
-                                                    >
-                                                        <span className={`${card.mostChosen ? 'text-[#e2e8f0]' : 'text-[#334155]'} text-[15px] font-medium`}>{item.label}</span>
-                                                        <div className="flex items-center gap-2">
-                                                            <span className={`${card.mostChosen ? 'bg-white text-[#2a2b53]' : 'bg-[#5c6bc0] text-white'} font-bold text-sm px-2.5 py-1 rounded shadow-sm`}>{item.price}</span>
-                                                            {selections[cardIdx] === i && <Check className={`w-4 h-4 ${card.mostChosen ? 'text-[#a5b4fc]' : 'text-[#5c6bc0]'}`} />}
-                                                        </div>
-                                                    </li>
-                                                ))}
+                                                {card.items.map((item, i) => {
+                                                    const originalAmount = parseInt(item.amount);
+                                                    const isDiscounted = discountActive && discountPercentage > 0;
+                                                    const discountedAmount = isDiscounted ? Math.floor(originalAmount * (1 - discountPercentage / 100)) : originalAmount;
+                                                    const displayDiscountedPrice = `$${discountedAmount}`;
+
+                                                    return (
+                                                        <li
+                                                            key={i}
+                                                            onClick={() => handleSelect(cardIdx, i)}
+                                                            className={`flex items-center justify-between cursor-pointer p-2 rounded-lg transition-all ${selections[cardIdx] === i
+                                                                ? (card.mostChosen ? 'bg-white/10 ring-1 ring-white/20' : 'bg-white shadow-sm ring-1 ring-[#5c6bc0]/30')
+                                                                : 'hover:bg-black/5'
+                                                                }`}
+                                                        >
+                                                            <span className={`${card.mostChosen ? 'text-[#e2e8f0]' : 'text-[#334155]'} text-[15px] font-medium`}>{item.label}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className={`${card.mostChosen ? 'bg-white text-[#2a2b53]' : 'bg-[#5c6bc0] text-white'} font-bold text-sm px-2.5 py-1 rounded shadow-sm flex items-center gap-1.5`}>
+                                                                    {isDiscounted && (
+                                                                        <span className="line-through text-[11px] opacity-70">
+                                                                            {item.price}
+                                                                        </span>
+                                                                    )}
+                                                                    <span>{isDiscounted ? displayDiscountedPrice : item.price}</span>
+                                                                </span>
+                                                                {selections[cardIdx] === i && <Check className={`w-4 h-4 ${card.mostChosen ? 'text-[#a5b4fc]' : 'text-[#5c6bc0]'}`} />}
+                                                            </div>
+                                                        </li>
+                                                    );
+                                                })}
                                             </ul>
 
                                             <Link

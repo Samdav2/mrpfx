@@ -14,15 +14,19 @@ import {
     CreditCard,
     Loader2,
     FileText,
-    ShoppingBag
+    ShoppingBag,
+    ExternalLink,
+    Send
 } from 'lucide-react';
 import { ordersService } from '@/lib/orders';
-import type { WCOrderFull } from '@/lib/types';
+import { productsService } from '@/lib/products';
+import type { WCOrderFull, WCProductRead } from '@/lib/types';
 
 export default function OrderDetailPage() {
     const params = useParams();
     const orderId = parseInt(params.orderId as string, 10);
     const [order, setOrder] = useState<WCOrderFull | null>(null);
+    const [products, setProducts] = useState<Record<number, WCProductRead>>({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,6 +34,22 @@ export default function OrderDetailPage() {
             try {
                 const data = await ordersService.getMyOrder(orderId);
                 setOrder(data);
+
+                // Fetch product details for all items to get access links
+                if (data.items && data.items.length > 0) {
+                    const productMap: Record<number, WCProductRead> = {};
+                    await Promise.all(data.items.map(async (item) => {
+                        if (item.product_id && !productMap[item.product_id]) {
+                            try {
+                                const p = await productsService.getProduct(item.product_id);
+                                productMap[item.product_id] = p;
+                            } catch (e) {
+                                console.error(`Failed to load product ${item.product_id}`, e);
+                            }
+                        }
+                    }));
+                    setProducts(productMap);
+                }
             } catch (err) {
                 console.error('Failed to load order', err);
             } finally {
@@ -183,18 +203,68 @@ export default function OrderDetailPage() {
                         <div className="col-span-2 text-right">Total</div>
                     </div>
 
-                    {order.items.map(item => (
-                        <div key={item.order_item_id} className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-6 py-4 border-b border-white/[0.04] items-center">
-                            <div className="md:col-span-6 text-white text-sm font-medium">{item.order_item_name}</div>
-                            <div className="md:col-span-2 text-center text-gray-400 text-sm">{item.quantity || 1}</div>
-                            <div className="md:col-span-2 text-right text-gray-400 text-sm">
-                                {item.quantity && item.line_total
-                                    ? formatPrice(String(parseFloat(item.line_total) / item.quantity))
-                                    : '—'}
+                    {order.items.map(item => {
+                        const product = item.product_id ? products[item.product_id] : null;
+                        const hasAccess = order.status === 'completed';
+
+                        return (
+                            <div key={item.order_item_id} className="border-b border-white/[0.04]">
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-6 py-4 items-center">
+                                    <div className="md:col-span-6">
+                                        <div className="text-white text-sm font-medium">{item.order_item_name}</div>
+                                        {/* Display Custom Meta (e.g. Telegram Username) */}
+                                        {item.meta && Object.entries(item.meta).length > 0 && (
+                                            <div className="mt-1 flex flex-wrap gap-2">
+                                                {Object.entries(item.meta).map(([key, value]) => (
+                                                    <span key={key} className="text-[10px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">
+                                                        {key}: {value}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="md:col-span-2 text-center text-gray-400 text-sm">{item.quantity || 1}</div>
+                                    <div className="md:col-span-2 text-right text-gray-400 text-sm">
+                                        {item.quantity && item.line_total
+                                            ? formatPrice(String(parseFloat(item.line_total) / item.quantity))
+                                            : '—'}
+                                    </div>
+                                    <div className="md:col-span-2 text-right text-white font-semibold text-sm">{formatPrice(item.line_total)}</div>
+                                </div>
+
+                                {/* Access Links (Only if completed) */}
+                                {hasAccess && product && (product.signal_link || product.telegram_link || product.vip_group) && (
+                                    <div className="px-6 pb-4 flex flex-wrap gap-3">
+                                        {product.telegram_link && (
+                                            <a
+                                                href={product.telegram_link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/20"
+                                            >
+                                                <Send className="w-3.5 h-3.5" /> Join Telegram Group
+                                            </a>
+                                        )}
+                                        {product.signal_link && (
+                                            <a
+                                                href={product.signal_link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
+                                            >
+                                                <ExternalLink className="w-3.5 h-3.5" /> Access Signals
+                                            </a>
+                                        )}
+                                        {product.vip_group && (
+                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">
+                                                VIP Group: {product.vip_group}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                            <div className="md:col-span-2 text-right text-white font-semibold text-sm">{formatPrice(item.line_total)}</div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
                     {/* Footer */}
                     <div className="px-6 py-4 flex justify-end">

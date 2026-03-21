@@ -198,6 +198,16 @@ export default function OrderDetailsPage() {
                                                 <div className="flex flex-col">
                                                     <span className="text-white font-medium">{item.order_item_name}</span>
                                                     <span className="text-xs text-gray-500">Product ID: {item.product_id || item.order_id}</span>
+                                                    {/* Custom Meta (e.g. Telegram) */}
+                                                    {item.meta && Object.entries(item.meta).length > 0 && (
+                                                        <div className="mt-1 flex flex-wrap gap-1.5">
+                                                            {Object.entries(item.meta).map(([key, value]) => (
+                                                                <span key={key} className="text-[10px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">
+                                                                    {key}: {value}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="p-4 text-center">

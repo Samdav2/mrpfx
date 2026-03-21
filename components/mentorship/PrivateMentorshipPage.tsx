@@ -1,12 +1,96 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getPrivateMentorshipSettings } from '@/app/actions/private-mentorship-settings';
+import { productsService } from '@/lib/products';
+import { cartService } from '@/lib/cart';
+import { WCProductFullRead, WCProductVariationRead } from '@/lib/types';
+import { Loader2 } from 'lucide-react';
 
 const PrivateMentorshipPage = () => {
-    const [selectedClass, setSelectedClass] = useState('Class A (10 Days)');
+    const router = useRouter();
+    const [selectedClassName, setSelectedClassName] = useState('Class A (10 Days)');
     const [telegramUsername, setTelegramUsername] = useState('');
+    const [product, setProduct] = useState<WCProductFullRead | null>(null);
+    const [selectedVariation, setSelectedVariation] = useState<WCProductVariationRead | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [addingToCart, setAddingToCart] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const settings = await getPrivateMentorshipSettings();
+                const slug = settings?.productSlug || 'private-mentorship';
+                const productData = await productsService.getProductBySlug(slug);
+                if (productData) {
+                    const fullProduct = await productsService.getProductFull(productData.id);
+                    setProduct(fullProduct);
+
+                    // User said: first variation is Class B, second is Class A
+                    const classB = fullProduct.variations[0];
+                    const classA = fullProduct.variations[1];
+
+                    if (classA) {
+                        setSelectedVariation(classA);
+                        setSelectedClassName('Class A (10 Days)');
+                    } else if (classB) {
+                        setSelectedVariation(classB);
+                        setSelectedClassName('Class B (10 Days)');
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch private mentorship data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleClassChange = (className: string) => {
+        setSelectedClassName(className);
+        if (product?.variations) {
+            // Map by index based on user instructions: 0 is B, 1 is A
+            if (className.includes('Class B') && product.variations[0]) {
+                setSelectedVariation(product.variations[0]);
+            } else if (className.includes('Class A') && product.variations[1]) {
+                setSelectedVariation(product.variations[1]);
+            } else if (product.variations[0]) {
+                setSelectedVariation(product.variations[0]);
+            }
+        }
+    };
+
+    const handleAddToCart = async () => {
+        if (!product || !selectedVariation) return;
+        setAddingToCart(true);
+        try {
+            await cartService.addToCart(product.id, 1, selectedVariation.id, {
+                'Telegram Username': telegramUsername
+            });
+            router.push('/checkout');
+        } catch (error) {
+            console.error('Failed to add to cart:', error);
+            // Fallback to manual checkout with params if needed
+            router.push(`/checkout?product=${product.slug}&variation=${selectedVariation.id}&telegram=${telegramUsername}`);
+        } finally {
+            setAddingToCart(false);
+        }
+    };
+
+    const displayPrice = selectedVariation?.price || product?.price || '1,999.00';
+    const regularPrice = selectedVariation?.regular_price || product?.regular_price || '8,999.00';
+    const hasSale = selectedVariation?.sale_price || product?.sale_price;
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#f8f9fe]">
+                <Loader2 className="w-8 h-8 animate-spin text-[#0052cc]" />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-[#f8f9fe] min-h-screen font-dm-sans pb-24">
@@ -132,7 +216,10 @@ const PrivateMentorshipPage = () => {
 
                         <div className="space-y-4 mb-10">
                             {/* Class B Box */}
-                            <div className="bg-white border rounded-[20px] p-5 flex items-center gap-4 shadow-sm border-gray-200 cursor-pointer hover:border-[#0052cc] transition-colors relative">
+                            <div
+                                onClick={() => handleClassChange('Class B (10 Days)')}
+                                className={`border rounded-[20px] p-5 flex items-center gap-4 shadow-sm cursor-pointer transition-colors relative ${selectedClassName.includes('Class B') ? 'bg-blue-50 border-[#0052cc]' : 'bg-white border-gray-200 hover:border-[#0052cc]'}`}
+                            >
                                 <div className="w-12 h-12 bg-[#0052cc] rounded-xl flex items-center justify-center text-white shrink-0">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
                                 </div>
@@ -140,11 +227,14 @@ const PrivateMentorshipPage = () => {
                                     <h4 className="font-bold text-[#1a1a1a] text-lg">Class B – 10 Days</h4>
                                     <p className="text-gray-600 text-sm">Real Deep Secrets of Retail Trading</p>
                                 </div>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                {selectedClassName.includes('Class B') && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
                             </div>
 
                             {/* Class A Box */}
-                            <div className="bg-[#fcf8e3] border rounded-[20px] p-5 flex items-center gap-4 shadow-sm border-[#e6d080] cursor-pointer hover:bg-[#faebb3] transition-colors relative">
+                            <div
+                                onClick={() => handleClassChange('Class A (10 Days)')}
+                                className={`border rounded-[20px] p-5 flex items-center gap-4 shadow-sm cursor-pointer transition-colors relative ${selectedClassName.includes('Class A') ? 'bg-[#fcf8e3] border-[#e6d080] shadow-[0_0_15px_rgba(230,208,128,0.3)]' : 'bg-white border-gray-200 hover:border-[#e6d080]'}`}
+                            >
                                 <div className="w-12 h-12 bg-[#b38b1e] rounded-xl flex items-center justify-center text-white shrink-0">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                                 </div>
@@ -152,6 +242,7 @@ const PrivateMentorshipPage = () => {
                                     <h4 className="font-bold text-[#b38b1e] text-lg">Class A – 10 Days</h4>
                                     <p className="text-[#8c6d18] text-sm">Institutions & Banks Pattern (Advanced)</p>
                                 </div>
+                                {selectedClassName.includes('Class A') && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b38b1e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}
                             </div>
                         </div>
 
@@ -190,8 +281,8 @@ const PrivateMentorshipPage = () => {
                             <h4 className="text-[17px] font-bold text-[#1a1a1a] mb-2">Investment for 10 Days</h4>
                             <div className="w-12 h-1 bg-[#0052cc] mb-6 rounded-full"></div>
 
-                            <div className="text-2xl text-gray-400 line-through font-medium tracking-tight mb-1">$8,999.00</div>
-                            <div className="text-[52px] font-black text-[#0052cc] tracking-tight mb-8 leading-none">$1,999.00</div>
+                            <div className="text-2xl text-gray-400 line-through font-medium tracking-tight mb-1">${Number(regularPrice).toLocaleString()}</div>
+                            <div className="text-[52px] font-black text-[#0052cc] tracking-tight mb-8 leading-none">${Number(displayPrice).toLocaleString()}</div>
 
                             <ul className="space-y-3 w-full mb-8">
                                 <li className="flex items-center gap-3 text-[15px] font-medium text-[#1a1a1a] bg-[#f8f9fe] p-3 rounded-lg">
@@ -212,15 +303,14 @@ const PrivateMentorshipPage = () => {
                                 </li>
                             </ul>
 
-                            <Link
-                                href="https://wa.me/2349076804442"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full bg-[#0052cc] hover:bg-[#0047b3] text-white font-bold text-lg py-4 rounded-[14px] transition-all flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(0,82,204,0.3)] mb-4"
+                            <button
+                                onClick={handleAddToCart}
+                                disabled={addingToCart}
+                                className="w-full bg-[#0052cc] hover:bg-[#0047b3] text-white font-bold text-lg py-4 rounded-[14px] transition-all flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(0,82,204,0.3)] mb-4 disabled:opacity-50"
                             >
-                                Apply For Mentorship
+                                {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Apply For Mentorship'}
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            </Link>
+                            </button>
 
                             <div className="flex items-center gap-2 text-sm text-[#e6a800] font-medium bg-[#fcf8e3] py-2 px-4 rounded-full">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -265,12 +355,20 @@ const PrivateMentorshipPage = () => {
                     <div className="flex flex-col sm:flex-row w-full gap-3 flex-1">
                         <div className="relative flex-1 md:max-w-[200px]">
                             <select
-                                value={selectedClass}
-                                onChange={(e) => setSelectedClass(e.target.value)}
+                                value={selectedClassName}
+                                onChange={(e) => handleClassChange(e.target.value)}
                                 className="w-full appearance-none bg-white border border-gray-300 rounded-xl py-3 pl-4 pr-10 text-[15px] font-medium text-[#1a1a1a] focus:outline-none focus:border-[#0052cc] focus:ring-1 focus:ring-[#0052cc] shadow-sm"
                             >
-                                <option value="Class A (10 Days)">Class A (10 Days)</option>
-                                <option value="Class B (10 Days)">Class B (10 Days)</option>
+                                {product?.variations.map(v => (
+                                    <option key={v.id} value={v.attributes?.[0]?.option || ''}>
+                                        {v.attributes?.[0]?.option || v.sku}
+                                    </option>
+                                )) || (
+                                        <>
+                                            <option value="Class A (10 Days)">Class A (10 Days)</option>
+                                            <option value="Class B (10 Days)">Class B (10 Days)</option>
+                                        </>
+                                    )}
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -291,15 +389,14 @@ const PrivateMentorshipPage = () => {
                             )}
                         </div>
 
-                        <Link
-                            href="https://wa.me/2349076804442"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-[#0052cc] hover:bg-[#0047b3] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 whitespace-nowrap"
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={addingToCart}
+                            className="bg-[#0052cc] hover:bg-[#0047b3] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50"
                         >
-                            Apply Now
+                            {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Apply Now'}
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>

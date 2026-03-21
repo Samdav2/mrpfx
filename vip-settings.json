@@ -1,13 +1,15 @@
 {
-    "plans": {
-        "oneMonth": {
-            "paymentLink": ""
-        },
-        "twelveMonths": {
-            "paymentLink": ""
-        },
-        "unlimited": {
-            "paymentLink": ""
-        }
+  "plans": {
+    "oneMonth": {
+      "paymentLink": "https://propfirmaol.com"
+    },
+    "twelveMonths": {
+      "paymentLink": "https://propfirmaol.com"
+    },
+    "unlimited": {
+      "paymentLink": "https://propfirmaol.com"
     }
+  },
+  "registrationOpenDate": "2026-03-10T13:23:00.000Z",
+  "groupPageLink": ""
 }

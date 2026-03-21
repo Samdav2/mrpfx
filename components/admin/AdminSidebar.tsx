@@ -29,7 +29,10 @@ import {
     Bot,
     Book,
     Youtube,
-    Trophy
+    Trophy,
+    Briefcase,
+    Mail,
+    Shield
 } from 'lucide-react';
 import { authService, User } from '@/lib/auth';
 import { ConfirmModal } from '@/components/admin/Modals';
@@ -76,6 +79,8 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Users', href: '/admin/users', icon: Users },
                 { name: 'Orders', href: '/admin/orders', icon: OrdersIcon },
                 { name: 'Prop Firm', href: '/admin/prop-firm', icon: Trophy },
+                { name: 'Account Mgmt', href: '/admin/account-management', icon: Briefcase },
+                { name: 'Copy Trading', href: '/admin/copy-trading', icon: Zap },
                 { name: 'Reports', href: '/admin/reports', icon: BarChart2 },
                 { name: 'Courses', href: '/admin/courses', icon: BookOpen },
                 { name: 'Products', href: '/admin/products', icon: ShoppingBag },
@@ -89,6 +94,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Members', href: '/admin/members', icon: Users },
                 { name: 'Shortlinks', href: '/admin/links', icon: Zap },
                 { name: 'Settings', href: '/admin/settings', icon: Settings },
+                { name: 'Security', href: '/admin/settings/security', icon: Shield },
             ]
         },
         {

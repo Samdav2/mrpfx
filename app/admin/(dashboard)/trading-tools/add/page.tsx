@@ -27,12 +27,18 @@ export default function AddTradingToolPage() {
         download_url: '',
         purchase_url: '',
         status: 'publish',
-        price: '',
+        price: '0',
         image_url: '',
     });
 
     const handleChange = (field: keyof DynamicTradingToolCreate, value: any) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormData(prev => {
+            const newData = { ...prev, [field]: value };
+            if (field === 'category' && value === 'free') {
+                newData.price = '0';
+            }
+            return newData;
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -186,10 +192,11 @@ export default function AddTradingToolPage() {
                                 <label className="text-sm font-medium text-gray-400">Price (optional)</label>
                                 <input
                                     type="text"
-                                    className="w-full bg-gray-800 text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600"
+                                    className="w-full bg-gray-800 text-white text-sm rounded-lg px-4 py-2.5 outline-none focus:ring-1 focus:ring-purple-500 border border-transparent placeholder-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     placeholder="e.g. 49.99"
                                     value={formData.price}
                                     onChange={(e) => handleChange('price', e.target.value)}
+                                    disabled={formData.category === 'free'}
                                 />
                             </div>
                         </div>

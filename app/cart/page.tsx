@@ -39,14 +39,14 @@ export default function CartPage() {
 
     useEffect(() => { fetchCart(); }, []);
 
-    const updateQty = async (productId: number, newQty: number) => {
+    const updateQty = async (productId: number, newQty: number, variationId?: number) => {
         setUpdating(productId);
         try {
             if (newQty <= 0) {
-                const updated = await cartService.removeFromCart(productId);
+                const updated = await cartService.removeFromCart(productId, variationId);
                 setCart(updated);
             } else {
-                const updated = await cartService.updateCartItem(productId, newQty);
+                const updated = await cartService.updateCartItem(productId, newQty, variationId);
                 setCart(updated);
             }
         } catch (err) {
@@ -56,10 +56,10 @@ export default function CartPage() {
         }
     };
 
-    const removeItem = async (productId: number) => {
+    const removeItem = async (productId: number, variationId?: number) => {
         setUpdating(productId);
         try {
-            const updated = await cartService.removeFromCart(productId);
+            const updated = await cartService.removeFromCart(productId, variationId);
             setCart(updated);
         } catch (err) {
             console.error('Failed to remove item', err);
@@ -193,7 +193,7 @@ export default function CartPage() {
                                     {/* Quantity */}
                                     <div className="flex items-center gap-2">
                                         <button
-                                            onClick={() => updateQty(item.product_id, item.quantity - 1)}
+                                            onClick={() => updateQty(item.product_id, item.quantity - 1, item.variation_id ?? undefined)}
                                             disabled={updating === item.product_id}
                                             className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-400 transition-all disabled:opacity-30"
                                         >
@@ -207,7 +207,7 @@ export default function CartPage() {
                                             )}
                                         </span>
                                         <button
-                                            onClick={() => updateQty(item.product_id, item.quantity + 1)}
+                                            onClick={() => updateQty(item.product_id, item.quantity + 1, item.variation_id ?? undefined)}
                                             disabled={updating === item.product_id}
                                             className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-400 transition-all disabled:opacity-30"
                                         >
@@ -222,7 +222,7 @@ export default function CartPage() {
 
                                     {/* Remove */}
                                     <button
-                                        onClick={() => removeItem(item.product_id)}
+                                        onClick={() => removeItem(item.product_id, item.variation_id ?? undefined)}
                                         disabled={updating === item.product_id}
                                         className="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center text-red-400 transition-all disabled:opacity-30"
                                     >

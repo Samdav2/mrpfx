@@ -15,6 +15,7 @@ export interface PropFirmRegistration {
     propfirm_rules: string;
     whatsapp_no: string;
     telegram_username: string;
+    payment_method?: string;
 }
 
 export interface PropFirmRegistrationResponse {
@@ -32,6 +33,7 @@ export interface PropFirmRegistrationData extends PropFirmRegistration {
     order_id: string;
     status: string;
     payment_status: string;
+    payment_method: string;
     created_at: string;
     updated_at: string;
 }

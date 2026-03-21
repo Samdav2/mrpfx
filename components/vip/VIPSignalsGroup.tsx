@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import Image from 'next/image';
 import NewsletterSection from '../shared/NewsletterSection';
-import { Check, X } from 'lucide-react';
+import { Check, X, Lock } from 'lucide-react';
 import { signalsService } from '@/lib/signals';
 import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
 import { Signal, TradingVideo, WCProductRead } from '@/lib/types';
@@ -13,6 +13,9 @@ import { useState, useEffect } from 'react';
 import { getMediaUrl } from '@/lib/utils';
 import VIPPlanModal from './VIPPlanModal';
 import { getVIPSettings } from '@/app/actions/vip-settings';
+import { useRouter } from 'next/navigation';
+import { cartService } from '@/lib/cart';
+import { Loader2 } from 'lucide-react';
 
 
 const FALLBACK_VIDEOS: TradingVideo[] = [
@@ -33,45 +36,7 @@ const FALLBACK_VIDEOS: TradingVideo[] = [
     }
 ];
 
-const FALLBACK_SIGNALS: Signal[] = [
-    {
-        id: 1,
-        title: 'Gold Signal',
-        status: 'publish',
-        instrument: 'GOLD (XAUUSD)',
-        type: 'buy',
-        entry: '2335',
-        sl: '2331',
-        tp1: '2355',
-        tp2: '2375',
-        date: new Date().toISOString(),
-        signal_type: 'vip'
-    },
-    {
-        id: 2,
-        title: 'Euro Signal',
-        status: 'publish',
-        instrument: 'EUR/USD',
-        type: 'buy',
-        entry: '1.07800',
-        sl: '1.07300',
-        tp1: '1.08110',
-        date: new Date().toISOString(),
-        signal_type: 'vip'
-    },
-    {
-        id: 3,
-        title: 'Nasdaq Signal',
-        status: 'publish',
-        instrument: 'US100 (NASDAQ)',
-        type: 'buy',
-        entry: '24874.71',
-        sl: '',
-        tp1: '25313.46',
-        date: new Date().toISOString(),
-        signal_type: 'vip'
-    }
-];
+// Removed FALLBACK_SIGNALS
 
 const VIPSignalsGroup = () => {
     const { data: youtubeVideos } = useDataWithFallback(
@@ -82,7 +47,7 @@ const VIPSignalsGroup = () => {
 
     const { data: signals } = useDataWithFallback(
         signalsService.getSignals,
-        FALLBACK_SIGNALS,
+        [],
         'vip',
         3
     );
@@ -94,6 +59,12 @@ const VIPSignalsGroup = () => {
         twelveMonths: string;
         unlimited: string;
     }>({ oneMonth: '', twelveMonths: '', unlimited: '' });
+    const [registrationOpenDate, setRegistrationOpenDate] = useState<string | null>(null);
+    const [groupPageLink, setGroupPageLink] = useState<string>('');
+    const [isLocked, setIsLocked] = useState(false);
+    const [unlockDate, setUnlockDate] = useState<string | null>(null);
+    const [addingToCart, setAddingToCart] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchVipProduct = async () => {
@@ -112,6 +83,23 @@ const VIPSignalsGroup = () => {
                     twelveMonths: settings.plans.twelveMonths.paymentLink,
                     unlimited: settings.plans.unlimited.paymentLink,
                 });
+                setRegistrationOpenDate(settings.registrationOpenDate);
+                setGroupPageLink(settings.groupPageLink);
+
+                if (settings.registrationOpenDate) {
+                    const target = new Date(settings.registrationOpenDate).getTime();
+                    const now = new Date().getTime();
+                    if (target > now) {
+                        setIsLocked(true);
+                        setUnlockDate(new Date(settings.registrationOpenDate).toLocaleString(undefined, {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }));
+                    }
+                }
             } catch (error) {
                 console.error('Failed to fetch VIP settings:', error);
             }
@@ -120,7 +108,31 @@ const VIPSignalsGroup = () => {
         fetchVipSettings();
     }, []);
 
-    const vipPrice = vipProduct?.price ? `$${vipProduct.price}` : '$39';
+    const handleAddToCart = async () => {
+        // If groupPageLink is an external URL (starts with http), navigate directly
+        if (groupPageLink.startsWith('http')) {
+            window.location.href = groupPageLink;
+            return;
+        }
+
+        // Otherwise treat as product slug
+        const slug = groupPageLink || 'vip-membership';
+        setAddingToCart(true);
+        try {
+            const product = await productsService.getProductBySlug(slug);
+            await cartService.addToCart(product.id, 1);
+            router.push('/checkout');
+        } catch (error) {
+            console.error('Failed to add VIP to cart:', error);
+            router.push(`/checkout?product=${slug}`);
+        } finally {
+            setAddingToCart(false);
+        }
+    };
+
+    const displayPrice = vipProduct?.price || '39';
+    const regularPrice = vipProduct?.regular_price || '59';
+    const hasSale = vipProduct?.sale_price && vipProduct.sale_price !== vipProduct.regular_price;
 
     const CheckIcon = () => (
         <svg className="w-4 h-4 text-[#eab308] mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -131,6 +143,35 @@ const VIPSignalsGroup = () => {
     const CrossIcon = () => (
         <X className="w-5 h-5 text-[#ef4444] mr-2 mt-0.5 flex-shrink-0" strokeWidth={3} />
     );
+
+    if (isLocked) {
+        return (
+            <div className="min-h-screen bg-[#e6e9f5] text-black font-dm-sans flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+                    <Image
+                        src="/images/vip-bg-city.jpg"
+                        alt="City Background"
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+                <div className="relative z-10 flex flex-col items-center max-w-2xl bg-white/40 backdrop-blur-md p-8 sm:p-12 rounded-[2rem] border border-white/50 shadow-xl">
+                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-sm">
+                        <Lock className="w-10 h-10 text-[#d4af37]" />
+                    </div>
+                    <h1 className="text-3xl sm:text-5xl font-black text-[#1e293b] mb-4 uppercase tracking-tighter">Registration Closed</h1>
+                    <p className="text-lg sm:text-xl text-gray-600 mb-8 font-medium">
+                        VIP Signals Group registration is currently closed. The next registration window will open on <strong className="text-[#1e293b]">{unlockDate}</strong>.
+                    </p>
+                    <Link href="/">
+                        <button className="px-10 py-4 bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black rounded shadow-lg transition-all uppercase tracking-widest hover:scale-105">
+                            Return Home
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     const getSignalIcon = (instrument: string) => {
         if (instrument.includes('GOLD')) return '🪙';
@@ -183,14 +224,27 @@ const VIPSignalsGroup = () => {
                                 </p>
 
                                 <div className="flex flex-col items-start">
-                                    <button
-                                        onClick={() => setIsModalOpen(true)}
-                                        className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-[11px] sm:text-lg md:text-2xl uppercase tracking-tighter px-4 sm:px-10 py-3 sm:py-5 rounded shadow-[0_8px_20px_rgba(184,134,11,0.4)] hover:shadow-[0_12px_30px_rgba(184,134,11,0.6)] hover:-translate-y-0.5 transition-all duration-300 border border-[#b8860b]/30"
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2 sm:gap-4">
-                                            JOIN VIP SIGNALS NOW <span className="text-xl sm:text-4xl leading-none">&raquo;</span>
-                                        </span>
-                                    </button>
+                                    {groupPageLink ? (
+                                        <Link
+                                            href={groupPageLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-[11px] sm:text-lg md:text-2xl uppercase tracking-tighter px-4 sm:px-10 py-3 sm:py-5 rounded shadow-[0_8px_20px_rgba(184,134,11,0.4)] hover:shadow-[0_12px_30px_rgba(184,134,11,0.6)] hover:-translate-y-0.5 transition-all duration-300 border border-[#b8860b]/30"
+                                        >
+                                            <span className="relative z-10 flex items-center gap-2 sm:gap-4">
+                                                JOIN VIP SIGNALS NOW <span className="text-xl sm:text-4xl leading-none">&raquo;</span>
+                                            </span>
+                                        </Link>
+                                    ) : (
+                                        <button
+                                            onClick={() => setIsModalOpen(true)}
+                                            className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-[11px] sm:text-lg md:text-2xl uppercase tracking-tighter px-4 sm:px-10 py-3 sm:py-5 rounded shadow-[0_8px_20px_rgba(184,134,11,0.4)] hover:shadow-[0_12px_30px_rgba(184,134,11,0.6)] hover:-translate-y-0.5 transition-all duration-300 border border-[#b8860b]/30"
+                                        >
+                                            <span className="relative z-10 flex items-center gap-2 sm:gap-4">
+                                                JOIN VIP SIGNALS NOW <span className="text-xl sm:text-4xl leading-none">&raquo;</span>
+                                            </span>
+                                        </button>
+                                    )}
                                     <p className="text-[10px] sm:text-sm text-[#64748b] mt-3 font-bold tracking-wide">Instant access after payment.</p>
                                 </div>
 
@@ -218,18 +272,24 @@ const VIPSignalsGroup = () => {
 
                                         {/* App Content */}
                                         <div className="flex-1 overflow-y-auto p-1.5 sm:p-4 space-y-2 sm:space-y-5 bg-gradient-to-b from-[#334155]/10 to-[#1e293b]/20 hide-scrollbar pb-3 sm:pb-6">
-                                            {signals.map((signal, index) => (
-                                                <div key={signal.id} className="bg-white/95 backdrop-blur rounded-lg sm:rounded-2xl p-2 sm:p-5 shadow-sm border border-gray-200">
-                                                    <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[8px] sm:text-[15px] mb-1 sm:mb-4 truncate">
-                                                        <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
-                                                    </div>
-                                                    <ul className="space-y-1 sm:space-y-2 text-[7px] sm:text-[13px] text-gray-800 font-bold">
-                                                        <li className="flex items-center gap-1"><CheckIcon /> Entry: {signal.entry}</li>
-                                                        <li className="flex items-center gap-1"><CheckIcon /> SL: {signal.sl}</li>
-                                                        <li className="flex items-center gap-1"><CheckIcon /> TP1: {signal.tp1}</li>
-                                                    </ul>
+                                            {signals.length === 0 ? (
+                                                <div className="bg-white/95 backdrop-blur rounded-lg sm:rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 text-center flex flex-col items-center justify-center min-h-[100px] gap-2">
+                                                    <span className="text-[10px] sm:text-[13px] font-bold text-gray-400">Files will be uploaded soon.</span>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                signals.map((signal, index) => (
+                                                    <div key={signal.id} className="bg-white/95 backdrop-blur rounded-lg sm:rounded-2xl p-2 sm:p-5 shadow-sm border border-gray-200">
+                                                        <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[8px] sm:text-[15px] mb-1 sm:mb-4 truncate">
+                                                            <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                                        </div>
+                                                        <ul className="space-y-1 sm:space-y-2 text-[7px] sm:text-[13px] text-gray-800 font-bold">
+                                                            <li className="flex items-center gap-1"><CheckIcon /> Entry: {signal.entry}</li>
+                                                            <li className="flex items-center gap-1"><CheckIcon /> SL: {signal.sl}</li>
+                                                            <li className="flex items-center gap-1"><CheckIcon /> TP1: {signal.tp1}</li>
+                                                        </ul>
+                                                    </div>
+                                                ))
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -280,17 +340,23 @@ const VIPSignalsGroup = () => {
                                     </div>
                                     {/* Card Content */}
                                     <div className="divide-y divide-gray-100">
-                                        {signals.slice(0, 2).map((signal, index) => (
-                                            <div key={signal.id} className="p-2 sm:p-8 hover:bg-slate-50/50 transition-colors">
-                                                <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[10px] sm:text-xl mb-1 sm:mb-4">
-                                                    <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument.split(' ')[0]} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
-                                                </div>
-                                                <ul className="grid grid-cols-1 gap-y-1 sm:gap-y-3">
-                                                    <li className="flex items-center text-[#4b5563] font-bold text-[8px] sm:text-base"><CheckIcon /> Entry: {signal.entry}</li>
-                                                    <li className="flex items-center text-[#4b5563] font-bold text-[8px] sm:text-base"><CheckIcon /> TP 1: {signal.tp1}</li>
-                                                </ul>
+                                        {signals.length === 0 ? (
+                                            <div className="p-8 text-center bg-gray-50/50">
+                                                <span className="text-sm font-bold text-gray-400">Files will be uploaded soon.</span>
                                             </div>
-                                        ))}
+                                        ) : (
+                                            signals.slice(0, 2).map((signal, index) => (
+                                                <div key={signal.id} className="p-2 sm:p-8 hover:bg-slate-50/50 transition-colors">
+                                                    <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[10px] sm:text-xl mb-1 sm:mb-4">
+                                                        <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument.split(' ')[0]} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                                    </div>
+                                                    <ul className="grid grid-cols-1 gap-y-1 sm:gap-y-3">
+                                                        <li className="flex items-center text-[#4b5563] font-bold text-[8px] sm:text-base"><CheckIcon /> Entry: {signal.entry}</li>
+                                                        <li className="flex items-center text-[#4b5563] font-bold text-[8px] sm:text-base"><CheckIcon /> TP 1: {signal.tp1}</li>
+                                                    </ul>
+                                                </div>
+                                            ))
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -349,14 +415,27 @@ const VIPSignalsGroup = () => {
 
                     {/* Bottom CTA */}
                     <div className="mt-16 flex flex-col items-center text-center">
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-lg md:text-2xl uppercase tracking-widest px-10 md:px-16 py-5 rounded-md shadow-[0_15px_40px_rgba(184,134,11,0.3)] hover:shadow-[0_20px_50px_rgba(184,134,11,0.5)] transition-all duration-300 border-2 border-[#b8860b]/30 mb-12"
-                        >
-                            <span className="relative z-10 flex items-center gap-3">
-                                JOIN VIP SIGNALS NOW <span className="text-3xl leading-none">&raquo;</span>
-                            </span>
-                        </button>
+                        {groupPageLink ? (
+                            <Link
+                                href={groupPageLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-lg md:text-2xl uppercase tracking-widest px-10 md:px-16 py-5 rounded-md shadow-[0_15px_40px_rgba(184,134,11,0.3)] hover:shadow-[0_20px_50px_rgba(184,134,11,0.5)] transition-all duration-300 border-2 border-[#b8860b]/30 mb-12"
+                            >
+                                <span className="relative z-10 flex items-center gap-3">
+                                    JOIN VIP SIGNALS NOW <span className="text-3xl leading-none">&raquo;</span>
+                                </span>
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="relative group inline-flex items-center justify-center bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] text-[#1e293b] font-black text-lg md:text-2xl uppercase tracking-widest px-10 md:px-16 py-5 rounded-md shadow-[0_15px_40px_rgba(184,134,11,0.3)] hover:shadow-[0_20px_50px_rgba(184,134,11,0.5)] transition-all duration-300 border-2 border-[#b8860b]/30 mb-12"
+                            >
+                                <span className="relative z-10 flex items-center gap-3">
+                                    JOIN VIP SIGNALS NOW <span className="text-3xl leading-none">&raquo;</span>
+                                </span>
+                            </button>
+                        )}
 
 
                         <div className="max-w-4xl p-8 bg-white/40 border border-white/60 rounded-2xl backdrop-blur-sm">

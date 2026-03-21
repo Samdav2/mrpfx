@@ -1,14 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { authService } from '@/lib/auth';
 
 const ForgotPasswordPage = () => {
+    const searchParams = useSearchParams();
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (searchParams.get('reason') === 'forced_reset') {
+            setError('Security Policy Update: For your protection, a password reset is required before you can log in.');
+        }
+    }, [searchParams]);
 
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();

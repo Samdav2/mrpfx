@@ -25,7 +25,12 @@ const LoginPage = () => {
             });
             router.push('/dashboard'); // Redirect to dashboard after login
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            const errorDetail = err.response?.data?.detail;
+            if (errorDetail === 'PASSWORD_RESET_REQUIRED') {
+                router.push('/forgot-password?reason=forced_reset');
+            } else {
+                setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            }
         } finally {
             setLoading(false);
         }

@@ -23,15 +23,28 @@ import {
     TrendingUp,
     Star,
     Eye,
-    X
+    X,
+    Send
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { authService } from '@/lib/auth';
 import { learnpressService } from '@/lib/learnpress';
 import { ordersService } from '@/lib/orders';
 import { postsService } from '@/lib/content';
 import { propFirmService, type PropFirmRegistrationData } from '@/services/prop-firm.service';
-import type { UserResponse, LPUserItem, WCOrder, WCUserOrderSummary, WPPostRead } from '@/lib/types';
+import { tradersService } from '@/lib/traders';
+import type {
+    UserResponse,
+    LPUserItem,
+    WCOrder,
+    WCUserOrderSummary,
+    WPPostRead,
+    AccountManagementData,
+    CopyTradingData,
+    WCProductRead
+} from '@/lib/types';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { ShieldCheck, Briefcase as BriefcaseIcon, Lock as LockIcon, Server as ServerIcon, Zap } from 'lucide-react';
 
 // ─── Skeleton Loader ──────────────────────────────────────────
 const Skeleton = ({ className = '' }: { className?: string }) => (
@@ -135,6 +148,177 @@ const RegistrationDetailsModal = ({ registration, onClose }: { registration: Pro
     );
 };
 
+// Modal for viewing account management connection details
+const ConnectionDetailsModal = ({ connection, onClose }: { connection: AccountManagementData; onClose: () => void }) => {
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-[#111827] border border-white/[0.08] rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-blue-500"></div>
+                <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                    <h3 className="text-white font-bold flex items-center gap-2">
+                        <BriefcaseIcon className="w-5 h-5 text-blue-400" />
+                        Account Connection Details
+                    </h3>
+                    <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                <div className="p-6 space-y-5">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Broker</p>
+                            <p className="text-sm text-white font-semibold">{connection.broker}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Account ID</p>
+                            <p className="text-sm text-blue-400 font-mono font-bold">{connection.account_id}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Server</p>
+                            <p className="text-sm text-white font-semibold">{connection.server}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Capital</p>
+                            <p className="text-sm text-white font-semibold">${connection.capital.toLocaleString()}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Assignee</p>
+                            <p className="text-sm text-white font-semibold">{connection.manager}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Date Connected</p>
+                            <p className="text-sm text-white font-semibold">{new Date(connection.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/[0.06] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Current Status</span>
+                            <StatusBadge status={connection.status} />
+                        </div>
+                    </div>
+
+                    <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-3 flex gap-3">
+                        <ShieldCheck className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                        <p className="text-[11px] text-gray-400 leading-relaxed text-left">
+                            Your credentials are encrypted and stored securely. Only authorized managers can access trading functions.
+                        </p>
+                    </div>
+                </div>
+                <div className="p-4 bg-white/[0.02] border-t border-white/[0.06]">
+                    <button
+                        onClick={onClose}
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Modal for viewing copy trading connection details
+const CopyTradingDetailsModal = ({ connection, onClose }: { connection: CopyTradingData; onClose: () => void }) => {
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-[#111827] border border-white/[0.08] rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                    <h3 className="text-white font-bold flex items-center gap-2">
+                        <Zap className="w-5 h-5 text-indigo-400" />
+                        Copy Trading Details
+                    </h3>
+                    <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                <div className="p-6 space-y-5">
+                    <div className="grid grid-cols-2 gap-4 text-left">
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Account ID</p>
+                            <p className="text-sm text-blue-400 font-mono font-bold">{connection.account_id}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Server</p>
+                            <p className="text-sm text-white font-semibold">{connection.server}</p>
+                        </div>
+                        <div className="space-y-1 col-span-2">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Date Connected</p>
+                            <p className="text-sm text-white font-semibold">{new Date(connection.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/[0.06] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Current Status</span>
+                            <StatusBadge status={connection.status} />
+                        </div>
+                    </div>
+
+                    <div className="bg-indigo-500/5 border border-indigo-500/10 rounded-xl p-3 flex gap-3">
+                        <ShieldCheck className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
+                        <p className="text-[11px] text-gray-400 leading-relaxed text-left">
+                            Trades will be copied automatically from the master account. Ensure your MT5 account is always online or provided to our server.
+                        </p>
+                    </div>
+                </div>
+                <div className="p-4 bg-white/[0.02] border-t border-white/[0.06]">
+                    <button
+                        onClick={onClose}
+                        className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ─── Digital Assets Section ──────────────────────────────────
+const DigitalAssetsSection = ({ assets }: { assets: WCProductRead[] }) => {
+    if (assets.length === 0) return null;
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-amber-400" />
+                    Digital Assets & Signals
+                </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {assets.map((asset) => (
+                    <div key={asset.id} className="bg-[#111827]/50 backdrop-blur-md border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] transition-all group relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/[0.03] rounded-full -mr-12 -mt-12 blur-2xl group-hover:bg-blue-500/[0.08] transition-all" />
+                        <h3 className="text-white font-bold mb-3 truncate relative z-10">{asset.name}</h3>
+                        <div className="flex flex-wrap gap-2 relative z-10">
+                            {asset.telegram_link && (
+                                <a href={asset.telegram_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-[11px] font-bold rounded-lg border border-sky-500/20 transition-all active:scale-95">
+                                    <Send className="w-3.5 h-3.5" />
+                                    Telegram Group
+                                </a>
+                            )}
+                            {asset.signal_link && (
+                                <a href={asset.signal_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-bold rounded-lg border border-amber-500/20 transition-all active:scale-95">
+                                    <TrendingUp className="w-3.5 h-3.5" />
+                                    Signals
+                                </a>
+                            )}
+                            {asset.vip_group && (
+                                <a href={asset.vip_group} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 text-[11px] font-bold rounded-lg border border-purple-500/20 transition-all active:scale-95">
+                                    <Star className="w-3.5 h-3.5" />
+                                    VIP Group
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 // ─── Main Dashboard ───────────────────────────────────────────
 export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
@@ -145,23 +329,45 @@ export default function DashboardPage() {
     const [recentPosts, setRecentPosts] = useState<WPPostRead[]>([]);
     const [registrations, setRegistrations] = useState<PropFirmRegistrationData[]>([]);
     const [selectedRegistration, setSelectedRegistration] = useState<PropFirmRegistrationData | null>(null);
+    const [accountConnections, setAccountConnections] = useState<AccountManagementData[]>([]);
+    const [selectedConnection, setSelectedConnection] = useState<AccountManagementData | null>(null);
+    const [copyTradingConnections, setCopyTradingConnections] = useState<CopyTradingData[]>([]);
+    const [selectedCopyTrading, setSelectedCopyTrading] = useState<CopyTradingData | null>(null);
+    const [digitalAssets, setDigitalAssets] = useState<WCProductRead[]>([]);
+    const router = useRouter();
 
     const fetchAll = useCallback(async () => {
         setLoading(true);
-        const [userRes, coursesRes, summaryRes, ordersRes, postsRes, propFirmRes] = await Promise.allSettled([
+        const [
+            userRes,
+            coursesRes,
+            summaryRes,
+            ordersRes,
+            postsRes,
+            propFirmRes,
+            accountConnectionsRes,
+            copyTradingRes,
+            digitalAssetsRes
+        ] = await Promise.allSettled([
             authService.getCurrentUser(),
             learnpressService.getMyCourses(),
             ordersService.getMyOrderSummary(),
             ordersService.getMyOrders(0, 5),
             postsService.getPosts('publish', 4, 0),
             propFirmService.getRegistrations(10, 0),
+            tradersService.getMyConnections(),
+            tradersService.getMyCopyTradingConnections(),
+            ordersService.getMyDigitalAssets(),
         ]);
-        if (userRes.status === 'fulfilled') setUser(userRes.value);
-        if (coursesRes.status === 'fulfilled') setCourses(Array.isArray(coursesRes.value) ? coursesRes.value : []);
-        if (summaryRes.status === 'fulfilled') setOrderSummary(summaryRes.value);
-        if (ordersRes.status === 'fulfilled') setRecentOrders(Array.isArray(ordersRes.value) ? ordersRes.value : []);
-        if (postsRes.status === 'fulfilled') setRecentPosts(Array.isArray(postsRes.value) ? postsRes.value : []);
-        if (propFirmRes.status === 'fulfilled') setRegistrations(propFirmRes.value.data || []);
+        if (userRes.status === 'fulfilled') setUser(userRes.value as UserResponse);
+        if (coursesRes.status === 'fulfilled') setCourses(Array.isArray(coursesRes.value) ? coursesRes.value as LPUserItem[] : []);
+        if (summaryRes.status === 'fulfilled') setOrderSummary(summaryRes.value as WCUserOrderSummary);
+        if (ordersRes.status === 'fulfilled') setRecentOrders(Array.isArray(ordersRes.value) ? ordersRes.value as WCOrder[] : []);
+        if (postsRes.status === 'fulfilled') setRecentPosts(Array.isArray(postsRes.value) ? postsRes.value as WPPostRead[] : []);
+        if (propFirmRes.status === 'fulfilled') setRegistrations((propFirmRes.value as any).data || []);
+        if (accountConnectionsRes.status === 'fulfilled') setAccountConnections((accountConnectionsRes.value as any).data || []);
+        if (copyTradingRes.status === 'fulfilled') setCopyTradingConnections((copyTradingRes.value as any).data || []);
+        if (digitalAssetsRes.status === 'fulfilled') setDigitalAssets(Array.isArray(digitalAssetsRes.value) ? digitalAssetsRes.value : []);
         setLoading(false);
     }, []);
 
@@ -287,6 +493,11 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
+                {/* ──── DIGITAL ASSETS ──── */}
+                <DigitalAssetsSection assets={digitalAssets} />
+
+                {/* ──── COURSE PROGRESS + RECENT ORDERS ──── */}
+
                 {/* ──── COURSE PROGRESS + RECENT ORDERS ──── */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* My Courses */}
@@ -401,11 +612,15 @@ export default function DashboardPage() {
                                             </td>
                                         </tr>
                                     ) : recentOrders.map((order, i) => (
-                                        <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
-                                            <td className="px-5 py-3 text-white font-medium">#{order.id}</td>
+                                        <tr
+                                            key={i}
+                                            className="border-b border-white/[0.03] hover:bg-white/[0.05] transition-colors cursor-pointer group"
+                                            onClick={() => router.push(`/my-orders/${order.id}`)}
+                                        >
+                                            <td className="px-5 py-3 text-white font-medium group-hover:text-blue-400">#{order.id}</td>
                                             <td className="px-5 py-3"><StatusBadge status={order.status || 'unknown'} /></td>
                                             <td className="px-5 py-3 text-right text-gray-300 font-medium">{formatCurrency(order.total_amount || '0')}</td>
-                                            <td className="px-5 py-3 text-right text-gray-500 text-xs hidden sm:table-cell">
+                                            <td className="px-5 py-3 text-right text-gray-500 text-xs hidden sm:table-cell group-hover:text-gray-300">
                                                 {order.date_created_gmt ? new Date(order.date_created_gmt).toLocaleDateString() : '-'}
                                             </td>
                                         </tr>
@@ -548,6 +763,93 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
+                {/* ──── ACCOUNT MANAGEMENT SECTION ──── */}
+                <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden mt-6 shadow-xl shadow-black/40">
+                    <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center ring-1 ring-blue-500/20 shadow-lg shadow-blue-500/10">
+                                <BriefcaseIcon className="w-5 h-5 text-blue-400" />
+                            </div>
+                            <div>
+                                <h3 className="text-white font-bold text-sm tracking-tight">Account Management Connections</h3>
+                                <p className="text-[11px] text-gray-500">Track your connected MT5 accounts</p>
+                            </div>
+                        </div>
+                        <Link href="/account-management" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-all hover:gap-2">
+                            Connect New Account <ArrowRight className="w-3 h-3" />
+                        </Link>
+                    </div>
+                    <div className="overflow-x-auto custom-scrollbar max-h-[250px]">
+                        <table className="w-full text-left">
+                            <thead className="sticky top-0 bg-[#0f172a] z-10 shadow-sm">
+                                <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/[0.04]">
+                                    <th className="px-5 py-4 font-bold">MT5 ID / Broker</th>
+                                    <th className="px-5 py-4 font-bold">Assignee</th>
+                                    <th className="px-5 py-4 font-bold">Capital</th>
+                                    <th className="px-5 py-4 font-bold">Status</th>
+                                    <th className="px-5 py-4 font-bold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-sm">
+                                {loading ? (
+                                    Array.from({ length: 2 }).map((_, i) => (
+                                        <tr key={i}><td colSpan={5} className="px-5 py-5 border-b border-white/[0.02]"><Skeleton className="h-4 w-full" /></td></tr>
+                                    ))
+                                ) : accountConnections.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="px-5 py-12 text-center bg-white/[0.01]">
+                                            <div className="flex flex-col items-center">
+                                                <div className="w-12 h-12 bg-gray-800/40 rounded-2xl flex items-center justify-center mb-4 border border-white/5">
+                                                    <LockIcon className="w-6 h-6 text-gray-600" />
+                                                </div>
+                                                <p className="text-sm text-gray-400 font-medium">No active connections</p>
+                                                <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Connect your MT5 account to start managed trading.</p>
+                                                <Link href="/account-management" className="mt-4 px-4 py-2 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-xs font-bold rounded-lg border border-blue-600/20 transition-all">
+                                                    Get Started
+                                                </Link>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    accountConnections.map((conn) => (
+                                        <tr key={conn.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                                            <td className="px-5 py-5">
+                                                <p className="text-white font-bold text-xs group-hover:text-blue-400 transition-colors uppercase tracking-tight">{conn.account_id}</p>
+                                                <p className="text-[10px] text-gray-500 mt-1 font-medium">{conn.broker}</p>
+                                            </td>
+                                            <td className="px-5 py-5 text-[11px] text-gray-400 font-semibold italic">
+                                                {conn.manager}
+                                            </td>
+                                            <td className="px-5 py-5 text-xs text-white font-bold tracking-tight">
+                                                ${conn.capital.toLocaleString()}
+                                            </td>
+                                            <td className="px-5 py-5">
+                                                <StatusBadge status={conn.status} />
+                                            </td>
+                                            <td className="px-5 py-5 text-right">
+                                                <button
+                                                    onClick={() => setSelectedConnection(conn)}
+                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] text-[11px] text-gray-400 hover:text-white rounded-md border border-white/[0.05] transition-all font-bold"
+                                                >
+                                                    <Eye className="w-3.5 h-3.5" />
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* ──── COPY TRADING SECTION ──── */}
+                <CopyTradingSection
+                    loading={loading}
+                    connections={copyTradingConnections}
+                    onView={setSelectedCopyTrading}
+                />
+
                 {/* ──── RECENT BLOG POSTS ──── */}
                 <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
@@ -651,13 +953,115 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Registration Details Modal */}
+            {selectedConnection && (
+                <ConnectionDetailsModal
+                    connection={selectedConnection as AccountManagementData}
+                    onClose={() => setSelectedConnection(null)}
+                />
+            )}
+            {selectedCopyTrading && (
+                <CopyTradingDetailsModal
+                    connection={selectedCopyTrading as CopyTradingData}
+                    onClose={() => setSelectedCopyTrading(null)}
+                />
+            )}
             {selectedRegistration && (
                 <RegistrationDetailsModal
-                    registration={selectedRegistration}
+                    registration={selectedRegistration as PropFirmRegistrationData}
                     onClose={() => setSelectedRegistration(null)}
                 />
             )}
         </div>
     );
 }
+
+// Separate Component for Copy Trading Section
+const CopyTradingSection = ({
+    loading,
+    connections,
+    onView
+}: {
+    loading: boolean;
+    connections: CopyTradingData[];
+    onView: (c: CopyTradingData) => void
+}) => {
+    return (
+        <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden mt-6 shadow-xl shadow-black/40">
+            <div className="flex items-center justify-between p-5 border-b border-white/[0.06]">
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-indigo-500/10 rounded-lg flex items-center justify-center ring-1 ring-indigo-500/20 shadow-lg shadow-indigo-500/10">
+                        <Zap className="w-5 h-5 text-indigo-400" />
+                    </div>
+                    <div>
+                        <h3 className="text-white font-bold text-sm tracking-tight">Copy Trading Connections</h3>
+                        <p className="text-[11px] text-gray-500">Track your trade copying activity</p>
+                    </div>
+                </div>
+                <Link href="/copy-trading" className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-all hover:gap-2">
+                    Manage / Connect <ArrowRight className="w-3 h-3" />
+                </Link>
+            </div>
+            <div className="overflow-x-auto custom-scrollbar max-h-[250px]">
+                <table className="w-full text-left">
+                    <thead className="sticky top-0 bg-[#0f172a] z-10 shadow-sm">
+                        <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/[0.04]">
+                            <th className="px-5 py-4 font-bold">Account ID</th>
+                            <th className="px-5 py-4 font-bold">Server</th>
+                            <th className="px-5 py-4 font-bold">Connected On</th>
+                            <th className="px-5 py-4 font-bold">Status</th>
+                            <th className="px-5 py-4 font-bold text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-sm">
+                        {loading ? (
+                            Array.from({ length: 2 }).map((_, i) => (
+                                <tr key={i}><td colSpan={5} className="px-5 py-5 border-b border-white/[0.02]"><Skeleton className="h-4 w-full" /></td></tr>
+                            ))
+                        ) : connections.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} className="px-5 py-12 text-center bg-white/[0.01]">
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-12 h-12 bg-gray-800/40 rounded-2xl flex items-center justify-center mb-4 border border-white/5">
+                                            <Zap className="w-6 h-6 text-gray-600" />
+                                        </div>
+                                        <p className="text-sm text-gray-400 font-medium">No active connections</p>
+                                        <p className="text-xs text-gray-500 mt-1 max-w-[200px]">Connect your account to start copying trades.</p>
+                                        <Link href="/copy-trading" className="mt-4 px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 text-xs font-bold rounded-lg border border-indigo-600/20 transition-all">
+                                            Connect Now
+                                        </Link>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                            connections.map((conn) => (
+                                <tr key={conn.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group">
+                                    <td className="px-5 py-5">
+                                        <p className="text-white font-bold text-xs group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{conn.account_id}</p>
+                                    </td>
+                                    <td className="px-5 py-5 text-[11px] text-gray-400 font-semibold">
+                                        {conn.server}
+                                    </td>
+                                    <td className="px-5 py-5 text-xs text-white">
+                                        {new Date(conn.created_at).toLocaleDateString()}
+                                    </td>
+                                    <td className="px-5 py-5">
+                                        <StatusBadge status={conn.status} />
+                                    </td>
+                                    <td className="px-5 py-5 text-right">
+                                        <button
+                                            onClick={() => onView(conn)}
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] text-[11px] text-gray-400 hover:text-white rounded-md border border-white/[0.05] transition-all font-bold"
+                                        >
+                                            <Eye className="w-3.5 h-3.5" />
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};

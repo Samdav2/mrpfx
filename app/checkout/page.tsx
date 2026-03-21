@@ -94,14 +94,19 @@ function CheckoutPageContent() {
                 });
             }
 
+            const finalPaymentMethod = cart?.total === 0 ? 'free' : paymentMethod;
+            const finalPaymentMethodTitle = cart?.total === 0 ? 'Free Checkout' : (
+                paymentMethod === 'whop' ? 'Whop Checkout' :
+                    paymentMethod === 'seller' ? 'Seller Payment' :
+                        paymentMethod === 'crypto' ? 'Pay with Crypto' : 'Bank Transfer'
+            );
+
             const request = checkoutService.buildCheckoutRequest(
                 billing,
-                paymentMethod,
+                finalPaymentMethod,
                 {
                     customerNote: customerNote || undefined,
-                    paymentMethodTitle: paymentMethod === 'whop' ? 'Whop Checkout' :
-                        paymentMethod === 'seller' ? 'Seller Payment' :
-                            paymentMethod === 'crypto' ? 'Pay with Crypto' : 'Bank Transfer',
+                    paymentMethodTitle: finalPaymentMethodTitle,
                     customFields: Object.keys(aggregatedCustomFields).length > 0 ? aggregatedCustomFields : undefined
                 }
             );
@@ -109,6 +114,13 @@ function CheckoutPageContent() {
 
             console.log('Checkout response:', response);
             console.log('Payment method:', paymentMethod);
+
+            // Handle free orders (total 0)
+            if (cart?.total === 0) {
+                console.log('Free order detected, completing checkout');
+                router.push(`/my-orders/${response.order_id}`);
+                return;
+            }
 
             // Handle crypto payment method - show modal for user to select currency
             if (paymentMethod === 'crypto') {
@@ -335,40 +347,51 @@ function CheckoutPageContent() {
                             </div>
                         </div>
 
-                        {/* Payment Method */}
-                        <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6">
-                            <h3 className="text-white font-semibold text-sm flex items-center gap-2 mb-5">
-                                <CreditCard className="w-4 h-4 text-amber-400" /> Payment Method
-                            </h3>
-                            <div className="space-y-3">
-                                {[
-                                    { id: 'whop', label: 'Whop Checkout', icon: ExternalLink, badge: 'Direct', badgeColor: 'bg-orange-500/20 text-orange-400' },
-                                    { id: 'seller', label: 'Seller Payment', icon: ExternalLink, badge: 'External', badgeColor: 'bg-cyan-500/20 text-cyan-400' },
-                                    { id: 'crypto', label: 'Pay with Crypto', icon: CreditCard, badge: 'NOWPayments', badgeColor: 'bg-purple-500/20 text-purple-400' },
-                                    { id: 'bank', label: 'Bank Transfer', icon: CreditCard, badge: 'Nigerians Only', badgeColor: 'bg-emerald-500/20 text-emerald-400' },
-                                ].map(method => (
-                                    <button
-                                        key={method.id}
-                                        onClick={() => setPaymentMethod(method.id)}
-                                        className={`w-full flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${paymentMethod === method.id
-                                            ? 'bg-purple-500/10 border-purple-500/30'
-                                            : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]'
-                                            }`}
-                                    >
-                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${paymentMethod === method.id ? 'border-purple-400 bg-purple-500' : 'border-gray-600'
-                                            }`}>
-                                            {paymentMethod === method.id && <div className="w-2 h-2 bg-white rounded-full" />}
-                                        </div>
-                                        <method.icon className={`w-4 h-4 ${paymentMethod === method.id ? 'text-white' : 'text-gray-500'}`} />
-                                        <span className="text-white text-sm font-medium">{method.label}</span>
-                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${method.badgeColor}`}>
-                                            {method.badge}
-                                        </span>
-                                    </button>
-                                ))}
+                        {/* Payment Method - Only show if total > 0 */}
+                        {cart?.total && cart.total > 0 ? (
+                            <div className="bg-[#111827]/80 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6">
+                                <h3 className="text-white font-semibold text-sm flex items-center gap-2 mb-5">
+                                    <CreditCard className="w-4 h-4 text-amber-400" /> Payment Method
+                                </h3>
+                                <div className="space-y-3">
+                                    {[
+                                        { id: 'whop', label: 'Whop Checkout', icon: ExternalLink, badge: 'Direct', badgeColor: 'bg-orange-500/20 text-orange-400' },
+                                        { id: 'seller', label: 'Seller Payment', icon: ExternalLink, badge: 'External', badgeColor: 'bg-cyan-500/20 text-cyan-400' },
+                                        { id: 'crypto', label: 'Pay with Crypto', icon: CreditCard, badge: 'NOWPayments', badgeColor: 'bg-purple-500/20 text-purple-400' },
+                                        // { id: 'bank', label: 'Bank Transfer', icon: CreditCard, badge: 'Nigerians Only', badgeColor: 'bg-emerald-500/20 text-emerald-400' },
+                                    ].map(method => (
+                                        <button
+                                            key={method.id}
+                                            onClick={() => setPaymentMethod(method.id)}
+                                            className={`w-full flex items-center gap-3 p-4 rounded-xl border text-left transition-all ${paymentMethod === method.id
+                                                ? 'bg-purple-500/10 border-purple-500/30'
+                                                : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]'
+                                                }`}
+                                        >
+                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${paymentMethod === method.id ? 'border-purple-400 bg-purple-500' : 'border-gray-600'
+                                                }`}>
+                                                {paymentMethod === method.id && <div className="w-2 h-2 bg-white rounded-full" />}
+                                            </div>
+                                            <method.icon className={`w-4 h-4 ${paymentMethod === method.id ? 'text-white' : 'text-gray-500'}`} />
+                                            <span className="text-white text-sm font-medium">{method.label}</span>
+                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${method.badgeColor}`}>
+                                                {method.badge}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-
-                        </div>
+                        ) : (
+                            <div className="bg-emerald-500/5 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-6 flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
+                                    <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-bold text-base">Free Order</h3>
+                                    <p className="text-emerald-400/70 text-sm">No payment required for this item.</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right: Order Summary */}
@@ -436,7 +459,7 @@ function CheckoutPageContent() {
                                 {submitting ? (
                                     <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
                                 ) : (
-                                    <><CheckCircle2 className="w-4 h-4" /> Place Order</>
+                                    <>{cart?.total === 0 ? <CheckCircle2 className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />} {cart?.total === 0 ? 'Complete Free Order' : 'Place Order'}</>
                                 )}
                             </button>
                         </div>

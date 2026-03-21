@@ -120,7 +120,7 @@ const FreeTradingBotsPage = () => {
                         </div>
                     ) : bots.length === 0 ? (
                         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
-                            <p className="text-slate-500">No free bots available at the moment. Check back later!</p>
+                            <p className="text-slate-500 text-lg font-medium">Files will be uploaded soon.</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">

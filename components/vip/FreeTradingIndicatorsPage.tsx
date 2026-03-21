@@ -8,73 +8,11 @@ import { tradingToolsService } from '@/lib/trading-tools';
 import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
 import { TradingTool } from '@/lib/types';
 
-const FALLBACK_INDICATORS: any[] = [
-    {
-        id: 3001,
-        title: "Support & Resistance",
-        description: "MT4 / MT5 Compatible Support & Resistance Indicator",
-        features: ["MT4 / MT5 Compatible", "Buy/Sell Signals", "Trend & Reversal Zones"],
-        image_url: "/assets/free-indicators/support-resistance.png",
-        category: "Forex & Indices Signals",
-        type: 'indicator',
-        is_free: true
-    },
-    {
-        id: 3002,
-        title: "Gold Detector",
-        description: "MT4 / MT5 Compatible Gold Detector Indicator",
-        features: ["MT4 / MT5 Compatible", "VWAP Zones", "Dynamic Support & Resistance"],
-        image_url: "/assets/free-indicators/gold-detector.png",
-        category: "Forex & Indices Signals",
-        type: 'indicator',
-        is_free: true
-    },
-    {
-        id: 3003,
-        title: "Advanced Trend",
-        description: "MT4 / MT5 Compatible Advanced Trend Indicator",
-        features: ["MT4 / MT5 Compatible", "Simple Buy/Sell Signals", "Precise Entry Signals"],
-        image_url: "/assets/indicators/chart-tablet.png",
-        category: "Forex & Indices Signals",
-        type: 'indicator',
-        is_free: true
-    },
-    {
-        id: 3004,
-        title: "Precision Entry",
-        description: "MT4 / MT5 Compatible Precision Entry Indicator",
-        features: ["MT4 / MT5 Compatible", "Trend & Momentum Bot", "Strategy & Suggestions"],
-        image_url: "/assets/free-indicators/precision-entry.png",
-        category: "Trend & Entry Indicators",
-        type: 'indicator',
-        is_free: true
-    },
-    {
-        id: 3005,
-        title: "Premium Oscillator",
-        description: "MT4 / MT5 Compatible Premium Oscillator Indicator",
-        features: ["MT4 / MT5 Compatible", "Scalping Zones", "Precise Entry Signals"],
-        image_url: "/assets/indicators/chart-tablet.png",
-        category: "Trend & Entry Indicators",
-        type: 'indicator',
-        is_free: true
-    },
-    {
-        id: 3006,
-        title: "Scalping Detector",
-        description: "MT4 / MT5 Compatible Scalping Detector Indicator",
-        features: ["MT4 / MT5 Compatible", "SMC Order Blocks", "Breakers & Liquidity Zones"],
-        image_url: "/assets/indicators/scalper-robot.png",
-        category: "Trend & Entry Indicators",
-        type: 'indicator',
-        is_free: true
-    }
-];
-
+// Removed FALLBACK_INDICATORS
 const FreeTradingIndicatorsPage = () => {
-    const { data: indicators } = useDataWithFallback(
+    const { data: indicators, isLoading } = useDataWithFallback(
         tradingToolsService.getTools,
-        FALLBACK_INDICATORS,
+        [],
         'indicator',
         'free',
         20
@@ -159,27 +97,39 @@ const FreeTradingIndicatorsPage = () => {
             {/* Main Content Grid */}
             <section className="py-24 bg-slate-50 relative">
                 <div className="max-w-[1280px] mx-auto px-6">
-                    {categories.map((category, catIndex) => (
-                        <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
-                            {/* Category Header */}
-                            <div className="flex items-center gap-6 mb-12">
-                                <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight">
-                                    {category.title}
-                                </h2>
-                                <div className="h-px w-full bg-slate-200 shadow-sm" />
-                            </div>
-
-                            {/* Indicators Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-                                {category.indicators.map((indicator: any, indIndex: number) => (
-                                    <FreeIndicatorCard
-                                        key={indIndex}
-                                        {...indicator}
-                                    />
-                                ))}
-                            </div>
+                    {isLoading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {[1, 2, 3].map((_, i) => (
+                                <div key={i} className="bg-slate-200 animate-pulse rounded-2xl h-[400px]"></div>
+                            ))}
                         </div>
-                    ))}
+                    ) : categories.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                            <p className="text-slate-500 font-medium text-lg">Files will be uploaded soon.</p>
+                        </div>
+                    ) : (
+                        categories.map((category, catIndex) => (
+                            <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
+                                {/* Category Header */}
+                                <div className="flex items-center gap-6 mb-12">
+                                    <h2 className="text-2xl md:text-3xl font-black text-slate-800 whitespace-nowrap tracking-tight">
+                                        {category.title}
+                                    </h2>
+                                    <div className="h-px w-full bg-slate-200 shadow-sm" />
+                                </div>
+
+                                {/* Indicators Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                                    {category.indicators.map((indicator: any, indIndex: number) => (
+                                        <FreeIndicatorCard
+                                            key={indIndex}
+                                            {...indicator}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </section>
 

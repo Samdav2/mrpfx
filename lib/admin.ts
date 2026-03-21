@@ -39,6 +39,21 @@ export interface AdminCourse {
     price: string;
 }
 
+export interface EmailTemplate {
+    id: string;
+    name: string;
+    subject: string;
+    body: string;
+}
+
+export interface SendEmailPayload {
+    targetOption: 'all' | 'specific';
+    userIds: number[];
+    templateId: string;
+    subject: string;
+    message: string;
+}
+
 export const adminService = {
     // Users
     getUsers: async (page = 1, per_page = 10) => {
@@ -150,5 +165,25 @@ export const adminService = {
             console.error('Failed to fetch dashboard stats:', error);
             return { users: 0, orders: 0, courses: 0, members: 0 };
         }
+    },
+
+    // Email Marketing
+    getTemplates: async () => {
+        try {
+            const response = await api.get<EmailTemplate[]>('/admin/marketing/templates');
+            return response.data;
+        } catch (error) {
+            console.warn('Using mock email templates', error);
+            return [
+                { id: 'welcome', name: 'Welcome Email', subject: 'Welcome to MRPFX', body: '<p>Welcome to our platform!</p>' },
+                { id: 'promo', name: 'Promotional Offer', subject: 'Special Offer Just For You', body: '<p>Here is a special promo for you.</p>' },
+                { id: 'update', name: 'System Update', subject: 'Important System Update', body: '<p>Please note that we have updated our system.</p>' }
+            ] as EmailTemplate[];
+        }
+    },
+
+    sendEmail: async (payload: SendEmailPayload) => {
+        const response = await api.post('/admin/marketing/send-email', payload);
+        return response.data;
     }
 };

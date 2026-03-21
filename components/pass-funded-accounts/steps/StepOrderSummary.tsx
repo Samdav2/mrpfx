@@ -48,16 +48,22 @@ export function StepOrderSummary({ data, onNext, onBack }: Props) {
                         <div className="text-slate-500">Subtotal</div>
                         <div className="text-slate-900">${data.price.toLocaleString()}</div>
                     </div>
+                    {data.discountPercentage !== undefined && data.discountPercentage > 0 && (
+                        <div className="flex justify-between items-center text-sm font-medium text-emerald-600 bg-emerald-50/50 p-2 -mx-2 rounded-lg">
+                            <div>Discount ({data.discountPercentage}%)</div>
+                            <div>-${(data.price * (data.discountPercentage / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        </div>
+                    )}
                     {data.vatPercentage !== undefined && data.vatPercentage > 0 && (
                         <div className="flex justify-between items-center text-sm font-medium">
                             <div className="text-slate-500">VAT ({data.vatPercentage}%)</div>
-                            <div className="text-slate-900">${(data.price * data.vatPercentage / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            <div className="text-slate-900">${((data.price * (1 - (data.discountPercentage || 0) / 100)) * data.vatPercentage / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                         </div>
                     )}
                     <div className="flex justify-between items-end pt-5 border-t border-slate-200/60">
                         <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">Total to Pay</div>
                         <div className="text-4xl font-black text-slate-900 tracking-tighter">
-                            ${(data.price + (data.price * (data.vatPercentage || 0) / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ${((data.price * (1 - (data.discountPercentage || 0) / 100)) * (1 + (data.vatPercentage || 0) / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </div>
                     </div>
                 </div>

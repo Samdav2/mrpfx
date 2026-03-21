@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Check, Download } from 'lucide-react';
+import { Check, Download, ShoppingCart } from 'lucide-react';
 import { cartService } from '@/lib/cart';
 
 interface FreeRobotCardProps {
@@ -62,13 +62,17 @@ const FreeRobotCard = ({ id, name, description = "", features, imageSrc, downloa
                     ))}
                 </ul>
 
-                <div className="mt-auto">
+                <div className="flex items-center justify-between gap-4 mt-auto">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Price</span>
+                        <span className="text-lg md:text-2xl font-black text-emerald-600">FREE</span>
+                    </div>
                     <button
                         onClick={handleAddToCart}
-                        className="flex items-center justify-center gap-1.5 md:gap-2 w-full bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-white font-bold py-2 md:py-3.5 px-3 md:px-6 rounded-lg shadow-md transition-all duration-300 active:scale-95 text-[10px] md:text-lg uppercase"
+                        className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 bg-gradient-to-r from-[#1e293b] to-[#0f172a] hover:from-[#334155] hover:to-[#1e293b] text-white font-bold py-2.5 md:py-4 px-4 md:px-8 rounded-xl shadow-lg transition-all duration-300 active:scale-95 text-[10px] md:text-base uppercase tracking-tight"
                     >
-                        <Download className="w-3 h-3 md:w-5 md:h-5 stroke-[2.5]" />
-                        Download
+                        <ShoppingCart className="w-3.5 h-3.5 md:w-5 md:h-5 stroke-[2.5]" />
+                        Add to Cart
                     </button>
                 </div>
             </div>

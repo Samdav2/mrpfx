@@ -9,75 +9,19 @@ import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
 import { TradingTool } from '@/lib/types';
 import { getMediaUrl } from '@/lib/utils';
 
-const FALLBACK_PAID_BOOKS: any[] = [
-    {
-        id: 1001,
-        title: "FOREX TRADING",
-        description: "Proven Forex strategies & in-depth price actions.",
-        price: "$39",
-        is_free: false,
-        image_url: "/assets/forex-books/book-cover-1.png",
-        type: 'book'
-    },
-    {
-        id: 1002,
-        title: "TRADING PSYCHOLOGY",
-        description: "Master Your mindset for and profitable trading.",
-        price: "$39",
-        is_free: false,
-        image_url: "/assets/forex-books/book-cover-2.png",
-        type: 'book'
-    },
-    {
-        id: 1003,
-        title: "ADVANCED FOREX",
-        description: "Powerful Forex trading strategies for consistent gains.",
-        price: "$39",
-        is_free: false,
-        image_url: "/assets/forex-books/book-cover-3.png",
-        type: 'book'
-    }
-];
-
-const FALLBACK_FREE_BOOKS: any[] = [
-    {
-        id: 2001,
-        title: "TECHNICAL ANALYSIS",
-        description: "Master chart patterns, indicators, and price action.",
-        is_free: true,
-        image_url: "/assets/forex-books/book-cover-4.png",
-        type: 'book'
-    },
-    {
-        id: 2002,
-        title: "FOREX FUNDAMENTALS",
-        description: "Learn how economic news affects Forex markets.",
-        is_free: true,
-        image_url: "/assets/forex-books/book-cover-5.png",
-        type: 'book'
-    },
-    {
-        id: 2003,
-        title: "CANDLESTICK PATTERNS",
-        description: "Identify and trade candlestick chart patterns with confidence.",
-        is_free: true,
-        image_url: "/assets/forex-books/book-cover-6.png",
-        type: 'book'
-    }
-];
-
+// Removed FALLBACK_PAID_BOOKS and FALLBACK_FREE_BOOKS
 const ForexBooksPage = () => {
-    const { data: paidBooksSource } = useDataWithFallback(
+    const { data: paidBooksSource, isLoading: isLoadingPaid } = useDataWithFallback(
         tradingToolsService.getTools,
-        FALLBACK_PAID_BOOKS,
+        [],
         'book',
         'vip',
         3
     );
 
-    const { data: freeBooksSource } = useDataWithFallback(
+    const { data: freeBooksSource, isLoading: isLoadingFree } = useDataWithFallback(
         tradingToolsService.getTools,
-        FALLBACK_FREE_BOOKS,
+        [],
         'book',
         'free',
         3
@@ -146,9 +90,19 @@ const ForexBooksPage = () => {
                 <section className="py-20 md:py-24 relative bg-white border-t border-slate-100">
                     <div className="max-w-[1280px] mx-auto px-4 md:px-6">
                         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-10">
-                            {allBooks.map((book, i) => (
-                                <BookCard key={i} {...book} />
-                            ))}
+                            {(isLoadingPaid || isLoadingFree) ? (
+                                [1, 2, 3].map((_, i) => (
+                                    <div key={i} className="bg-slate-200 animate-pulse rounded-2xl h-[400px]"></div>
+                                ))
+                            ) : allBooks.length === 0 ? (
+                                <div className="col-span-full text-center py-20 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                                    <p className="text-slate-500 font-medium text-lg">Files will be uploaded soon.</p>
+                                </div>
+                            ) : (
+                                allBooks.map((book, i) => (
+                                    <BookCard key={i} {...book} />
+                                ))
+                            )}
                         </div>
                     </div>
                 </section>

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { authService, User } from '@/lib/auth';
+import PromoBanner from './PromoBanner';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -72,9 +73,10 @@ const Header = () => {
   };
 
   return (
-    <header id="masthead" className="sticky top-0 z-[9999] bg-white w-full">
+    <header id="masthead" className="sticky top-0 z-[9999] bg-white w-full shadow-sm">
+      <PromoBanner />
       {/* Desktop Header */}
-      <div className="hidden lg:flex items-center justify-between px-5 py-3 max-w-full mx-auto">
+      <div className="hidden lg:flex items-center justify-between px-5 py-3 max-w-full mx-auto border-b border-gray-100">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/">

@@ -1,9 +1,57 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getMentorshipSettings } from '@/app/actions/mentorship-settings';
+import { productsService } from '@/lib/products';
+import { cartService } from '@/lib/cart';
+import { WCProductRead } from '@/lib/types';
+import { Loader2 } from 'lucide-react';
 
 const MentorshipCourse = () => {
+  const router = useRouter();
+  const [productSlug, setProductSlug] = useState('standard-mentorship');
+  const [product, setProduct] = useState<WCProductRead | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [addingToCart, setAddingToCart] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const settings = await getMentorshipSettings();
+        const slug = settings?.productSlug || 'standard-mentorship';
+        setProductSlug(slug);
+
+        const productData = await productsService.getProductBySlug(slug);
+        setProduct(productData);
+      } catch (error) {
+        console.error('Failed to fetch mentorship data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    setAddingToCart(true);
+    try {
+      await cartService.addToCart(product.id, 1);
+      router.push('/checkout');
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      router.push(`/checkout?product=${productSlug}`);
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  // Pricing logic
+  const displayPrice = product?.sale_price || '499.99';
+  const regularPrice = product?.regular_price || '1,590';
+  const hasSale = product?.sale_price && product.sale_price !== product.regular_price;
   return (
     <div className="bg-white min-h-screen font-dm-sans overflow-x-hidden relative">
       {/* Background Image/Overlay */}
@@ -37,12 +85,13 @@ const MentorshipCourse = () => {
 
             {/* CTA Buttons - Mobile Flow */}
             <div className="flex flex-col gap-2 mb-4 w-full sm:w-max">
-              <Link
-                href="/checkout?product=standard-mentorship"
-                className="w-full sm:w-[340px] bg-[#1e4ced] hover:bg-[#1a41cc] text-white font-bold text-[15px] lg:text-[18px] py-3 lg:py-4 px-8 rounded-lg transition-all flex items-center justify-center shadow-[0_8px_25px_rgba(30,76,237,0.3)]"
+              <button
+                onClick={handleAddToCart}
+                disabled={addingToCart}
+                className="w-full sm:w-[340px] bg-[#1e4ced] hover:bg-[#1a41cc] text-white font-bold text-[15px] lg:text-[18px] py-3 lg:py-4 px-8 rounded-lg transition-all flex items-center justify-center shadow-[0_8px_25px_rgba(30,76,237,0.3)] disabled:opacity-70"
               >
-                Get Instant Access Now
-              </Link>
+                {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Get Instant Access Now'}
+              </button>
 
               <button className="w-full sm:w-[340px] flex items-center justify-center gap-2 text-[#2a2a2a] font-bold text-[14px] bg-white border border-gray-100 py-2.5 rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.03)] hover:bg-gray-50 transition-colors">
                 <div className="w-5 h-5 rounded-full bg-[#1e4ced] flex items-center justify-center text-white shrink-0">
@@ -99,8 +148,10 @@ const MentorshipCourse = () => {
               <p className="text-[11px] text-gray-500 font-medium mb-4">Immediate access to recorded sessions</p>
 
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[14px] text-red-500 line-through font-medium opacity-40">$1,590</span>
-                <span className="text-[32px] font-black text-[#1a4a38] leading-none">$499.99</span>
+                {hasSale && (
+                  <span className="text-[14px] text-red-500 line-through font-medium opacity-40">${regularPrice}</span>
+                )}
+                <span className="text-[32px] font-black text-[#1a4a38] leading-none">${displayPrice}</span>
               </div>
 
               {/* Features List with Checkmarks */}
@@ -133,12 +184,13 @@ const MentorshipCourse = () => {
                 </div>
               </div>
 
-              <Link
-                href="/checkout?product=standard-mentorship"
-                className="w-full bg-[#1e4ced] hover:bg-[#1a41cc] text-white font-bold text-[15px] py-3.5 rounded-xl transition-all flex items-center justify-center relative z-10 shadow-[0_8px_20px_rgba(30,76,237,0.2)]"
+              <button
+                onClick={handleAddToCart}
+                disabled={addingToCart}
+                className="w-full bg-[#1e4ced] hover:bg-[#1a41cc] text-white font-bold text-[15px] py-3.5 rounded-xl transition-all flex items-center justify-center relative z-10 shadow-[0_8px_20px_rgba(30,76,237,0.2)] disabled:opacity-70"
               >
-                Get Instant Access Now
-              </Link>
+                {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Get Instant Access Now'}
+              </button>
             </div>
 
             {/* Social Proof (Students and Reviews) */}

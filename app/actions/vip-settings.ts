@@ -13,6 +13,8 @@ export interface VIPPlanLinks {
 
 export interface VIPSettings {
     plans: VIPPlanLinks;
+    registrationOpenDate: string | null;
+    groupPageLink: string;
 }
 
 const DEFAULT_SETTINGS: VIPSettings = {
@@ -20,7 +22,9 @@ const DEFAULT_SETTINGS: VIPSettings = {
         oneMonth: { paymentLink: '' },
         twelveMonths: { paymentLink: '' },
         unlimited: { paymentLink: '' },
-    }
+    },
+    registrationOpenDate: null,
+    groupPageLink: '',
 };
 
 export async function getVIPSettings(): Promise<VIPSettings> {

@@ -8,6 +8,7 @@ import type {
     WCOrder,
     WCOrderFull,
     WCUserOrderSummary,
+    WCProductRead,
 } from './types';
 
 export type { WCOrder, WCOrderFull, WCUserOrderSummary };
@@ -32,6 +33,16 @@ export const ordersService = {
     getMyOrderSummary: async (): Promise<WCUserOrderSummary> => {
         const response = await api.get<WCUserOrderSummary>(
             '/wordpress/wc/my-orders/summary'
+        );
+        return response.data;
+    },
+
+    /**
+     * Get all purchased products with access links for the current user
+     */
+    getMyDigitalAssets: async (): Promise<WCProductRead[]> => {
+        const response = await api.get<WCProductRead[]>(
+            '/wordpress/wc/my-orders/digital-assets'
         );
         return response.data;
     },

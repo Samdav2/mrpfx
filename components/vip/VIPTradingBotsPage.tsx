@@ -9,90 +9,11 @@ import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
 import { TradingTool } from '@/lib/types';
 import { getMediaUrl } from '@/lib/utils';
 
-const FALLBACK_BOTS: any[] = [
-    {
-        id: 4001,
-        title: "MEGATRON X ROBOT",
-        price: "199",
-        description: "Automated Boom & Crash Trading System",
-        features: ["MT5 Compatible", "Fully Automated"],
-        image_url: "/assets/vip/robot-combat.png",
-        category: "Boom & Crash Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4002,
-        title: "BOOM CRASH MINER",
-        price: "199",
-        description: "Boom & Crash Automated Trading Bot",
-        features: ["MT5 Compatible", "24/7 Monitoring"],
-        image_url: "/assets/vip/robot-sleek.png",
-        category: "Boom & Crash Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4003,
-        title: "VIKING V75 BOT",
-        price: "199",
-        description: "Automated Volatility 75 Trading Bot",
-        features: ["MT5 Compatible", "Fully Automated"],
-        image_url: "/assets/vip/robot-astro.png",
-        category: "Volatility Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4004,
-        title: "CRYSTAL BEAST BOT",
-        price: "199",
-        description: "Automated Volatility 75 Trading Bot",
-        features: ["MT5 Compatible", "NASDAQ Included"],
-        image_url: "/assets/vip/robot-combat.png",
-        category: "Volatility Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4005,
-        title: "ASTRO X",
-        price: "199",
-        description: "AI Powered Auto Trading Bot",
-        features: ["MT5 Compatible", "Fully Automated", "Mobile & PC"],
-        image_url: "/assets/vip/robot-astro.png",
-        category: "AI Trading Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4006,
-        title: "ALISA G ROBOT",
-        price: "199",
-        description: "AI Forex & Boom / Crash Bot",
-        features: ["MT5 Compatible", "Fully Automated", "Gold Trading"],
-        image_url: "/assets/vip/robot-sleek.png",
-        category: "AI Trading Bots",
-        type: 'bot',
-        is_free: false
-    },
-    {
-        id: 4007,
-        title: "DERIV VISION ATTACKER",
-        price: "199",
-        description: "All-In-One Synthetic Index Bot",
-        features: ["MT5 Compatible", "Volatility Index"],
-        image_url: "/assets/vip/robot-combat.png",
-        category: "AI Trading Bots",
-        type: 'bot',
-        is_free: false
-    }
-];
-
+// Removed FALLBACK_BOTS
 const VIPTradingBotsPage = () => {
-    const { data: bots } = useDataWithFallback(
+    const { data: bots, isLoading } = useDataWithFallback(
         tradingToolsService.getTools,
-        FALLBACK_BOTS,
+        [],
         'bot',
         'vip',
         20
@@ -189,27 +110,39 @@ const VIPTradingBotsPage = () => {
             {/* Categories & Robots Section */}
             <section className="py-20 bg-[#f8fafc]">
                 <div className="max-w-[1280px] mx-auto px-6">
-                    {categories.map((category, catIndex) => (
-                        <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
-                            {/* Category Header */}
-                            <div className="flex items-center gap-4 mb-10">
-                                <h2 className="text-2xl md:text-3xl font-black text-[#0f172a] whitespace-nowrap">
-                                    {category.title}
-                                </h2>
-                                <div className="h-[2px] w-full bg-gradient-to-r from-blue-100 to-transparent" />
-                            </div>
-
-                            {/* Robots Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
-                                {category.robots.map((robot: any, robIndex: number) => (
-                                    <RobotCard
-                                        key={robIndex}
-                                        {...robot}
-                                    />
-                                ))}
-                            </div>
+                    {isLoading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                            {[1, 2, 3, 4].map((_, i) => (
+                                <div key={i} className="bg-slate-200 animate-pulse rounded-2xl h-[400px]"></div>
+                            ))}
                         </div>
-                    ))}
+                    ) : categories.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                            <p className="text-slate-500 font-medium text-lg">Files will be uploaded soon.</p>
+                        </div>
+                    ) : (
+                        categories.map((category, catIndex) => (
+                            <div key={catIndex} className={catIndex > 0 ? "mt-24" : ""}>
+                                {/* Category Header */}
+                                <div className="flex items-center gap-4 mb-10">
+                                    <h2 className="text-2xl md:text-3xl font-black text-[#0f172a] whitespace-nowrap">
+                                        {category.title}
+                                    </h2>
+                                    <div className="h-[2px] w-full bg-gradient-to-r from-blue-100 to-transparent" />
+                                </div>
+
+                                {/* Robots Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
+                                    {category.robots.map((robot: any, robIndex: number) => (
+                                        <RobotCard
+                                            key={robIndex}
+                                            {...robot}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </section>
 

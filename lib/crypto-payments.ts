@@ -35,7 +35,7 @@ export const cryptoPaymentsService = {
      */
     getMinAmount: async (from: string, to: string): Promise<{ min_amount: number }> => {
         const response = await api.get<{ min_amount: number }>('/crypto-payments/min-amount', {
-            params: { from, to }
+            params: { currency_from: from, currency_to: to }
         });
         return response.data;
     },
@@ -45,7 +45,7 @@ export const cryptoPaymentsService = {
      */
     getEstimate: async (amount: number, from: string, to: string): Promise<CryptoEstimate> => {
         const response = await api.get<CryptoEstimate>('/crypto-payments/estimate', {
-            params: { amount, from, to }
+            params: { amount, currency_from: from, currency_to: to }
         });
         return response.data;
     },
