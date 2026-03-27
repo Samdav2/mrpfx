@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Check, Download, ShoppingCart } from 'lucide-react';
 import { cartService } from '@/lib/cart';
+import { getMediaUrl } from '@/lib/utils';
 
 interface FreeRobotCardProps {
     id: number;
@@ -18,15 +19,17 @@ interface FreeRobotCardProps {
 const FreeRobotCard = ({ id, name, description = "", features, imageSrc, downloadUrl = "#", category = "Automated" }: FreeRobotCardProps) => {
     const router = useRouter();
 
-    const handleAddToCart = async () => {
+    const handleDownload = async () => {
+        if (downloadUrl && downloadUrl !== "#") {
+            window.open(downloadUrl, '_blank');
+            return;
+        }
+
         try {
             await cartService.addToCart(id, 1);
             router.push('/checkout');
         } catch (error) {
             console.error("Failed to add to cart:", error);
-            if (downloadUrl && downloadUrl !== "#") {
-                window.location.href = downloadUrl;
-            }
         }
     };
     return (
@@ -34,7 +37,7 @@ const FreeRobotCard = ({ id, name, description = "", features, imageSrc, downloa
             {/* Image Section */}
             <div className="relative aspect-square sm:aspect-[16/10] overflow-hidden bg-gradient-to-b from-[#f0fdf9] to-white">
                 <Image
-                    src={imageSrc}
+                    src={getMediaUrl(imageSrc) || "/assets/indicators/chart-tablet.png"}
                     alt={name}
                     fill
                     className="object-contain p-4 md:p-6 group-hover:scale-110 transition-transform duration-500"
@@ -68,11 +71,11 @@ const FreeRobotCard = ({ id, name, description = "", features, imageSrc, downloa
                         <span className="text-lg md:text-2xl font-black text-emerald-600">FREE</span>
                     </div>
                     <button
-                        onClick={handleAddToCart}
-                        className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 bg-gradient-to-r from-[#1e293b] to-[#0f172a] hover:from-[#334155] hover:to-[#1e293b] text-white font-bold py-2.5 md:py-4 px-4 md:px-8 rounded-xl shadow-lg transition-all duration-300 active:scale-95 text-[10px] md:text-base uppercase tracking-tight"
+                        onClick={handleDownload}
+                        className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 bg-gradient-to-r from-[#059669] to-[#10b981] hover:from-[#10b981] hover:to-[#34d399] text-white font-bold py-2.5 md:py-4 px-4 md:px-8 rounded-xl shadow-lg transition-all duration-300 active:scale-95 text-[10px] md:text-base uppercase tracking-tight"
                     >
-                        <ShoppingCart className="w-3.5 h-3.5 md:w-5 md:h-5 stroke-[2.5]" />
-                        Add to Cart
+                        <Download className="w-3.5 h-3.5 md:w-5 md:h-5 stroke-[2.5]" />
+                        Download
                     </button>
                 </div>
             </div>

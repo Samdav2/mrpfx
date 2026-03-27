@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { adminDynamicService } from '@/lib/admin-api';
 import { DynamicVideo } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
 
 const VideosPage = () => {
     const [videos, setVideos] = useState<DynamicVideo[]>([]);
@@ -72,7 +73,7 @@ const VideosPage = () => {
                             >
                                 <div className="relative aspect-video bg-gray-100 mb-4 overflow-hidden rounded-lg">
                                     <Image
-                                        src={video.thumbnail}
+                                        src={getMediaUrl(video.thumbnail) || ""}
                                         alt={video.title}
                                         fill
                                         style={{ objectFit: 'cover' }}

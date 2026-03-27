@@ -7,7 +7,7 @@ import { ArrowLeft, Save, Youtube, Trash2, Info, Image as ImageIcon } from 'luci
 import { adminDynamicService, DynamicVideo, WPMediaItem } from '@/lib/admin-api';
 import { SuccessModal, ConfirmModal, ErrorModal } from '@/components/admin/Modals';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
-import { getMediaUrl } from '@/lib/utils';
+import { getMediaUrl, relativizeMediaUrl } from '@/lib/utils';
 
 export default function EditVideoPage() {
     const router = useRouter();
@@ -78,7 +78,9 @@ export default function EditVideoPage() {
             const submitData = {
                 title: formData.title,
                 youtube_id: videoId,
-                image_url: featuredImage ? ((featuredImage as any).url || featuredImage.source_url) : ''
+                image_url: featuredImage
+                    ? relativizeMediaUrl((featuredImage as any).url || featuredImage.source_url)
+                    : ''
             };
             await adminDynamicService.updateVideo(videoId, submitData);
             setSuccessModal(true);

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { cartService } from '@/lib/cart';
+import { getMediaUrl } from '@/lib/utils';
 
 interface IndicatorCardProps {
     id: number;
@@ -35,7 +36,7 @@ const IndicatorCard = ({ id, name, price, description, features, imageSrc, produ
             {/* Image Section */}
             <div className="relative aspect-square sm:aspect-[16/10] overflow-hidden bg-gradient-to-b from-[#f0f9ff] to-white">
                 <Image
-                    src={imageSrc}
+                    src={getMediaUrl(imageSrc) || "/assets/indicators/chart-tablet.png"}
                     alt={name}
                     fill
                     className="object-contain p-4 md:p-6 group-hover:scale-110 transition-transform duration-500"

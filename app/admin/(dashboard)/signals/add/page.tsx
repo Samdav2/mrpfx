@@ -7,7 +7,7 @@ import { ArrowLeft, Save, Zap, Info, Image as ImageIcon } from 'lucide-react';
 import { adminDynamicService, DynamicSignalCreate, WPMediaItem } from '@/lib/admin-api';
 import { SuccessModal, ErrorModal } from '@/components/admin/Modals';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
-import { getMediaUrl } from '@/lib/utils';
+import { getMediaUrl, relativizeMediaUrl } from '@/lib/utils';
 
 export default function AddSignalPage() {
     const router = useRouter();
@@ -44,7 +44,9 @@ export default function AddSignalPage() {
         try {
             const submitData = {
                 ...formData,
-                image_url: featuredImage ? ((featuredImage as any).url || featuredImage.source_url) : formData.image_url
+                image_url: featuredImage
+                    ? relativizeMediaUrl((featuredImage as any).url || featuredImage.source_url)
+                    : relativizeMediaUrl(formData.image_url)
             };
             const newSignal = await adminDynamicService.createSignal(submitData);
             setCreatedId(newSignal.id);

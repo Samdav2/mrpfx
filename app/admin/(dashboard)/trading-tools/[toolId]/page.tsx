@@ -7,7 +7,7 @@ import { ArrowLeft, Save, Bot, Trash2, Info, Link as LinkIcon, Image as ImageIco
 import { adminDynamicService, DynamicTradingTool, WPMediaItem } from '@/lib/admin-api';
 import { SuccessModal, ConfirmModal, ErrorModal } from '@/components/admin/Modals';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
-import { getMediaUrl } from '@/lib/utils';
+import { getMediaUrl, relativizeMediaUrl } from '@/lib/utils';
 
 export default function EditTradingToolPage() {
     const router = useRouter();
@@ -85,7 +85,9 @@ export default function EditTradingToolPage() {
         try {
             const submitData = {
                 ...formData,
-                image_url: featuredImage ? ((featuredImage as any).url || featuredImage.source_url) : formData.image_url
+                image_url: featuredImage
+                    ? relativizeMediaUrl((featuredImage as any).url || featuredImage.source_url)
+                    : relativizeMediaUrl(formData.image_url)
             };
             await adminDynamicService.updateTradingTool(toolId, submitData);
             setSuccessModal(true);

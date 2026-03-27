@@ -36,7 +36,44 @@ const FALLBACK_VIDEOS: TradingVideo[] = [
     }
 ];
 
-// Removed FALLBACK_SIGNALS
+const FALLBACK_SIGNALS: Signal[] = [
+    {
+        id: 101,
+        title: 'EURUSD BUY Update',
+        date: '2026-03-25',
+        status: 'active',
+        instrument: 'EURUSD',
+        signal_type: 'vip',
+        entry: '1.0850',
+        sl: '1.0790',
+        tp1: '1.0900',
+        type: 'buy'
+    },
+    {
+        id: 102,
+        title: 'EURUSD BUY Update 2',
+        date: '2026-03-25',
+        status: 'active',
+        instrument: 'EURUSD',
+        signal_type: 'vip',
+        entry: '1.0850',
+        sl: '1.0800',
+        tp1: '1.0900',
+        type: 'buy'
+    },
+    {
+        id: 103,
+        title: 'EURUSD BUY Update 3',
+        date: '2026-03-25',
+        status: 'active',
+        instrument: 'EURUSD',
+        signal_type: 'vip',
+        entry: '1.0850',
+        sl: '1.0800',
+        tp1: '1.0900',
+        type: 'buy'
+    }
+];
 
 const VIPSignalsGroup = () => {
     const { data: youtubeVideos } = useDataWithFallback(
@@ -47,7 +84,7 @@ const VIPSignalsGroup = () => {
 
     const { data: signals } = useDataWithFallback(
         signalsService.getSignals,
-        [],
+        FALLBACK_SIGNALS,
         'vip',
         3
     );
@@ -274,13 +311,13 @@ const VIPSignalsGroup = () => {
                                         <div className="flex-1 overflow-y-auto p-1.5 sm:p-4 space-y-2 sm:space-y-5 bg-gradient-to-b from-[#334155]/10 to-[#1e293b]/20 hide-scrollbar pb-3 sm:pb-6">
                                             {signals.length === 0 ? (
                                                 <div className="bg-white/95 backdrop-blur rounded-lg sm:rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200 text-center flex flex-col items-center justify-center min-h-[100px] gap-2">
-                                                    <span className="text-[10px] sm:text-[13px] font-bold text-gray-400">Files will be uploaded soon.</span>
+                                                    <span className="text-[10px] sm:text-[13px] font-bold text-gray-400">Loading signals...</span>
                                                 </div>
                                             ) : (
                                                 signals.map((signal, index) => (
                                                     <div key={signal.id} className="bg-white/95 backdrop-blur rounded-lg sm:rounded-2xl p-2 sm:p-5 shadow-sm border border-gray-200">
                                                         <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[8px] sm:text-[15px] mb-1 sm:mb-4 truncate">
-                                                            <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                                            <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument} - <span className={signal.type?.toLowerCase() === 'buy' ? 'text-green-500' : 'text-red-500'}>{(signal.type || 'buy').toUpperCase()}</span>
                                                         </div>
                                                         <ul className="space-y-1 sm:space-y-2 text-[7px] sm:text-[13px] text-gray-800 font-bold">
                                                             <li className="flex items-center gap-1"><CheckIcon /> Entry: {signal.entry}</li>
@@ -342,13 +379,13 @@ const VIPSignalsGroup = () => {
                                     <div className="divide-y divide-gray-100">
                                         {signals.length === 0 ? (
                                             <div className="p-8 text-center bg-gray-50/50">
-                                                <span className="text-sm font-bold text-gray-400">Files will be uploaded soon.</span>
+                                                <span className="text-sm font-bold text-gray-400">Loading signals...</span>
                                             </div>
                                         ) : (
                                             signals.slice(0, 2).map((signal, index) => (
                                                 <div key={signal.id} className="p-2 sm:p-8 hover:bg-slate-50/50 transition-colors">
                                                     <div className="flex items-center gap-1 sm:gap-2 font-black text-[#1e293b] text-[10px] sm:text-xl mb-1 sm:mb-4">
-                                                        <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument.split(' ')[0]} - <span className={signal.type === 'buy' ? 'text-green-600' : 'text-red-600'}>{(signal.type || 'buy').toUpperCase()}</span>
+                                                        <span>{getSignalIcon(signal.instrument)}</span> {signal.instrument.split(' ')[0]} - <span className={signal.type?.toLowerCase() === 'buy' ? 'text-green-500' : 'text-red-500'}>{(signal.type || 'buy').toUpperCase()}</span>
                                                     </div>
                                                     <ul className="grid grid-cols-1 gap-y-1 sm:gap-y-3">
                                                         <li className="flex items-center text-[#4b5563] font-bold text-[8px] sm:text-base"><CheckIcon /> Entry: {signal.entry}</li>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
     ShoppingCart,
@@ -94,18 +94,41 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
         })();
     }, [product.id]);
 
-    // Initialize selected attributes
+    // Initialize selected attributes from the first available variation
     useEffect(() => {
-        if ((product.type === 'variable' || product.type === 'variable-subscription') && product.attributes) {
-            const initial: Record<string, string> = {};
-            product.attributes.forEach(attr => {
-                if (attr.variation && attr.options.length > 0) {
-                    initial[attr.name] = attr.options[0];
-                }
-            });
-            setSelectedAttributes(initial);
+        if ((product.type === 'variable' || product.type === 'variable-subscription')) {
+            if (product.variations && product.variations.length > 0) {
+                const firstVar = product.variations[0];
+                const initial: Record<string, string> = {};
+
+                // Map variation attributes back to parent attribute names
+                firstVar.attributes.forEach(vAttr => {
+                    const parentAttr = product.attributes.find(
+                        a => slugify(a.name) === slugify(vAttr.name)
+                    );
+                    if (parentAttr) {
+                        initial[parentAttr.name] = vAttr.option;
+                    }
+                });
+
+                // Fill in any missing attributes from their first options (fallback)
+                product.attributes.forEach(attr => {
+                    if (attr.variation && !initial[attr.name] && attr.options.length > 0) {
+                        initial[attr.name] = attr.options[0];
+                    }
+                });
+                setSelectedAttributes(initial);
+            } else if (product.attributes) {
+                const initial: Record<string, string> = {};
+                product.attributes.forEach(attr => {
+                    if (attr.variation && attr.options.length > 0) {
+                        initial[attr.name] = attr.options[0];
+                    }
+                });
+                setSelectedAttributes(initial);
+            }
         }
-    }, [product.id, product.type, product.attributes]);
+    }, [product.id, product.type, product.attributes, product.variations]);
 
     // Helper to slugify attribute names for comparison
     const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -115,22 +138,34 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
         if ((product.type === 'variable' || product.type === 'variable-subscription') && product.variations) {
             const match = product.variations.find(v => {
                 return v.attributes.every(attr => {
-                    // Variation attributes use slugified names (e.g. "subscription-plan")
-                    // while selectedAttributes uses display names (e.g. "Subscription Plan")
-                    // Try exact match first, then slugified match
-                    const directMatch = selectedAttributes[attr.name] === attr.option;
-                    if (directMatch) return true;
-
                     // Find matching key by slugifying both sides
                     const matchingKey = Object.keys(selectedAttributes).find(
                         key => slugify(key) === slugify(attr.name)
                     );
-                    return matchingKey ? selectedAttributes[matchingKey] === attr.option : false;
+                    if (!matchingKey) return false;
+
+                    const selectedValue = selectedAttributes[matchingKey];
+                    return selectedValue === attr.option;
                 });
             });
             setSelectedVariation(match || null);
         }
     }, [selectedAttributes, product.variations, product.type]);
+
+    // Derive available options from variations to only show valid selectable items
+    const availableOptions = useMemo(() => {
+        const map: Record<string, Set<string>> = {};
+        if (product.variations) {
+            product.variations.forEach(v => {
+                v.attributes.forEach(vAttr => {
+                    const slugName = slugify(vAttr.name);
+                    if (!map[slugName]) map[slugName] = new Set();
+                    map[slugName].add(vAttr.option);
+                });
+            });
+        }
+        return map;
+    }, [product.variations]);
 
     // Initialize custom fields
     useEffect(() => {
@@ -363,7 +398,10 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                                             {attr.name}
                                         </label>
                                         <div className="flex flex-wrap gap-2">
-                                            {attr.options.map(opt => (
+                                            {attr.options.filter(opt => {
+                                                const slugName = slugify(attr.name);
+                                                return availableOptions[slugName]?.has(opt);
+                                            }).map(opt => (
                                                 <button
                                                     key={opt}
                                                     onClick={() => setSelectedAttributes(prev => ({ ...prev, [attr.name]: opt }))}

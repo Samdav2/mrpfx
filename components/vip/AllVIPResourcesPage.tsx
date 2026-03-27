@@ -7,6 +7,7 @@ import NewsletterSection from '@/components/shared/NewsletterSection';
 import { productsService } from '@/lib/products';
 import type { WCProductRead } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
+import { getMediaUrl } from '@/lib/utils';
 
 const AllVIPResourcesPage = () => {
     const [products, setProducts] = useState<WCProductRead[]>([]);
@@ -103,13 +104,13 @@ const AllVIPResourcesPage = () => {
                                     <Link href={`/product/${product.slug}`} className="block relative aspect-[4/3] overflow-hidden bg-gray-100">
                                         {product.featured_image ? (
                                             <img
-                                                src={product.featured_image.url}
+                                                src={getMediaUrl(product.featured_image.url)}
                                                 alt={product.featured_image.alt_text || product.name}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             />
                                         ) : product.gallery_images && product.gallery_images.length > 0 ? (
                                             <img
-                                                src={product.gallery_images[0].url}
+                                                src={getMediaUrl(product.gallery_images[0].url)}
                                                 alt={product.gallery_images[0].alt_text || product.name}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             />

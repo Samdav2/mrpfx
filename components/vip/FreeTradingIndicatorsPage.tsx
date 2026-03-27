@@ -7,6 +7,7 @@ import NewsletterSection from '@/components/shared/NewsletterSection';
 import { tradingToolsService } from '@/lib/trading-tools';
 import { useDataWithFallback } from '@/lib/hooks/useDataWithFallback';
 import { TradingTool } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
 
 // Removed FALLBACK_INDICATORS
 const FreeTradingIndicatorsPage = () => {
@@ -30,7 +31,7 @@ const FreeTradingIndicatorsPage = () => {
             id: indicator.id,
             name: indicator.title,
             features: indicator.features || [],
-            imageSrc: indicator.image_url || "/assets/indicators/chart-tablet.png",
+            imageSrc: getMediaUrl(indicator.image_url) || "/assets/indicators/chart-tablet.png",
             downloadUrl: indicator.download_url
         });
         return acc;

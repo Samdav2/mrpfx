@@ -8,6 +8,7 @@ import NewsletterSection from '@/components/shared/NewsletterSection';
 import { useState, useEffect } from 'react';
 import { tradingToolsService } from '@/lib/trading-tools';
 import { TradingTool } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
 
 const FreeTradingBotsPage = () => {
     const [bots, setBots] = useState<TradingTool[]>([]);
@@ -131,7 +132,7 @@ const FreeTradingBotsPage = () => {
                                     name={bot.title}
                                     description={bot.description}
                                     features={bot.description.split('\n').filter(l => l.trim().length > 0).slice(0, 3)}
-                                    imageSrc={getBotImage(bot.title)}
+                                    imageSrc={getMediaUrl(bot.image_url) || getBotImage(bot.title)}
                                     downloadUrl={bot.download_url}
                                     category={bot.title.includes('Synthetic') ? 'Synthetic' : 'Forex'}
                                 />

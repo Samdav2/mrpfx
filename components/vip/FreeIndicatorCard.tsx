@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Check, Download } from 'lucide-react';
 import { cartService } from '@/lib/cart';
+import { getMediaUrl } from '@/lib/utils';
 
 interface FreeIndicatorCardProps {
     id: number;
@@ -18,15 +19,17 @@ interface FreeIndicatorCardProps {
 const FreeIndicatorCard = ({ id, name, description = "", features, imageSrc, downloadUrl = "#", platforms = "MT4 / MT5" }: FreeIndicatorCardProps) => {
     const router = useRouter();
 
-    const handleAddToCart = async () => {
+    const handleDownload = async () => {
+        if (downloadUrl && downloadUrl !== "#") {
+            window.open(downloadUrl, '_blank');
+            return;
+        }
+
         try {
             await cartService.addToCart(id, 1);
             router.push('/checkout');
         } catch (error) {
             console.error("Failed to add to cart:", error);
-            if (downloadUrl && downloadUrl !== "#") {
-                window.location.href = downloadUrl;
-            }
         }
     };
     return (
@@ -34,7 +37,7 @@ const FreeIndicatorCard = ({ id, name, description = "", features, imageSrc, dow
             {/* Image Section */}
             <div className="relative aspect-square sm:aspect-[16/10] overflow-hidden bg-gradient-to-b from-[#f0fdf4] to-white">
                 <Image
-                    src={imageSrc}
+                    src={getMediaUrl(imageSrc) || "/assets/indicators/chart-tablet.png"}
                     alt={name}
                     fill
                     className="object-contain p-4 md:p-6 group-hover:scale-110 transition-transform duration-500"
@@ -64,7 +67,7 @@ const FreeIndicatorCard = ({ id, name, description = "", features, imageSrc, dow
 
                 <div className="mt-auto">
                     <button
-                        onClick={handleAddToCart}
+                        onClick={handleDownload}
                         className="flex items-center justify-center gap-1.5 md:gap-2 w-full bg-gradient-to-r from-[#106b52] to-[#147b62] hover:from-[#147b62] hover:to-[#188c72] text-white font-bold py-2 md:py-3.5 px-3 md:px-6 rounded-lg shadow-md transition-all duration-300 active:scale-95 text-[10px] md:text-lg uppercase"
                     >
                         <Download className="w-3 h-3 md:w-5 md:h-5 stroke-[2.5]" />

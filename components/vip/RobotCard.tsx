@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { cartService } from '@/lib/cart';
+import { getMediaUrl } from '@/lib/utils';
 
 interface RobotCardProps {
     id: number;
@@ -35,7 +36,7 @@ const RobotCard = ({ id, name, price, description, features, imageSrc, productUr
             {/* Image Section */}
             <div className="relative aspect-[1/1] sm:aspect-[16/10] overflow-hidden bg-gradient-to-b from-[#eef2ff] to-white">
                 <Image
-                    src={imageSrc}
+                    src={getMediaUrl(imageSrc) || "/assets/indicators/chart-tablet.png"}
                     alt={name}
                     fill
                     className="object-contain p-2 md:p-4 group-hover:scale-105 transition-transform duration-500"

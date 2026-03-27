@@ -81,6 +81,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
                 { name: 'Prop Firm', href: '/admin/prop-firm', icon: Trophy },
                 { name: 'Account Mgmt', href: '/admin/account-management', icon: Briefcase },
                 { name: 'Copy Trading', href: '/admin/copy-trading', icon: Zap },
+                { name: 'Traders', href: '/admin/traders', icon: Users },
                 { name: 'Reports', href: '/admin/reports', icon: BarChart2 },
                 { name: 'Courses', href: '/admin/courses', icon: BookOpen },
                 { name: 'Products', href: '/admin/products', icon: ShoppingBag },

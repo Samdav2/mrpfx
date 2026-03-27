@@ -10,7 +10,7 @@ import {
     Check
 } from 'lucide-react';
 import { adminMediaService, WPMediaItem } from '@/lib/admin-api';
-import { getMediaUrl } from '@/lib/utils';
+import { getMediaUrl, relativizeMediaUrl } from '@/lib/utils';
 
 interface MediaLibraryProps {
     onSelect?: (media: WPMediaItem) => void;
@@ -321,7 +321,7 @@ export function MediaLibrary({ onSelect, maxHeight = '600px', className = '' }: 
                                         const url = selectedItem.sizes?.[selectedSize] || selectedItem.url || selectedItem.source_url || '';
                                         onSelect({
                                             ...selectedItem,
-                                            url: url
+                                            url: relativizeMediaUrl(url)
                                         });
                                     }}
                                     className="w-full h-12 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 active:scale-95"

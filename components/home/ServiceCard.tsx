@@ -1,6 +1,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { getMediaUrl } from '@/lib/utils';
 
 interface ServiceCardProps {
     title: string;
@@ -14,9 +15,9 @@ export default function ServiceCard({ title, imageSrc, href, onClick, className 
     const CardContent = (
         <div className={classNames("group relative flex flex-col items-center cursor-pointer transition-transform hover:-translate-y-2 duration-300", className)}>
             <div className="relative w-full aspect-square overflow-hidden rounded-2xl shadow-lg border border-gray-100 bg-white">
-                {imageSrc.startsWith('/') ? (
+                {imageSrc ? (
                     <Image
-                        src={imageSrc}
+                        src={getMediaUrl(imageSrc) || ""}
                         alt={title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

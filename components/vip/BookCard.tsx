@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Star, Download, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { cartService } from '@/lib/cart';
+import { getMediaUrl } from '@/lib/utils';
 
 interface BookCardProps {
     id: number;
@@ -32,7 +33,12 @@ const BookCard = ({
 }: BookCardProps) => {
     const router = useRouter();
 
-    const handleAddToCart = async () => {
+    const handleAction = async () => {
+        if (isFree && downloadUrl && downloadUrl !== "#") {
+            window.open(downloadUrl, '_blank');
+            return;
+        }
+
         try {
             await cartService.addToCart(id, 1);
             router.push('/checkout');
@@ -50,7 +56,7 @@ const BookCard = ({
             <div className="relative aspect-[4/5] overflow-hidden bg-slate-50">
                 {imageSrc ? (
                     <Image
-                        src={imageSrc}
+                        src={getMediaUrl(imageSrc) || ""}
                         alt={title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -84,7 +90,7 @@ const BookCard = ({
                 <div className="mt-auto flex flex-col items-center gap-2 md:gap-3">
                     {isFree ? (
                         <button
-                            onClick={handleAddToCart}
+                            onClick={handleAction}
                             className="w-full bg-[#1e293b] hover:bg-slate-800 text-white font-black py-2 md:py-3.5 px-4 rounded-xl active:scale-95 transition-all duration-300 shadow-lg shadow-slate-200 block text-center uppercase tracking-tighter text-xs md:text-lg"
                         >
                             Free Download
@@ -92,7 +98,7 @@ const BookCard = ({
                     ) : (
                         <>
                             <button
-                                onClick={handleAddToCart}
+                                onClick={handleAction}
                                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-2 md:py-3.5 px-4 rounded-xl active:scale-95 transition-all duration-300 shadow-lg shadow-blue-100 block text-center uppercase tracking-tighter text-sm md:text-xl"
                             >
                                 BUY NOW
