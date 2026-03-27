@@ -28,17 +28,12 @@ const PrivateMentorshipPage = () => {
                     const fullProduct = await productsService.getProductFull(productData.id);
                     setProduct(fullProduct);
 
-                    // User said: first variation is Class B, second is Class A
+                    // User said: Class A is the normal product (parent), Class B is the first variation
                     const classB = fullProduct.variations[0];
-                    const classA = fullProduct.variations[1];
 
-                    if (classA) {
-                        setSelectedVariation(classA);
-                        setSelectedClassName('Class A (10 Days)');
-                    } else if (classB) {
-                        setSelectedVariation(classB);
-                        setSelectedClassName('Class B (10 Days)');
-                    }
+                    // Default to Class A (Parent Product)
+                    setSelectedVariation(null);
+                    setSelectedClassName('Class A (10 Days)');
                 }
             } catch (error) {
                 console.error('Failed to fetch private mentorship data:', error);
@@ -51,37 +46,38 @@ const PrivateMentorshipPage = () => {
 
     const handleClassChange = (className: string) => {
         setSelectedClassName(className);
-        if (product?.variations) {
-            // Map by index based on user instructions: 0 is B, 1 is A
-            if (className.includes('Class B') && product.variations[0]) {
+        if (product) {
+            // Class A -> Parent Product (null variation)
+            // Class B -> First Variation
+            if (className.includes('Class B') && product.variations?.[0]) {
                 setSelectedVariation(product.variations[0]);
-            } else if (className.includes('Class A') && product.variations[1]) {
-                setSelectedVariation(product.variations[1]);
-            } else if (product.variations[0]) {
-                setSelectedVariation(product.variations[0]);
+            } else {
+                setSelectedVariation(null);
             }
         }
     };
 
     const handleAddToCart = async () => {
-        if (!product || !selectedVariation) return;
+        if (!product) return;
         setAddingToCart(true);
         try {
-            await cartService.addToCart(product.id, 1, selectedVariation.id, {
+            // If selectedVariation is null, it's Class A (Parent Product)
+            await cartService.addToCart(product.id, 1, selectedVariation?.id, {
                 'Telegram Username': telegramUsername
             });
             router.push('/checkout');
         } catch (error) {
             console.error('Failed to add to cart:', error);
             // Fallback to manual checkout with params if needed
-            router.push(`/checkout?product=${product.slug}&variation=${selectedVariation.id}&telegram=${telegramUsername}`);
+            const variationId = selectedVariation?.id;
+            router.push(`/checkout?product=${product.slug}${variationId ? `&variation=${variationId}` : ''}&telegram=${telegramUsername}`);
         } finally {
             setAddingToCart(false);
         }
     };
 
-    const displayPrice = selectedVariation?.price || product?.price || '1,999.00';
-    const regularPrice = selectedVariation?.regular_price || product?.regular_price || '8,999.00';
+    const displayPrice = selectedVariation?.price || product?.price || '499.00';
+    const regularPrice = selectedVariation?.regular_price || product?.regular_price || '100.00';
     const hasSale = selectedVariation?.sale_price || product?.sale_price;
 
     if (loading) {
@@ -359,16 +355,8 @@ const PrivateMentorshipPage = () => {
                                 onChange={(e) => handleClassChange(e.target.value)}
                                 className="w-full appearance-none bg-white border border-gray-300 rounded-xl py-3 pl-4 pr-10 text-[15px] font-medium text-[#1a1a1a] focus:outline-none focus:border-[#0052cc] focus:ring-1 focus:ring-[#0052cc] shadow-sm"
                             >
-                                {product?.variations.map(v => (
-                                    <option key={v.id} value={v.attributes?.[0]?.option || ''}>
-                                        {v.attributes?.[0]?.option || v.sku}
-                                    </option>
-                                )) || (
-                                        <>
-                                            <option value="Class A (10 Days)">Class A (10 Days)</option>
-                                            <option value="Class B (10 Days)">Class B (10 Days)</option>
-                                        </>
-                                    )}
+                                <option value="Class A (10 Days)">Class A (10 Days)</option>
+                                <option value="Class B (10 Days)">Class B (10 Days)</option>
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
