@@ -1,5 +1,4 @@
-import React from 'react';
-import Link from 'next/link';
+import ResourceAuthForm from '@/components/resource/ResourceAuthForm';
 
 export default function IndicatorsPage() {
     return (
@@ -32,73 +31,7 @@ export default function IndicatorsPage() {
 
             {/* Registration Form Section */}
             <div className="container mx-auto px-4 my-[50px] relative z-20">
-                <div className="max-w-[600px] mx-auto bg-white p-8 rounded-lg">
-                    <form className="space-y-5">
-                        {/* Username Field */}
-                        <div className="space-y-2">
-                            <label className="block text-[15px] font-bold text-[#555]">
-                                Username<span className="text-red-500 ml-1">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
-                            />
-                        </div>
-
-                        {/* Email Field */}
-                        <div className="space-y-2">
-                            <label className="block text-[15px] font-bold text-[#555]">
-                                E-mail Address<span className="text-red-500 ml-1">*</span>
-                            </label>
-                            <input
-                                type="email"
-                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
-                            />
-                        </div>
-
-                        {/* Password Field */}
-                        <div className="space-y-2">
-                            <label className="block text-[15px] font-bold text-[#555]">
-                                Password<span className="text-red-500 ml-1">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666]"
-                            />
-                        </div>
-
-                        {/* Confirm Password Field */}
-                        <div className="space-y-2">
-                            <label className="block text-[15px] font-bold text-[#555]">
-                                Confirm Password<span className="text-red-500 ml-1">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="Confirm Password"
-                                className="w-full h-[45px] px-3 border border-[#ddd] rounded-[2px] focus:outline-none focus:border-[#bbb] text-[#666] placeholder:text-[#aaa]"
-                            />
-                        </div>
-
-                        {/* Buttons */}
-                        <div className="flex justify-between pt-6">
-                            <button
-                                type="submit"
-                                style={{ backgroundColor: '#3ba1da', width: '48%', height: '45px', color: 'white', border: 'none' }}
-                                className="hover:!bg-[#44b0ec] font-normal text-[15px] leading-[1em] rounded-[4px] transition-colors duration-200 shadow-[0_4px_6px_rgba(50,50,93,0.11),0_1px_3px_rgba(0,0,0,0.08)] flex items-center justify-center outline-none focus:outline-none"
-                            >
-                                Register
-                            </button>
-
-                            <button
-                                type="button"
-                                style={{ backgroundColor: '#eee', width: '48%', height: '45px', color: '#666', border: 'none' }}
-                                className="hover:!bg-[#e5e5e5] font-normal text-[15px] leading-[1em] rounded-[4px] transition-colors duration-200 shadow-[0_4px_6px_rgba(50,50,93,0.11),0_1px_3px_rgba(0,0,0,0.08)] flex items-center justify-center outline-none focus:outline-none"
-                            >
-                                Login
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <ResourceAuthForm title="Indicators" />
             </div>
         </div>
     );
