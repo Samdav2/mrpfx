@@ -5,13 +5,14 @@ import Link from 'next/link';
 import {
     User as UserIcon, Lock as LockIcon, Server as ServerIcon, DollarSign, Users, Award, TrendingUp,
     AlertTriangle, Briefcase, ChevronRight, ChevronLeft,
-    ArrowRight, Loader2, Download, ShieldCheck
+    ArrowRight, Loader2, Download, ShieldCheck, LogIn
 } from 'lucide-react';
 import { tradersService } from '@/lib/traders';
 import { TraderInfo, TraderPerformanceRecord } from '@/lib/types';
 import { toast } from 'react-hot-toast';
 import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { authService } from '@/lib/auth';
 import { getAccountManagementSettings, AccountManagementSettings, AccountManagementTier } from '@/app/actions/account-management-settings';
 import ConfirmBeforePaymentModal from '../checkout/ConfirmBeforePaymentModal';
 import SuccessModal from '../checkout/SuccessModal';
@@ -38,6 +39,15 @@ export default function AccountManagementForm() {
     const [calculatedFee, setCalculatedFee] = useState<number>(0);
     const [calculatedTarget, setCalculatedTarget] = useState<number>(0);
     const [selectedTier, setSelectedTier] = useState<AccountManagementTier | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const pathname = usePathname();
+
+    useEffect(() => {
+        setIsLoggedIn(!!authService.getUserFromToken());
+        const handleAuthChange = () => setIsLoggedIn(!!authService.getUserFromToken());
+        window.addEventListener('auth-change', handleAuthChange);
+        return () => window.removeEventListener('auth-change', handleAuthChange);
+    }, []);
 
     useEffect(() => {
         getAccountManagementSettings().then(setSettings);
@@ -237,27 +247,42 @@ export default function AccountManagementForm() {
                     </div>
                 )}
 
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                        <Users className="h-5 w-5 text-[#1E3A8A]" />
-                    </div>
-                    <select
-                        value={manager}
-                        onChange={(e) => setManager(e.target.value)}
-                        disabled={loadingTraders}
-                        className="block w-full pl-11 pr-12 py-[14px] border border-gray-200 rounded-lg text-gray-800 appearance-none focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/20 focus:border-[#1E3A8A] bg-white text-[14px] sm:text-[15px] bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%231e3a8a%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-no-repeat bg-[position:right_12px_center] disabled:opacity-50 transition-all font-medium overflow-hidden text-ellipsis whitespace-nowrap"
-                        required
-                    >
-                        <option value="" disabled className="text-gray-500">
-                            {loadingTraders ? 'Loading Managers...' : 'Select Verified Manager'}
-                        </option>
-                        {traders.map(t => (
-                            <option key={t.trader_id} value={t.trader_id} className="py-2">
-                                {t.name} - {t.type}
+                {isLoggedIn ? (
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                            <Users className="h-5 w-5 text-[#1E3A8A]" />
+                        </div>
+                        <select
+                            value={manager}
+                            onChange={(e) => setManager(e.target.value)}
+                            disabled={loadingTraders}
+                            className="block w-full pl-11 pr-12 py-[14px] border border-gray-200 rounded-lg text-gray-800 appearance-none focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/20 focus:border-[#1E3A8A] bg-white text-[14px] sm:text-[15px] bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%208l5%205%205-5%22%20stroke%3D%22%231e3a8a%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-no-repeat bg-[position:right_12px_center] disabled:opacity-50 transition-all font-medium overflow-hidden text-ellipsis whitespace-nowrap"
+                            required
+                        >
+                            <option value="" disabled className="text-gray-500">
+                                {loadingTraders ? 'Loading Managers...' : 'Select Verified Manager'}
                             </option>
-                        ))}
-                    </select>
-                </div>
+                            {traders.map(t => (
+                                <option key={t.trader_id} value={t.trader_id} className="py-2">
+                                    {t.name} - {t.type}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                ) : (
+                    <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-5 text-center">
+                        <LogIn className="h-8 w-8 text-amber-500 mx-auto mb-3" />
+                        <p className="text-amber-800 font-semibold text-sm mb-1">Login Required</p>
+                        <p className="text-amber-700 text-xs mb-4">Please sign in to view and select a verified manager.</p>
+                        <Link
+                            href={`/login?redirect=${encodeURIComponent(pathname)}`}
+                            className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition-colors"
+                        >
+                            <LogIn className="w-4 h-4" />
+                            Sign In
+                        </Link>
+                    </div>
+                )}
 
                 {selectedTrader && (
                     <div className="mt-2 mb-4 animate-in fade-in slide-in-from-top-4 duration-300 ease-out">

@@ -10,10 +10,11 @@ import { WCProductRead } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
 
 interface MentorshipCourse100ContentProps {
-    productSlug: string;
+    settings: any;
 }
 
-export default function MentorshipCourse100Content({ productSlug }: MentorshipCourse100ContentProps) {
+export default function MentorshipCourse100Content({ settings }: MentorshipCourse100ContentProps) {
+    const productSlug = settings?.productSlug || 'mentorship-100';
     const router = useRouter();
     const [product, setProduct] = useState<WCProductRead | null>(null);
     const [loading, setLoading] = useState(true);
@@ -53,7 +54,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                 }
             })();
         }
-    }, [product, isAuthenticated]);
+    }, [product, isAuthenticated, getPendingAction, clearPendingAction]);
 
     const handleAddToCart = async () => {
         if (!product) return;
@@ -84,6 +85,44 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
     const regularPrice = product?.regular_price || '1,000';
     const hasSale = product?.sale_price && product.sale_price !== product.regular_price;
 
+    const heroTitle1 = settings?.heroTitle1 || 'Live One-On-One';
+    const heroTitle2 = settings?.heroTitle2 || 'Trading Mentorship';
+    const heroSubtitle = settings?.heroSubtitle || 'With Mr P';
+    const courseDateText = settings?.courseDateText || 'March 2nd – 10th, 2026';
+    const heroDescription = settings?.heroDescription || 'During this program, Mr P will personally teach <strong class="text-[#F8CD5C]">LIVE</strong> through Zoom, guiding you step-by-step through <strong class="text-white">real market execution</strong> and advanced chart mastery.';
+    const pinnedNote = settings?.pinnedNote || 'All classes will be recorded and sent to the <strong class="text-white underline decoration-[#D4AF37]/50">private group</strong> after each session in case you miss any live class.';
+    const primaryCtaText = settings?.primaryCtaText || 'RESERVE YOUR SEAT NOW';
+    const secondaryCtaText = settings?.secondaryCtaText || 'JOIN NOW – LIMITED SPOTS!';
+    const secondaryCtaLink = settings?.secondaryCtaLink || '';
+    const limitedAdmissionTitle = settings?.limitedAdmissionTitle || 'Limited Admission';
+    const limitedAdmissionPoints = settings?.limitedAdmissionPoints || [
+        'To maintain real interaction during the Zoom sessions, <strong class="text-[#F8CD5C] drop-shadow-sm font-bold">only 100 TRADERS</strong> will be accepted into this mentorship program.',
+        'Once the seats are filled, registration will permanently close.'
+    ];
+    const whatYouWillLearnTitle = settings?.whatYouWillLearnTitle || 'What You Will Learn';
+    const whatYouWillLearnPoints = settings?.whatYouWillLearnPoints || [
+        'Full basics and foundations of Forex trading and Indices',
+        'Complete intermediate-level trading systems',
+        'Extremely advanced-level trading execution',
+        'Real-time LIVE trading practice',
+        'Advanced market structure analysis',
+        'Prop firm challenge strategies',
+        'Mentorship competition analysis',
+        'Funding opportunity up to $10,000',
+        'Private LIVE trading with Mr P'
+    ];
+    const transformationText1 = settings?.transformationText1 || 'This Is <span class="text-[#D4AF37] italic font-serif">Not a Normal Forex Class</span> &mdash;';
+    const transformationText2 = settings?.transformationText2 || 'This is a <span class="text-[#D4AF37] italic font-serif">Trading Transformation</span>';
+    const detailsTitle = settings?.detailsTitle || 'Registration Details';
+    const detailsDateRange = settings?.detailsDateRange || 'March 2nd-10th';
+    const detailsInclusions = settings?.detailsInclusions || [
+        '12 months VIP group',
+        'Access to VIP tools',
+        'Private live sessions',
+        'Recorded classes'
+    ];
+    const bottomCtaText = settings?.bottomCtaText || 'JOIN NOW – LIMITED!';
+
     return (
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
             {/* Hero Layout Grid */}
@@ -104,15 +143,15 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
 
                     <div className="space-y-0.5 sm:space-y-2">
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold text-white leading-tight sm:leading-[1.1] tracking-tight">
-                            Live One-On-One
+                            {heroTitle1}
                         </h1>
                         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] italic text-[#D4AF37] font-serif leading-tight sm:leading-[1.1] tracking-tight">
-                            Trading Mentorship
+                            {heroTitle2}
                         </h2>
                         <div className="flex items-center gap-2 sm:gap-4 mt-1 lg:mt-3">
                             <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
                             <h3 className="text-base sm:text-2xl md:text-3xl text-gray-300 font-light tracking-wide whitespace-nowrap">
-                                With Mr P
+                                {heroSubtitle}
                             </h3>
                             <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#D4AF37]/50 max-w-[60px] sm:max-w-[100px]"></div>
                         </div>
@@ -133,17 +172,13 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                         <div className="flex flex-col">
                             <span className="text-[#D4AF37] text-[10px] sm:text-xs font-bold uppercase tracking-wider">Course Duration</span>
                             <span className="text-[#EBEBEB] font-bold text-sm sm:text-lg md:text-2xl">
-                                March 2nd &ndash; 10th, 2026
+                                {courseDateText}
                             </span>
                         </div>
                     </div>
 
                     <div>
-                        <p className="text-gray-300 leading-snug sm:leading-relaxed text-[13px] sm:text-lg font-medium max-w-xl">
-                            During this program, Mr P will personally teach <strong className="text-[#F8CD5C]">LIVE</strong> through Zoom,
-                            guiding you step-by-step through <strong className="text-white">real market execution</strong> and
-                            advanced chart mastery.
-                        </p>
+                        <p className="text-gray-300 leading-snug sm:leading-relaxed text-[13px] sm:text-lg font-medium max-w-xl" dangerouslySetInnerHTML={{ __html: heroDescription }} />
                     </div>
                 </div>
 
@@ -186,10 +221,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                                 </svg>
                             </div>
                         </div>
-                        <p className="text-[11px] sm:text-[16px] text-gray-200 leading-snug sm:leading-relaxed font-semibold">
-                            All classes will be recorded and sent to the <strong className="text-white underline decoration-[#D4AF37]/50">private group</strong> after
-                            each session in case you miss any live class.
-                        </p>
+                        <p className="text-[11px] sm:text-[16px] text-gray-200 leading-snug sm:leading-relaxed font-semibold" dangerouslySetInnerHTML={{ __html: pinnedNote }} />
                     </div>
                 </div>
             </div>
@@ -203,13 +235,13 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                 >
                     <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37] via-[#FFDF73] to-[#B68C36] rounded-md blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
                     <div className="relative w-full bg-gradient-to-r from-[#E6B94A] via-[#F8CD5C] to-[#D6AB40] hover:from-[#F0C55A] hover:to-[#E0B54A] text-[#110905] font-black text-sm sm:text-xl py-4 sm:py-5 px-6 rounded shadow-xl flex items-center justify-center gap-2 border-b-4 border-[#A37B24] transition-all transform active:translate-y-1 active:border-b-0 uppercase tracking-widest">
-                        {addingToCart ? <Loader2 className="w-6 h-6 animate-spin" /> : 'RESERVE YOUR SEAT NOW'}
+                        {addingToCart ? <Loader2 className="w-6 h-6 animate-spin" /> : primaryCtaText}
                         {!addingToCart && <svg className="w-5 h-5 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>}
                     </div>
                 </button>
 
                 <button
-                    onClick={handleAddToCart}
+                    onClick={secondaryCtaLink ? () => window.open(secondaryCtaLink, '_blank') : handleAddToCart}
                     disabled={addingToCart || loading}
                     className="flex items-center gap-2 text-[#D4AF37] hover:text-[#F8CD5C] transition-colors font-bold text-xs sm:text-lg uppercase tracking-widest group"
                 >
@@ -219,7 +251,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                         <line x1="20" y1="8" x2="20" y2="14"></line>
                         <line x1="23" y1="11" x2="17" y2="11"></line>
                     </svg>
-                    <span className="border-b-2 border-transparent group-hover:border-[#F8CD5C]">JOIN NOW – LIMITED SPOTS!</span>
+                    <span className="border-b-2 border-transparent group-hover:border-[#F8CD5C]">{secondaryCtaText}</span>
                 </button>
             </div>
 
@@ -228,22 +260,16 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 blur-[60px] rounded-full"></div>
                 <h3 className="text-[#D4AF37] text-xl sm:text-2xl md:text-3xl font-bold mb-6 border-b border-[#D4AF37]/20 pb-4 flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-                    Limited Admission
+                    {limitedAdmissionTitle}
                 </h3>
 
                 <ul className="space-y-4 md:space-y-6 text-gray-300 text-[14px] sm:text-[18px] md:text-xl font-medium">
-                    <li className="flex items-start gap-3 sm:gap-4 transition-transform hover:translate-x-1 duration-300">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <p className="leading-tight sm:leading-relaxed">
-                            To maintain real interaction during the Zoom sessions, <strong className="text-[#F8CD5C] drop-shadow-sm font-bold">only 100 TRADERS</strong> will be accepted into this mentorship program.
-                        </p>
-                    </li>
-                    <li className="flex items-start gap-3 sm:gap-4 transition-transform hover:translate-x-1 duration-300">
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <p className="leading-tight sm:leading-relaxed">
-                            Once the seats are filled, registration will permanently close.
-                        </p>
-                    </li>
+                    {limitedAdmissionPoints.map((point: string, idx: number) => (
+                        <li key={idx} className="flex items-start gap-3 sm:gap-4 transition-transform hover:translate-x-1 duration-300">
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            <p className="leading-tight sm:leading-relaxed" dangerouslySetInnerHTML={{ __html: point }} />
+                        </li>
+                    ))}
                 </ul>
             </div>
 
@@ -251,7 +277,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
             <div className="mt-8 md:mt-24 w-full">
                 <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-8">
                     <h3 className="text-[#D4AF37] text-lg sm:text-3xl font-bold whitespace-nowrap">
-                        What You Will Learn
+                        {whatYouWillLearnTitle}
                     </h3>
                     <div className="h-[1px] w-full max-w-sm bg-gradient-to-r from-[#D4AF37]/50 to-transparent"></div>
                 </div>
@@ -263,24 +289,12 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                     <div className="relative z-10 bg-[#251A10]/40 backdrop-blur-sm flex flex-row min-h-[200px] sm:min-h-[400px]">
                         <div className="p-3 sm:p-10 flex-[1.5]">
                             <ul className="grid grid-cols-1 sm:grid-cols-1 gap-2 sm:gap-5 text-[10px] sm:text-lg text-gray-200">
-                                {[
-                                    { text: 'Full basics and foundations of Forex trading and Indices' },
-                                    { text: 'Complete intermediate-level trading systems' },
-                                    { text: 'Extremely advanced-level trading execution' },
-                                    { text: 'Real-time LIVE trading practice' },
-                                    { text: 'Advanced market structure analysis' },
-                                    { text: 'Prop firm challenge strategies' },
-                                    { text: 'Mentorship competition analysis' },
-                                    { text: 'Funding opportunity up to $10,000' },
-                                    { text: 'Private LIVE trading with Mr P' }
-                                ].map((item, idx) => (
+                                {whatYouWillLearnPoints.map((point: string, idx: number) => (
                                     <li key={idx} className="flex items-start gap-1.5 sm:gap-4 group">
                                         <div className="mt-1 sm:mt-2.5 shrink-0 flex items-center justify-center w-2 h-2 sm:w-3 sm:h-3">
                                             <div className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-[#1A110A] border-[1px] sm:border-2 border-gray-400 group-hover:border-[#D4AF37]"></div>
                                         </div>
-                                        <p className="leading-tight sm:leading-relaxed truncate sm:whitespace-normal">
-                                            {item.text}
-                                        </p>
+                                        <p className="leading-tight sm:leading-relaxed truncate sm:whitespace-normal" dangerouslySetInnerHTML={{ __html: point }} />
                                     </li>
                                 ))}
                             </ul>
@@ -301,12 +315,8 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
 
             {/* Transformation Banner */}
             <div className="mt-16 md:mt-24 w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center md:text-left">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold">
-                    This Is <span className="text-[#D4AF37] italic font-serif">Not a Normal Forex Class</span> &mdash;
-                </h3>
-                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold mt-1 md:mt-0">
-                    This is a <span className="text-[#D4AF37] italic font-serif">Trading Transformation</span>
-                </h3>
+                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold" dangerouslySetInnerHTML={{ __html: transformationText1 }} />
+                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-semibold mt-1 md:mt-0" dangerouslySetInnerHTML={{ __html: transformationText2 }} />
             </div>
 
             {/* Registration Details Section */}
@@ -314,7 +324,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                 <div className="flex items-center justify-center gap-4 sm:gap-6 mb-6 sm:mb-10 w-full mx-auto max-w-2xl px-2">
                     <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#D4AF37]"></div>
                     <h3 className="text-[#EBEBEB] text-sm sm:text-3xl font-bold tracking-wide whitespace-nowrap">
-                        Registration Details
+                        {detailsTitle}
                     </h3>
                     <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#D4AF37]"></div>
                 </div>
@@ -345,26 +355,19 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                                     </div>
                                     <div>
                                         <span className="font-bold text-white block sm:inline">Date:</span>
-                                        <span className="truncate block">March 2nd-10th</span>
+                                        <span className="truncate block">{detailsDateRange}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Right Column: Inclusions */}
                             <div className="space-y-3 sm:space-y-5 sm:pl-6 sm:border-l border-white/10">
-                                {[
-                                    { text: '12 months VIP group' },
-                                    { text: 'Access to VIP tools' },
-                                    { text: 'Private live sessions' },
-                                    { text: 'Recorded classes' }
-                                ].map((item, idx) => (
+                                {detailsInclusions.map((point: string, idx: number) => (
                                     <div key={idx} className="flex items-center gap-2">
                                         <div className="bg-[#2ECC71] text-[#110905] rounded-sm p-0.5 shrink-0">
                                             <svg className="w-2.5 h-2.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                         </div>
-                                        <p className="leading-snug truncate">
-                                            {item.text}
-                                        </p>
+                                        <p className="leading-snug truncate" dangerouslySetInnerHTML={{ __html: point }} />
                                     </div>
                                 ))}
                             </div>
@@ -381,7 +384,7 @@ export default function MentorshipCourse100Content({ productSlug }: MentorshipCo
                     >
                         <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37] via-[#FFDF73] to-[#B68C36] rounded-md blur opacity-20 group-hover:opacity-40"></div>
                         <div className="relative w-full bg-gradient-to-r from-[#E6B94A] via-[#F8CD5C] to-[#D6AB40] hover:from-[#F0C55A] hover:to-[#E0B54A] text-[#110905] font-black text-xs sm:text-lg py-3 sm:py-4 px-4 sm:px-6 rounded shadow-xl flex items-center justify-center gap-2 border-b-2 sm:border-b-4 border-[#A37B24] uppercase tracking-wide">
-                            {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : 'JOIN NOW – LIMITED!'}
+                            {addingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : bottomCtaText}
                             {!addingToCart && <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>}
                         </div>
                     </button>

@@ -83,20 +83,22 @@ export default function TradingToolPage() {
                 }
             }, { key: 'download-tool' });
         } else {
-            try {
+            withAuth(async () => {
                 setAddingToCart(true);
-                await cartService.addToCart(tool.id, 1);
-                window.dispatchEvent(new CustomEvent('open-checkout', {
-                    detail: { sellerLink: tool.seller_payment_link }
-                }));
-            } catch (error) {
-                console.error("Failed to add to cart:", error);
-                if (tool.purchase_url && tool.purchase_url !== "#") {
-                    window.location.href = tool.purchase_url;
+                try {
+                    await cartService.addToCart(tool.id, 1);
+                    window.dispatchEvent(new CustomEvent('open-checkout', {
+                        detail: { sellerLink: tool.seller_payment_link }
+                    }));
+                } catch (error) {
+                    console.error("Failed to add to cart:", error);
+                    if (tool.purchase_url && tool.purchase_url !== "#") {
+                        window.location.href = tool.purchase_url;
+                    }
+                } finally {
+                    setAddingToCart(false);
                 }
-            } finally {
-                setAddingToCart(false);
-            }
+            }, { key: 'purchase-tool' });
         }
     };
 
@@ -196,8 +198,7 @@ export default function TradingToolPage() {
                             </div>
                         )}
 
-                        {/* Alternative Checkout Methods - Moving to Checkout Modal for a cleaner experience */}
-                        {false && !isFree && (tool.whop_payment_link || tool.seller_payment_link) && (
+                        {!isFree && (tool.whop_payment_link || tool.seller_payment_link) && (
                             <div className="space-y-3 mb-6">
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -211,7 +212,7 @@ export default function TradingToolPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {tool.whop_payment_link && (
                                         <button
-                                            onClick={() => window.open(tool.whop_payment_link, '_blank')}
+                                            onClick={() => withAuth(() => window.open(tool.whop_payment_link, '_blank'), { key: 'whop-checkout' })}
                                             className="flex items-center justify-center gap-2 py-3 bg-[#FC440F]/10 hover:bg-[#FC440F]/20 border border-[#FC440F]/20 text-[#FC440F] rounded-xl text-xs font-bold transition-all"
                                         >
                                             <ExternalLink className="w-4 h-4" />
@@ -220,7 +221,7 @@ export default function TradingToolPage() {
                                     )}
                                     {tool.seller_payment_link && (
                                         <button
-                                            onClick={() => window.open(tool.seller_payment_link, '_blank')}
+                                            onClick={() => withAuth(() => window.open(tool.seller_payment_link, '_blank'), { key: 'selar-checkout' })}
                                             className="flex items-center justify-center gap-2 py-3 bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-500/20 text-cyan-400 rounded-xl text-xs font-bold transition-all"
                                         >
                                             <ExternalLink className="w-4 h-4" />

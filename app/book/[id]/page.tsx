@@ -84,20 +84,22 @@ export default function BookPage() {
             }, { key: 'download-book' });
         } else {
             // Premium
-            try {
+            withAuth(async () => {
                 setAddingToCart(true);
-                await cartService.addToCart(book.id, 1);
-                window.dispatchEvent(new CustomEvent('open-checkout', {
-                    detail: { sellerLink: book.seller_payment_link || book.buy_url }
-                }));
-            } catch (error) {
-                console.error("Failed to add to cart:", error);
-                if (book.buy_url && book.buy_url !== "#") {
-                    window.location.href = book.buy_url;
+                try {
+                    await cartService.addToCart(book.id, 1);
+                    window.dispatchEvent(new CustomEvent('open-checkout', {
+                        detail: { sellerLink: book.seller_payment_link || book.buy_url }
+                    }));
+                } catch (error) {
+                    console.error("Failed to add to cart:", error);
+                    if (book.buy_url && book.buy_url !== "#") {
+                        window.location.href = book.buy_url;
+                    }
+                } finally {
+                    setAddingToCart(false);
                 }
-            } finally {
-                setAddingToCart(false);
-            }
+            }, { key: 'purchase-book' });
         }
     };
 
@@ -199,8 +201,8 @@ export default function BookPage() {
                             </div>
                         </div>
 
-                        {/* Alternative Checkout Methods - Moving to Checkout Modal for a cleaner experience */}
-                        {false && !isFree && (book.whop_payment_link || book.seller_payment_link) && (
+                        {/* Alternative Checkout Methods */}
+                        {!isFree && (book.whop_payment_link || book.seller_payment_link) && (
                             <div className="space-y-3 mb-6">
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -214,7 +216,7 @@ export default function BookPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {book.whop_payment_link && (
                                         <button
-                                            onClick={() => window.open(book.whop_payment_link, '_blank')}
+                                            onClick={() => withAuth(() => window.open(book.whop_payment_link, '_blank'), { key: 'whop-checkout' })}
                                             className="flex items-center justify-center gap-2 py-3 bg-[#FC440F]/10 hover:bg-[#FC440F]/20 border border-[#FC440F]/20 text-[#FC440F] rounded-xl text-xs font-bold transition-all"
                                         >
                                             <ExternalLink className="w-4 h-4" />
@@ -223,7 +225,7 @@ export default function BookPage() {
                                     )}
                                     {book.seller_payment_link && (
                                         <button
-                                            onClick={() => window.open(book.seller_payment_link, '_blank')}
+                                            onClick={() => withAuth(() => window.open(book.seller_payment_link, '_blank'), { key: 'selar-checkout' })}
                                             className="flex items-center justify-center gap-2 py-3 bg-cyan-600/10 hover:bg-cyan-600/20 border border-cyan-500/20 text-cyan-400 rounded-xl text-xs font-bold transition-all"
                                         >
                                             <ExternalLink className="w-4 h-4" />

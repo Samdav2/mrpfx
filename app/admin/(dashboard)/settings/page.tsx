@@ -23,6 +23,26 @@ export default function SettingsPage() {
     const [saving100, setSaving100] = useState(false);
     const [message100, setMessage100] = useState('');
 
+    const [heroTitle1, setHeroTitle1] = useState('');
+    const [heroTitle2, setHeroTitle2] = useState('');
+    const [heroSubtitle, setHeroSubtitle] = useState('');
+    const [courseDateText, setCourseDateText] = useState('');
+    const [heroDescription, setHeroDescription] = useState('');
+    const [pinnedNote, setPinnedNote] = useState('');
+    const [primaryCtaText, setPrimaryCtaText] = useState('');
+    const [secondaryCtaText, setSecondaryCtaText] = useState('');
+    const [secondaryCtaLink, setSecondaryCtaLink] = useState('');
+    const [limitedAdmissionTitle, setLimitedAdmissionTitle] = useState('');
+    const [limitedAdmissionPointsText, setLimitedAdmissionPointsText] = useState('');
+    const [whatYouWillLearnTitle, setWhatYouWillLearnTitle] = useState('');
+    const [whatYouWillLearnPointsText, setWhatYouWillLearnPointsText] = useState('');
+    const [transformationText1, setTransformationText1] = useState('');
+    const [transformationText2, setTransformationText2] = useState('');
+    const [detailsTitle, setDetailsTitle] = useState('');
+    const [detailsDateRange, setDetailsDateRange] = useState('');
+    const [detailsInclusionsText, setDetailsInclusionsText] = useState('');
+    const [bottomCtaText, setBottomCtaText] = useState('');
+
     const [vipSlugs, setVipSlugs] = useState({ oneMonth: '', twelveMonths: '', unlimited: '' });
     const [vipDate, setVipDate] = useState('');
     const [vipGroupLink, setVipGroupLink] = useState('');
@@ -62,9 +82,11 @@ export default function SettingsPage() {
         getMentorshipSettings().then(data => {
             if (data?.registrationOpenDate) {
                 const localDate = new Date(data.registrationOpenDate);
-                const offset = localDate.getTimezoneOffset() * 60000;
-                const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
-                setDate(localISOTime);
+                if (!isNaN(localDate.getTime())) {
+                    const offset = localDate.getTimezoneOffset() * 60000;
+                    const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
+                    setDate(localISOTime);
+                }
             }
             if (data?.productSlug) {
                 setProductSlug(data.productSlug);
@@ -74,13 +96,34 @@ export default function SettingsPage() {
         getMentorship100Settings().then(data => {
             if (data?.registrationOpenDate) {
                 const localDate = new Date(data.registrationOpenDate);
-                const offset = localDate.getTimezoneOffset() * 60000;
-                const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
-                setDate100(localISOTime);
+                if (!isNaN(localDate.getTime())) {
+                    const offset = localDate.getTimezoneOffset() * 60000;
+                    const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
+                    setDate100(localISOTime);
+                }
             }
             if (data?.productSlug) {
                 setProductSlug100(data.productSlug);
             }
+            setHeroTitle1(data?.heroTitle1 || '');
+            setHeroTitle2(data?.heroTitle2 || '');
+            setHeroSubtitle(data?.heroSubtitle || '');
+            setCourseDateText(data?.courseDateText || '');
+            setHeroDescription(data?.heroDescription || '');
+            setPinnedNote(data?.pinnedNote || '');
+            setPrimaryCtaText(data?.primaryCtaText || '');
+            setSecondaryCtaText(data?.secondaryCtaText || '');
+            setSecondaryCtaLink(data?.secondaryCtaLink || '');
+            setLimitedAdmissionTitle(data?.limitedAdmissionTitle || '');
+            setLimitedAdmissionPointsText((data?.limitedAdmissionPoints || []).join('\n'));
+            setWhatYouWillLearnTitle(data?.whatYouWillLearnTitle || '');
+            setWhatYouWillLearnPointsText((data?.whatYouWillLearnPoints || []).join('\n'));
+            setTransformationText1(data?.transformationText1 || '');
+            setTransformationText2(data?.transformationText2 || '');
+            setDetailsTitle(data?.detailsTitle || '');
+            setDetailsDateRange(data?.detailsDateRange || '');
+            setDetailsInclusionsText((data?.detailsInclusions || []).join('\n'));
+            setBottomCtaText(data?.bottomCtaText || '');
         });
         getVIPSettings().then(data => {
             setVipSlugs({
@@ -90,9 +133,11 @@ export default function SettingsPage() {
             });
             if (data.registrationOpenDate) {
                 const localDate = new Date(data.registrationOpenDate);
-                const offset = localDate.getTimezoneOffset() * 60000;
-                const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
-                setVipDate(localISOTime);
+                if (!isNaN(localDate.getTime())) {
+                    const offset = localDate.getTimezoneOffset() * 60000;
+                    const localISOTime = new Date(localDate.getTime() - offset).toISOString().slice(0, 16);
+                    setVipDate(localISOTime);
+                }
             }
             setVipGroupLink(data.groupPageLink || '');
         });
@@ -139,7 +184,29 @@ export default function SettingsPage() {
         setMessage100('');
         try {
             const isoString = date100 ? new Date(date100).toISOString() : null;
-            await updateMentorship100Settings({ registrationOpenDate: isoString, productSlug: productSlug100 });
+            await updateMentorship100Settings({
+                registrationOpenDate: isoString,
+                productSlug: productSlug100,
+                heroTitle1,
+                heroTitle2,
+                heroSubtitle,
+                courseDateText,
+                heroDescription,
+                pinnedNote,
+                primaryCtaText,
+                secondaryCtaText,
+                secondaryCtaLink,
+                limitedAdmissionTitle,
+                limitedAdmissionPoints: limitedAdmissionPointsText.split('\n').map(p => p.trim()).filter(Boolean),
+                whatYouWillLearnTitle,
+                whatYouWillLearnPoints: whatYouWillLearnPointsText.split('\n').map(p => p.trim()).filter(Boolean),
+                transformationText1,
+                transformationText2,
+                detailsTitle,
+                detailsDateRange,
+                detailsInclusions: detailsInclusionsText.split('\n').map(p => p.trim()).filter(Boolean),
+                bottomCtaText
+            });
             setMessage100('Mentorship 100 settings saved successfully!');
         } catch (e) {
             setMessage100('Failed to save settings.');
@@ -478,6 +545,207 @@ export default function SettingsPage() {
                         placeholder="mentorship-100"
                         className="w-full md:w-1/2 p-3 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder-gray-500 font-mono"
                     />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    {/* Hero Section Content */}
+                    <div className="bg-[#111827]/40 p-4 rounded-xl border border-gray-800/60 space-y-4">
+                        <h3 className="text-lg font-medium text-white border-b border-gray-800 pb-2">Hero Section Settings</h3>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Hero Title Part 1</label>
+                            <input
+                                type="text"
+                                value={heroTitle1}
+                                onChange={(e) => setHeroTitle1(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Hero Title Part 2 (Italic)</label>
+                            <input
+                                type="text"
+                                value={heroTitle2}
+                                onChange={(e) => setHeroTitle2(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Hero Subtitle</label>
+                            <input
+                                type="text"
+                                value={heroSubtitle}
+                                onChange={(e) => setHeroSubtitle(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Course Date Text</label>
+                            <input
+                                type="text"
+                                value={courseDateText}
+                                onChange={(e) => setCourseDateText(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Hero Description (HTML allowed)</label>
+                            <textarea
+                                value={heroDescription}
+                                onChange={(e) => setHeroDescription(e.target.value)}
+                                rows={3}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Pinned Note (HTML allowed)</label>
+                            <textarea
+                                value={pinnedNote}
+                                onChange={(e) => setPinnedNote(e.target.value)}
+                                rows={2}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y"
+                            />
+                        </div>
+                    </div>
+
+                    {/* CTAs and Banner Section */}
+                    <div className="bg-[#111827]/40 p-4 rounded-xl border border-gray-800/60 space-y-4">
+                        <h3 className="text-lg font-medium text-white border-b border-gray-800 pb-2">CTAs & Transformation Banner</h3>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Primary CTA Button Text</label>
+                            <input
+                                type="text"
+                                value={primaryCtaText}
+                                onChange={(e) => setPrimaryCtaText(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Secondary CTA Button Text</label>
+                            <input
+                                type="text"
+                                value={secondaryCtaText}
+                                onChange={(e) => setSecondaryCtaText(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Secondary CTA Link (URL — if set, button navigates to this link instead of adding to cart)</label>
+                            <input
+                                type="text"
+                                value={secondaryCtaLink}
+                                onChange={(e) => setSecondaryCtaLink(e.target.value)}
+                                placeholder="https://"
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Bottom CTA Button Text</label>
+                            <input
+                                type="text"
+                                value={bottomCtaText}
+                                onChange={(e) => setBottomCtaText(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Transformation Banner Part 1 (HTML allowed)</label>
+                            <input
+                                type="text"
+                                value={transformationText1}
+                                onChange={(e) => setTransformationText1(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Transformation Banner Part 2 (HTML allowed)</label>
+                            <input
+                                type="text"
+                                value={transformationText2}
+                                onChange={(e) => setTransformationText2(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    {/* Limited Admission Section */}
+                    <div className="bg-[#111827]/40 p-4 rounded-xl border border-gray-800/60 space-y-4">
+                        <h3 className="text-lg font-medium text-white border-b border-gray-800 pb-2">Limited Admission</h3>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Section Title</label>
+                            <input
+                                type="text"
+                                value={limitedAdmissionTitle}
+                                onChange={(e) => setLimitedAdmissionTitle(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Bullet Points (One per line, HTML allowed)</label>
+                            <textarea
+                                value={limitedAdmissionPointsText}
+                                onChange={(e) => setLimitedAdmissionPointsText(e.target.value)}
+                                rows={6}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y font-sans text-sm"
+                            />
+                        </div>
+                    </div>
+
+                    {/* What You Will Learn Section */}
+                    <div className="bg-[#111827]/40 p-4 rounded-xl border border-gray-800/60 space-y-4">
+                        <h3 className="text-lg font-medium text-white border-b border-gray-800 pb-2">What You Will Learn</h3>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Section Title</label>
+                            <input
+                                type="text"
+                                value={whatYouWillLearnTitle}
+                                onChange={(e) => setWhatYouWillLearnTitle(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Bullet Points (One per line, HTML allowed)</label>
+                            <textarea
+                                value={whatYouWillLearnPointsText}
+                                onChange={(e) => setWhatYouWillLearnPointsText(e.target.value)}
+                                rows={6}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y font-sans text-sm"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Registration Details Section */}
+                    <div className="bg-[#111827]/40 p-4 rounded-xl border border-gray-800/60 space-y-4">
+                        <h3 className="text-lg font-medium text-white border-b border-gray-800 pb-2">Registration Details</h3>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Section Title</label>
+                            <input
+                                type="text"
+                                value={detailsTitle}
+                                onChange={(e) => setDetailsTitle(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Details Date Range</label>
+                            <input
+                                type="text"
+                                value={detailsDateRange}
+                                onChange={(e) => setDetailsDateRange(e.target.value)}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Inclusions Checklist (One per line, HTML allowed)</label>
+                            <textarea
+                                value={detailsInclusionsText}
+                                onChange={(e) => setDetailsInclusionsText(e.target.value)}
+                                rows={6}
+                                className="w-full p-2.5 bg-[#111827] border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-y font-sans text-sm"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">

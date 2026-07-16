@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { X, Clock } from 'lucide-react';
-import { getMentorshipSettings } from '@/app/actions/mentorship-settings';
+import { getMentorship100Settings } from '@/app/actions/mentorship-100-settings';
 
 interface MentorshipModalProps {
     isOpen: boolean;
@@ -18,7 +18,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
         if (!isOpen) return;
         let interval: NodeJS.Timeout;
 
-        getMentorshipSettings().then(data => {
+        getMentorship100Settings().then(data => {
             if (data?.registrationOpenDate) {
                 const target = new Date(data.registrationOpenDate).getTime();
 
@@ -43,6 +43,9 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
 
                 updateCountdown();
                 interval = setInterval(updateCountdown, 1000);
+            } else {
+                setIsLocked(false);
+                setCountdown(null);
             }
         });
 
@@ -189,7 +192,7 @@ const MentorshipModal: React.FC<MentorshipModalProps> = ({ isOpen, onClose }) =>
                     </div>
 
                     <div className="mt-8 text-center text-[#312E81] sm:text-lg">
-                        Unlock Your Trading Potential with MR P FX's Proven <strong>Mentorship Programs.</strong>
+                        Unlock Your Trading Potential with MR P FX&apos;s Proven <strong>Mentorship Programs.</strong>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,8 @@ import MentorshipCourse100Content from '@/components/mentorship/MentorshipCourse
 import { Lock } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MentorshipCourse100Page() {
     const settings = await getMentorship100Settings();
     let isLocked = false;
@@ -62,7 +64,7 @@ export default async function MentorshipCourse100Page() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#110905]/50 to-[#110905] pointer-events-none" />
 
             {/* Main Content Container (Client Component) */}
-            <MentorshipCourse100Content productSlug={settings?.productSlug || 'mentorship-100'} />
+            <MentorshipCourse100Content settings={settings} />
         </div>
     );
 }

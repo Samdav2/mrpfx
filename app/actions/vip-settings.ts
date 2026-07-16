@@ -2,6 +2,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { revalidatePath } from 'next/cache';
 
 const SETTINGS_FILE = path.join(process.cwd(), 'vip-settings.json');
 
@@ -38,5 +39,8 @@ export async function getVIPSettings(): Promise<VIPSettings> {
 
 export async function updateVIPSettings(data: VIPSettings): Promise<{ success: boolean }> {
     await fs.writeFile(SETTINGS_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    revalidatePath('/admin/settings');
+    revalidatePath('/vip-signals-group');
+    revalidatePath('/');
     return { success: true };
 }

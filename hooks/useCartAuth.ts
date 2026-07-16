@@ -2,11 +2,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import { authService } from '@/lib/auth';
 
 export type PendingCartAction = {
-    type: 'ADD_TO_CART';
+    type: 'ADD_TO_CART' | 'DIRECT_CHECKOUT';
     productId: number;
     quantity: number;
     variationId?: number;
     customFields?: Record<string, string>;
+    method?: 'whop' | 'seller';
+    paymentUrl?: string;
     timestamp: number;
 };
 

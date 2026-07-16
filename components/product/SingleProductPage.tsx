@@ -98,25 +98,33 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
         // Execute Pending Cart Action if exists
         const pendingAction = getPendingAction();
         if (pendingAction && pendingAction.productId === product.id && isAuthenticated()) {
-            (async () => {
-                setAddingToCart(true);
-                try {
-                    await cartService.addToCart(
-                        pendingAction.productId,
-                        pendingAction.quantity,
-                        pendingAction.variationId,
-                        pendingAction.customFields
-                    );
-                    setCartCount(prev => prev + pendingAction.quantity);
-                    setAddedToCart(true);
-                    setTimeout(() => setAddedToCart(false), 3000);
-                } catch (e) {
-                    console.error('Failed to execute pending cart action', e);
-                } finally {
-                    setAddingToCart(false);
-                    clearPendingAction();
+            if (pendingAction.type === 'DIRECT_CHECKOUT') {
+                const url = pendingAction.paymentUrl;
+                if (url) {
+                    window.location.href = url;
                 }
-            })();
+                clearPendingAction();
+            } else {
+                (async () => {
+                    setAddingToCart(true);
+                    try {
+                        await cartService.addToCart(
+                            pendingAction.productId,
+                            pendingAction.quantity,
+                            pendingAction.variationId,
+                            pendingAction.customFields
+                        );
+                        setCartCount(prev => prev + pendingAction.quantity);
+                        setAddedToCart(true);
+                        setTimeout(() => setAddedToCart(false), 3000);
+                    } catch (e) {
+                        console.error('Failed to execute pending cart action', e);
+                    } finally {
+                        setAddingToCart(false);
+                        clearPendingAction();
+                    }
+                })();
+            }
         }
     }, [product.id, isAuthenticated]);
 
@@ -266,6 +274,21 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                 alert(`${addon.name} is required`);
                 return;
             }
+        }
+
+        if (!isAuthenticated()) {
+            const directUrl = method === 'whop' ? product.whop_payment_link : product.seller_payment_link;
+            savePendingAction({
+                type: 'DIRECT_CHECKOUT',
+                productId: product.id,
+                quantity,
+                method,
+                paymentUrl: directUrl ?? undefined,
+                variationId: (product.type === 'variable' || product.type === 'variable-subscription') ? selectedVariation?.id : undefined,
+                customFields
+            });
+            redirectToLogin();
+            return;
         }
 
         setAddingToCart(true);
@@ -580,8 +603,7 @@ const SingleProductPage: React.FC<SingleProductPageProps> = ({ product, relatedP
                             </Link>
                         )}
 
-                        {/* Alternative Checkout Methods - Moving to Centralized Checkout Modal */}
-                        {false && (product.whop_payment_link || product.seller_payment_link) && (
+                        {(product.whop_payment_link || product.seller_payment_link) && (
                             <div className="space-y-3 mb-6">
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center" aria-hidden="true">

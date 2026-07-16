@@ -2,6 +2,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { revalidatePath } from 'next/cache';
 
 const SETTINGS_FILE = path.join(process.cwd(), 'private-mentorship-settings.json');
 
@@ -20,5 +21,8 @@ export async function getPrivateMentorshipSettings() {
 
 export async function updatePrivateMentorshipSettings(data: { classASlug: string, classBSlug: string }) {
     await fs.writeFile(SETTINGS_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    revalidatePath('/admin/settings');
+    revalidatePath('/private-mentorship');
+    revalidatePath('/');
     return { success: true };
 }
